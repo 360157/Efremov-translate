@@ -1,0 +1,29 @@
+{
+    "name": "sashaef/translateprovider",
+    "description": "Translate provider",
+    "type": "package",
+    "authors": [
+        {
+            "name": "alex",
+            "email": "sashaef02@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type":"package",
+            "package":{
+
+                "name":"sashaef/translateprovider",
+                "version": "master",
+                "source":{
+
+                    "type":"git",
+                    "url":"ssh://git@95.211.204.15:8415/esv2/translateprovider.git",
+                    "reference":"master"
+                }
+            }
+        }
+    ],
+    "require": {}
+}
