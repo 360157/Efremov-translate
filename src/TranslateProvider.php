@@ -13,7 +13,8 @@ class TranslateProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make('Sashaef\TranslateProvider\TranslateController');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->app->make('Sashaef\TranslateProvider\Controllers\TranslateController');
         $this->loadViewsFrom(__DIR__.'/views', 'vocabulare');
     }
 

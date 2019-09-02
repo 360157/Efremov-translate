@@ -1,6 +1,6 @@
 <?php
 
-namespace Sashaef\TranslateProvider;
+namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -85,7 +85,7 @@ class TranslateController extends Controller
 
     public function add($a, $b){
         $result = $a + $b;
-        return view('vocabulare::add', compact('result'));
+        return view('vocabulare::pages.index', compact('result'));
     }
 
     public function subtract($a, $b){
