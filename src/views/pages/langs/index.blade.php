@@ -9,9 +9,6 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                @if (!empty($success))
-                    <h1>{{$success}}</h1>
-                @endif
                 <div class="panel-body">
                     <form action="{{ route('langs.store') }}" method="post" enctype="multipart/form-data">
                         {{ csrf_field() }}
@@ -29,7 +26,7 @@
                         </div>
 
                         <div class="text-right">
-                            <button type="submit" class="btn btn-primary">@lang('main.create') <i class="icon-arrow-right14 position-right"></i></button>
+                            <button type="submit" class="btn btn-primary">@lang('main.create')<i class="icon-arrow-right14 position-right"></i></button>
                         </div>
                     </form>
                 </div>
@@ -46,15 +43,15 @@
 
                     <tbody>
                     <div id="myModal" class="modal fade">
+                        <form id="myForm" action="{{ route('langs.update', [ 'id' => 0 ]) }}" method="POST" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="_method" value="PUT" />
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header"><button class="close" type="button" data-dismiss="modal">×</button>
                                     <h4 class="modal-title">Edit langs</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="{{ route('langs.update', [ 'id' => 0 ]) }}" method="post" enctype="multipart/form-data">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="_method" value="PUT">
                                         <div class="form-group">
                                             <div class="row">
                                                 <input id="id" type="hidden" name="id" value="" class="form-control">
@@ -68,7 +65,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label>@lang('main.index')</label>
-                                                    <input id="isActive" type="checkbox" name="is_active">
+                                                    <input id="isActiveCheck" type="checkbox" value="1" name="is_active">
                                                 </div>
                                             </div>
                                         </div>
@@ -76,12 +73,24 @@
                                         <div class="text-right">
                                             <button type="submit" class="btn btn-primary">@lang('main.create') <i class="icon-arrow-right14 position-right"></i></button>
                                         </div>
-                                    </form>
                                 </div>
                                 <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
                             </div>
                         </div>
+                        </form>
                     </div>
+                    @if (!empty($success))
+                        <h1>{{$success}}</h1>
+                    @endif
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     @foreach($langs as $value)
                         <tr>
                             <td>{{ $value->id }}</td>
@@ -103,6 +112,7 @@
                                                 <form id="destroy-form-{{ $value->id }}" action="{{ route('langs.destroy', ['id'=>$value->id]) }}" method="post" onsubmit="return submitForm()">
                                                     <input type="hidden" name="_method" value="DELETE">
                                                     {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-primary">@lang('main.delete') <i class="icon-arrow-right14 position-right"></i></button>
                                                 </form>
                                                 <a onclick="$('#destroy-form-{{ $value->id }}').submit()"><i class="icon-trash"></i>@lang('main.delete')</a>
                                             </li>
@@ -115,17 +125,18 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
-
-
     </div>
     <script type='text/javascript'>
         function edit(id, index, name, isActive){
             $("#id").attr("value", id);
             $("#name").attr("value", index);
             $("#index").attr("value", name);
-            document.getElementById("isActive").checked = isActive;
+            if(isActive == 1) {
+                document.getElementById("isActiveCheck").checked = true;
+            } else {
+                document.getElementById("isActiveCheck").checked = false;
+            }
         }
     </script>
 

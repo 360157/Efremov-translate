@@ -31,4 +31,9 @@ class Langs extends Model
             'is_active' => $isActive
         ]);
     }
+
+    public static function deleteLangs($id)
+    {
+        self::where('id', $id)->delete();
+    }
 }

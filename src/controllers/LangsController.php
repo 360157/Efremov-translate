@@ -42,7 +42,7 @@ class LangsController extends Controller
     public function store(LangCreateRequest $request)
     {
         $this->postLang($request->name, $request->index);
-        return redirect()->back()->withSuccess('Done!');
+        return redirect()->route('langs.index')->withSuccess('Done!');
     }
 
     /**
@@ -74,8 +74,8 @@ class LangsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(LangUpdateRequest $request, $id)
-    {dd($request);
+    public function update(Request $request, $id)
+    {
         $this->updateLang(
             $request->id,
             $request->index,
@@ -93,6 +93,7 @@ class LangsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->deleteLang($id);
+        return redirect()->back()->withSuccess('Deleted!');
     }
 }

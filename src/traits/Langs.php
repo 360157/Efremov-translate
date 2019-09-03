@@ -22,8 +22,14 @@ trait Langs
         Model::postLangs($name, $index);
     }
 
-    public function updateLang($id, $name, $index, $idActive)
+    public function updateLang($id, $name, $index, $isActive)
     {
-        Model::updateLangs($id, $name, $index, $idActive);
+        $isActive = is_null($isActive) ? 0 : 1;
+        Model::updateLangs($id, $name, $index, $isActive);
+    }
+
+    public function deleteLang($id)
+    {
+        Model::deleteLangs($id);
     }
 }
