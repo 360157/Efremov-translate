@@ -4,17 +4,29 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Sashaef\TranslateProvider\Requests\TransStoreRequest;
+use Sashaef\TranslateProvider\Traits\Langs as LangModel;
+use Sashaef\TranslateProvider\Models\Langs;
+use Sashaef\TranslateProvider\Traits\Translations;
 
 class TranslateController extends Controller
 {
+    use Translations, LangModel;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data = $this->getTranslations($request->id);
+        return view('vocabulare::pages.trans.translations', [
+            'group_id' => $request->id,
+            'trans' => $data['trans'],
+            'transData' => $data['transData'],
+            'langs' => $this->getLangs(),
+            'type' => $request->type
+        ]);
     }
 
     /**
@@ -33,9 +45,10 @@ class TranslateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TransStoreRequest $request)
     {
-        //
+        $this->storeTranslation($request->key, $request->group_id);
+        return redirect()->back()->withSuccess('Done!');
     }
 
     /**
@@ -69,7 +82,7 @@ class TranslateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request);
     }
 
     /**
@@ -81,14 +94,5 @@ class TranslateController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function add($a, $b){
-        $result = $a + $b;
-        return view('vocabulare::pages.index', compact('result'));
-    }
-
-    public function subtract($a, $b){
-        echo $a - $b;
     }
 }

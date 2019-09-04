@@ -2,15 +2,14 @@
 
 namespace Sashaef\TranslateProvider\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Sashaef\TranslateProvider\Traits\Langs;
-use Sashaef\TranslateProvider\Requests\LangCreateRequest;
-use Sashaef\TranslateProvider\Requests\LangUpdateRequest;
+use Sashaef\TranslateProvider\Traits\Groups;
+use App\Http\Controllers\Controller;
+use Sashaef\TranslateProvider\Requests\GroupsStoreRequest;
 
-class LangsController extends Controller
+class GroupsController extends Controller
 {
-    use Langs;
+    use Groups;
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +17,7 @@ class LangsController extends Controller
      */
     public function index()
     {
-        return view('vocabulare::pages.langs.index', [
-            'langs' => $this->getLangs()
-        ]);
+        //
     }
 
     /**
@@ -39,10 +36,10 @@ class LangsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(LangCreateRequest $request)
+    public function store(GroupsStoreRequest $request)
     {
-        $this->postLang($request->name, $request->index);
-        return redirect()->route('langs.index')->withSuccess('Done!');
+        $this->storeGroup($request->name, $request->type);
+        return redirect()->route('groups.mainInterface')->withSuccess('Updated!');
     }
 
     /**
@@ -74,15 +71,9 @@ class LangsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(LangUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $this->updateLang(
-            $request->id,
-            $request->index,
-            $request->name,
-            $request->is_active
-        );
-        return redirect()->route('langs.index')->withSuccess('Updated!');
+        //
     }
 
     /**
@@ -93,7 +84,23 @@ class LangsController extends Controller
      */
     public function destroy($id)
     {
-        $this->deleteLang($id);
-        return redirect()->route('langs.index')->withSuccess('Deleted!');
+        $this->deleteGroup($id);
+        return redirect()->route('groups.mainInterface')->withSuccess('Updated!');
+    }
+
+    public function showInterface()
+    {
+        return view('vocabulare::pages.trans.vocabulare', [
+            'type' => 'interface',
+            'groups' => $this->getGroups('interface')
+        ]);
+    }
+
+    public function showSystem()
+    {
+        return view('vocabulare::pages.trans.vocabulare', [
+            'type' => 'system',
+            'groups' => $this->getGroups('system')
+        ]);
     }
 }

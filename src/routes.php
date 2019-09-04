@@ -7,6 +7,9 @@ Route::get('translate-provider-hello', function(){
 Route::group(['middleware' => ['web']], function () {
 
 Route::resource('langs', 'Sashaef\TranslateProvider\Controllers\LangsController');
-Route::get('subtract/{a}/{b}', 'Sashaef\TranslateProvider\Controllers\TranslateController@subtract');
+    Route::resource('groups', 'Sashaef\TranslateProvider\Controllers\GroupsController');
+    Route::resource('translate', 'Sashaef\TranslateProvider\Controllers\TranslateController');
+Route::get('interface-trans', 'Sashaef\TranslateProvider\Controllers\GroupsController@showInterface')->name('groups.mainInterface');
+    Route::get('system-trans', 'Sashaef\TranslateProvider\Controllers\GroupsController@showSystem')->name('groups.mainSystems');
 
 });

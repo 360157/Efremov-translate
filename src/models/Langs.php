@@ -10,6 +10,11 @@ class Langs extends Model
 
     protected $fillable = ['name', 'index', 'is_active'];
 
+    public function transData()
+    {
+        return $this->hasMany(TransData::class);
+    }
+
     public static function getLangs()
     {
         return self::get();
