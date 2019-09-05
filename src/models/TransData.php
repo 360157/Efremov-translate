@@ -28,4 +28,11 @@ class TransData extends Model
             'status' => $status
         ]);
     }
+
+    public static function updateStatus($id, $status)
+    {
+        return self::where('id', $id)->update([
+            'status' => $status
+        ]);
+    }
 }

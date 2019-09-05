@@ -4,6 +4,7 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Sashaef\TranslateProvider\Requests\GetTranslationRequest;
 use Sashaef\TranslateProvider\Requests\TransStoreRequest;
 use Sashaef\TranslateProvider\Traits\Langs as LangModel;
 use Sashaef\TranslateProvider\Models\Langs;
@@ -17,9 +18,9 @@ class TranslateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(GetTranslationRequest $request)
     {
-        $data = $this->getTranslations($request->id);
+        $data = $this->getTranslations($request->id, $request->type);
         return view('vocabulare::pages.trans.translations', [
             'group_id' => $request->id,
             'trans' => $data['trans'],
@@ -47,7 +48,7 @@ class TranslateController extends Controller
      */
     public function store(TransStoreRequest $request)
     {
-        $this->storeTranslation($request->key, $request->group_id);
+        $this->storeTranslation($request->key, $request->group_id, $request->type);
         return redirect()->back()->withSuccess('Done!');
     }
 
@@ -80,9 +81,10 @@ class TranslateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $group_id)
     {
-        dd($request);
+        $this->updateTranslation($request->trans, $group_id, $request->type, $request->isChecked);
+        return redirect()->back()->withSuccess('Done!');
     }
 
     /**

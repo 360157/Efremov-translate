@@ -10,28 +10,36 @@ namespace Sashaef\TranslateProvider\Traits;
 use Sashaef\TranslateProvider\Models\Trans;
 use Sashaef\TranslateProvider\Models\TransData;
 use Sashaef\TranslateProvider\Models\Langs;
+use Sashaef\TranslateProvider\Models\Groups;
+use Illuminate\Support\Facades\Redis;
 
 trait Translations
 {
-    public function storeTranslation($key, $group_id)
+    public function storeTranslation($key, $group_id, $type)
     {
         $trans = Trans::postTrans($group_id, $key);
+        $groupKey = Groups::getGroupName($group_id);
         foreach (Langs::getLangs() as $lang) {
             TransData::postTransData($trans->id, $lang->id, 0);
+            Redis::set($type.':'.$groupKey.':'.$key.':'.$lang->id, '');
         }
     }
 
-    public function getTranslations($group_id)
+    public function getTranslations($group_id, $type)
     {
-        $trans = Trans::getByGroup($group_id);
 
+        $trans = Trans::getByGroup($group_id);
+        $groupKey = Groups::getGroupName($group_id);
         $transData = array();
         foreach ($trans as $value) {
             $transData[$value->id] = $value->data->toArray();
+            foreach ($transData[$value->id] as $k => $transArray) {
+                $transData[$value->id][$k]['key'] = $value->key;
+            }
         }
         foreach ($transData as $k => $value) {
             foreach ($value as $i => $item) {
-                $transData[$k][$i]['value'] = 'NULL';
+                $transData[$k][$i]['value'] = Redis::get($type.':'.$groupKey.':'.$transData[$k][$i]['key'].':'.$item['lang_id']);
             }
         }
 
@@ -39,5 +47,21 @@ trait Translations
             'trans' => $trans,
             'transData' => $transData
         ];
+    }
+
+    public function updateTranslation($translations, $group_id, $type, $isChecked)
+    {
+        $isChecked = array_keys($isChecked);
+        $groupKey = Groups::getGroupName($group_id);
+        foreach ($translations as $k => $trans) {
+            $transDbRow = Trans::getById($k);
+            foreach ($trans as $i => $word) {
+                Redis::set($type.':'.$groupKey.':'.$transDbRow->key.':'.$i, $word);
+            }
+            foreach ($transDbRow->data as $transData) {
+                $status = in_array($transData->id, $isChecked) ? 2 : 1;
+                TransData::updateStatus($transData->id, $status);
+            }
+        }
     }
 }

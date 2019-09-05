@@ -1,7 +1,18 @@
 @extends('vocabulare::layouts.main')
 
 @section('content')
+    <style>
+        .td-aproved{
+            background-color: #00FFAF;
+        }
+        .td-default{
+            background-color: #5D8AA8;
+        }
+        .td-warning{
+            background-color: #FF0000;
+        }
 
+    </style>
     <div class="panel panel-flat">
         <div class="panel-heading">
 
@@ -18,6 +29,7 @@
                                     <label>@lang('main.new_translation')</label>
                                     <input type="text" name="key" value="" class="form-control">
                                     <input type="hidden" name="group_id" value="{{ $group_id }}" class="form-control">
+                                    <input type="hidden" name="type" value="{{ $type }}" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -63,8 +75,10 @@
                 <tr>
                     <td>{{ $value->key }}</td>
                     @foreach($transData[$value->id] as $data)
-                    <td @if($data['status'] == 0) bgcolor="#FF0000" @elseif($data['status'] == 1) bgcolor="#00FF00" @endif>
-                        <input type="text" name="{{ $value->key.'['. $data['lang_id'] .']' }}" value="{{ $data['value'] }}" class="form-control">
+                    <td @if($data['status'] == 0) class="td-warning" @elseif($data['status'] == 1) class="td-default" @elseif($data['status'] == 2) class="td-aproved" @endif>
+                        <input type="text" name="{{ 'trans['.$value->id.']['. $data['lang_id'] .']' }}" value="{{ $data['value'] }}" class="form-control checkClass">
+                        <label class="custom-control-label" for="defaultUnchecked">Checked</label>
+                        <input name="isChecked[{{ $data['id'] }}]" type="checkbox" @if($data['status'] == 2) checked @endif>
                     </td>
                     @endforeach
                 </tr>
@@ -77,6 +91,18 @@
         </form>
     </div>
     <script type='text/javascript'>
+        const elements = document.querySelectorAll('input.checkClass');
+        elements.forEach(function(el) {
+           el.addEventListener('input', function(e) {
+               console.log('name: ' + e.target.name, 'new value: '+e.target.value);
+                const tdParent = e.target.parentNode;
+                tdParent.classList.remove('td-aproved');
+                tdParent.classList.add('td-default');
+                const checkbox = tdParent.querySelector("input[type='checkbox']");
+                checkbox.checked = false;
+               console.log( );
+           });
+        });
 
     </script>
 

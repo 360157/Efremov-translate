@@ -32,4 +32,9 @@ class Groups extends Model
     {
         return self::where('type', $type)->get();
     }
+
+    public static function getGroupName($id)
+    {
+        return self::where('id', $id)->value('name');
+    }
 }

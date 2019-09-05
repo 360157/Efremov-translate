@@ -33,6 +33,11 @@ class Trans extends Model
         return self::where('group_id', $group_id)->get();
     }
 
+    public static function getById($id)
+    {
+        return self::where('id', $id)->first();
+    }
+
     /*public static function getWithData()
     {
       //  return self::join('trans_data', 'trans.id', '=', 'trans_data.translation_id')->get();
