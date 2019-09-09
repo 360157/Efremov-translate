@@ -55,6 +55,22 @@
             </div>
         @endif
 
+        <form action="{{ route('translate.index') }}" method="get" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="hidden" name="id" value="{{ $group_id }}" class="form-control">
+                        <input type="hidden" name="type" value="{{ $type }}" class="form-control">
+                        <input type="hidden" name="isFilter" value="1" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary">@lang('main.filter')<i class="icon-arrow-right14 position-right"></i></button>
+            </div>
+        </form>
+
         <form id="translate" action="{{ route('translate.update', [ 'id' => $group_id ]) }}" method="post" enctype="multipart/form-data">
             {{ csrf_field() }}
             <input type="hidden" name="_method" value="PUT" />

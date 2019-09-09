@@ -24,6 +24,12 @@ trait Groups
 
     public function getGroups($type)
     {
-        return Model::getGroups($type);
+        $groups = Model::getGroups($type)->toArray();
+        foreach ($groups as $k => $group) {
+            $groups[$k]['trans'] = Model::getTransCount($group['id'], 'active');
+            $groups[$k]['not_trans'] = Model::getTransCount($group['id']);
+        }
+
+        return $groups;
     }
 }

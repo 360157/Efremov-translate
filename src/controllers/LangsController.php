@@ -16,10 +16,10 @@ class LangsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return view('vocabulare::pages.langs.index', [
-            'langs' => $this->getLangs()
+            'langs' => $this->getLangs($request->select)
         ]);
     }
 

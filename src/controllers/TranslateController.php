@@ -20,7 +20,7 @@ class TranslateController extends Controller
      */
     public function index(GetTranslationRequest $request)
     {
-        $data = $this->getTranslations($request->id, $request->type);
+        $data = $this->getTranslations($request->id, $request->type, $request->isFilter);
         return view('vocabulare::pages.trans.translations', [
             'group_id' => $request->id,
             'trans' => $data['trans'],

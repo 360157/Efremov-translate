@@ -37,4 +37,19 @@ class Groups extends Model
     {
         return self::where('id', $id)->value('name');
     }
+
+    public static function getTransCount($id, $status = null)
+    {
+        $orders = self::join('trans', 'groups.id', '=', 'trans.group_id')
+            ->join('trans_data', 'trans.id', '=', 'trans_data.translation_id')
+            ->where('groups.id', $id);
+        if (!is_null($status)) {
+            $orders = $orders->where('trans_data.status', 2);
+        } else {
+            $orders = $orders->where('trans_data.status', '!=',  2);
+        }
+        $orders = $orders->count();
+
+        return $orders;
+    }
 }

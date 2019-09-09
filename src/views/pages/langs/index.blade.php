@@ -30,6 +30,23 @@
                         </div>
                     </form>
                 </div>
+
+                <form action="{{ route('langs.index') }}" method="get" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Example select</label>
+                    <select name="select" class="form-control" id="exampleFormControlSelect1">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="notActive">Not active</option>
+                    </select>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary">@lang('main.filter')<i class="icon-arrow-right14 position-right"></i></button>
+                    </div>
+                </div>
+                </form>
+
+
                 <table class="table">
                     <thead>
                     <tr>
@@ -37,6 +54,8 @@
                         <th>@lang('main.index')</th>
                         <th>@lang('main.name')</th>
                         <th>@lang('main.isActive')</th>
+                        <th>@lang('main.created_at')</th>
+                        <th>@lang('main.updated_at')</th>
                         <th>@lang('main.actions')</th>
                     </tr>
                     </thead>
@@ -97,6 +116,8 @@
                             <td>{{ $value->index }}</td>
                             <td>{{ $value->name }}</td>
                             <td><input type="checkbox" name @if($value->is_active) checked @endif>{{ $value->is_active }}</td>
+                            <td>{{ $value->created_at }}</td>
+                            <td>{{ $value->updated_at }}</td>
                             <td class="text-center">
                                 <ul class="icons-list">
                                     <li class="dropdown">

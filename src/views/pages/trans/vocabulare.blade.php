@@ -35,6 +35,7 @@
             <tr>
                 <th>@lang('main.id')</th>
                 <th>@lang('main.group')</th>
+                <th>@lang('main.trans')/@lang('main.not_trans')</th>
                 <th>@lang('main.actions')</th>
             </tr>
             </thead>
@@ -53,9 +54,10 @@
                 </div>
             @endif
             @foreach($groups as $value)
-                <tr onclick="trClick({{ $value->id  }})">
-                    <td>{{ $value->id }}</td>
-                    <td>{{ $value->name }}</td>
+                <tr onclick="trClick({{ $value['id']  }})">
+                    <td>{{ $value['id'] }}</td>
+                    <td>{{ $value['name'] }}</td>
+                    <td>{{ $value['trans'] }}/{{ $value['not_trans'] }}</td>
                     <td class="text-center">
                         <ul class="icons-list">
                             <li class="dropdown">
@@ -65,12 +67,12 @@
 
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li>
-                                        <form id="destroy-form-{{ $value->id }}" action="{{ route('groups.destroy', ['id'=>$value->id]) }}" method="post" onsubmit="return submitForm()">
+                                        <form id="destroy-form-{{ $value['id'] }}" action="{{ route('groups.destroy', ['id'=>$value['id']]) }}" method="post" onsubmit="return submitForm()">
                                             <input type="hidden" name="_method" value="DELETE">
                                             {{ csrf_field() }}
                                             <button type="submit" class="btn btn-primary">@lang('main.delete') <i class="icon-arrow-right14 position-right"></i></button>
                                         </form>
-                                        <a onclick="$('#destroy-form-{{ $value->id }}').submit()"><i class="icon-trash"></i>@lang('main.delete')</a>
+                                        <a onclick="$('#destroy-form-{{ $value['id'] }}').submit()"><i class="icon-trash"></i>@lang('main.delete')</a>
                                     </li>
                                 </ul>
                             </li>

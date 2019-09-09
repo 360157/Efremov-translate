@@ -12,9 +12,20 @@ use Sashaef\TranslateProvider\Models\Langs as Model;
 
 trait Langs
 {
-    public function getLangs()
+    public function getLangs($select = null)
     {
-        return Model::getLangs();
+        switch ($select) {
+            case 'active':
+                $isActive = 1;
+                break;
+            case 'notActive':
+                $isActive = 0;
+                break;
+            default:
+                $isActive = null;
+                break;
+        }
+        return Model::getLangs($isActive);
     }
 
     public function postLang($name, $index)

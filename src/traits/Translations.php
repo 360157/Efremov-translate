@@ -25,7 +25,7 @@ trait Translations
         }
     }
 
-    public function getTranslations($group_id, $type)
+    public function getTranslations($group_id, $type, $isFilter)
     {
 
         $trans = Trans::getByGroup($group_id);
@@ -41,6 +41,10 @@ trait Translations
             foreach ($value as $i => $item) {
                 $transData[$k][$i]['value'] = Redis::get($type.':'.$groupKey.':'.$transData[$k][$i]['key'].':'.$item['lang_id']);
             }
+        }
+
+        if (!is_null( $isFilter)) {
+            $trans = $this->filterTrans($trans);
         }
 
         return [
@@ -63,5 +67,27 @@ trait Translations
                 TransData::updateStatus($transData->id, $status);
             }
         }
+    }
+
+    private function filterTrans($trans)
+    {
+        //$trans = $trans->toArray();
+        $withTrans = array();
+        $withoutTrans = array();
+        foreach ($trans as $value) {
+            $checkStatus = 0;
+            foreach ($value->data as $data) {
+                if ( $data->status != 2) {
+                    $checkStatus++;
+                }
+            }
+            if ( $checkStatus == 0) {
+                $withTrans[] = $value;
+            } else {
+                $withoutTrans[] = $value;
+            }
+        }
+
+        return array_merge($withoutTrans, $withTrans);
     }
 }
