@@ -15,7 +15,7 @@ class Langs extends Model
         return $this->hasMany(TransData::class);
     }
 
-    public static function getLangs($isActive)
+    public static function getLangs($isActive = null)
     {
         if (!is_null($isActive)) {
             $result = self::where('is_active', $isActive)->get();
@@ -28,7 +28,7 @@ class Langs extends Model
 
     public static function postLangs($name, $index)
     {
-        self::create([
+        return self::create([
             'name' => $name,
             'index' => $index
         ]);

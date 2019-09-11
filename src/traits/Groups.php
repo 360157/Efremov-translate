@@ -32,4 +32,10 @@ trait Groups
 
         return $groups;
     }
+
+    public function getAllGroups()
+    {
+        return Model::getAllGroups();
+    }
+
 }

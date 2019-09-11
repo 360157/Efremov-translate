@@ -9,9 +9,14 @@
 namespace Sashaef\TranslateProvider\Traits;
 
 use Sashaef\TranslateProvider\Models\Langs as Model;
+use Sashaef\TranslateProvider\Traits\Groups;
+use Sashaef\TranslateProvider\Models\TransData;
+use Illuminate\Support\Facades\Redis;
 
 trait Langs
 {
+    use Groups;
+
     public function getLangs($select = null)
     {
         switch ($select) {
@@ -30,7 +35,14 @@ trait Langs
 
     public function postLang($name, $index)
     {
-        Model::postLangs($name, $index);
+        $lang = Model::postLangs($name, $index);
+        $groups = $this->getAllGroups();
+        foreach ($groups as $group) {
+            foreach ($group->trans as $trans) {
+                TransData::postTransData($trans->id, $lang->id, 0);
+                Redis::set($group->type.':'.$group->name.':'.$trans->key.':'.$lang->id, '');
+            }
+        }
     }
 
     public function updateLang($id, $name, $index, $isActive)
@@ -43,4 +55,6 @@ trait Langs
     {
         Model::deleteLangs($id);
     }
+
+
 }

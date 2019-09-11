@@ -69,9 +69,17 @@ trait Translations
         }
     }
 
+    public function getTransByKey($keys)
+    {
+        $response = array();
+        foreach ($keys as $key) {
+            $response[$key] = Redis::get($key);
+        }
+        return $response;
+    }
+
     private function filterTrans($trans)
     {
-        //$trans = $trans->toArray();
         $withTrans = array();
         $withoutTrans = array();
         foreach ($trans as $value) {

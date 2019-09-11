@@ -12,7 +12,7 @@ class Groups extends Model
 
     public function trans()
     {
-        return $this->hasMany(Trans::class);
+        return $this->hasMany(Trans::class, 'group_id');
     }
 
     public static function storeGroup($name, $type)
@@ -31,6 +31,11 @@ class Groups extends Model
     public static function getGroups($type)
     {
         return self::where('type', $type)->get();
+    }
+
+    public static function getAllGroups()
+    {
+        return self::get();
     }
 
     public static function getGroupName($id)

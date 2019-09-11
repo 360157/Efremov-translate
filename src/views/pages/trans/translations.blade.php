@@ -91,7 +91,7 @@
                 <tr>
                     <td>{{ $value->key }}</td>
                     @foreach($transData[$value->id] as $data)
-                    <td @if($data['status'] == 0) class="td-warning" @elseif($data['status'] == 1) class="td-default" @elseif($data['status'] == 2) class="td-aproved" @endif>
+                    <td @if($data['status'] == 0 || $data['value'] == '') class="td-warning" @elseif($data['status'] == 1) class="td-default" @elseif($data['status'] == 2) class="td-aproved" @endif>
                         <input type="text" name="{{ 'trans['.$value->id.']['. $data['lang_id'] .']' }}" value="{{ $data['value'] }}" class="form-control checkClass">
                         <label class="custom-control-label" for="defaultUnchecked">Checked</label>
                         <input name="isChecked[{{ $data['id'] }}]" type="checkbox" @if($data['status'] == 2) checked @endif>

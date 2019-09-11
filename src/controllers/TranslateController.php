@@ -58,9 +58,9 @@ class TranslateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        return response()->json($this->getTransByKey($request->keys));
     }
 
     /**

@@ -39,7 +39,8 @@ class GroupsController extends Controller
     public function store(GroupsStoreRequest $request)
     {
         $this->storeGroup($request->name, $request->type);
-        return redirect()->route('groups.mainInterface')->withSuccess('Updated!');
+        $route = ($request->type == 'interface') ? 'groups.mainInterface' : 'groups.mainSystems';
+        return redirect()->route($route)->withSuccess('Updated!');
     }
 
     /**
