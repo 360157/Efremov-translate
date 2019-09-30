@@ -10,7 +10,7 @@
                "package":{
    
                    "name":"sashaef/translateprovider",
-                   "version": "master",
+                   "version": "dev-master",
                    "source":{
                        "type":"git",
                        "url":"ssh://git@95.211.204.15:8415/esv2/translateprovider.git",
@@ -25,7 +25,7 @@
  ```bash
  "require": {
             ...,
-            "sashaef/translateprovider": "master"
+            "sashaef/translateprovider": "dev-master"
         },     
   ```       
 -- Than run composer install and composer update        
