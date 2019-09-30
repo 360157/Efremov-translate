@@ -14,8 +14,8 @@ class AddForeignKeysToTransDataTable extends Migration
     public function up()
     {
         Schema::table('trans_data', function (Blueprint $table) {
-            $table->foreign('translation_id')->references('id')->on('trans');
-            $table->foreign('lang_id')->references('id')->on('langs');
+            $table->foreign('translation_id')->references('id')->on('trans')->onDelete('cascade');
+            $table->foreign('lang_id')->references('id')->on('langs')->onDelete('cascade');
         });
     }
 

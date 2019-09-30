@@ -55,7 +55,7 @@ trait Translations
 
     public function updateTranslation($translations, $group_id, $type, $isChecked)
     {
-        $isChecked = array_keys($isChecked);
+        $isChecked = is_null($isChecked) ? [] : array_keys($isChecked);
         $groupKey = Groups::getGroupName($group_id);
         foreach ($translations as $k => $trans) {
             $transDbRow = Trans::getById($k);
@@ -72,8 +72,10 @@ trait Translations
     public function getTransByKey($keys)
     {
         $response = array();
-        foreach ($keys as $key) {
-            $response[$key] = Redis::get($key);
+        if (isset($keys)) {
+            foreach ($keys as $key) {
+                $response[$key] = Redis::get($key);
+            }
         }
         return $response;
     }

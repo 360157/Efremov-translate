@@ -22,6 +22,23 @@
 
         <div class="content-wrapper">
             <div class="content">
+                <li>
+                    <a href="{{ route('langs.index') }}">
+                        <span>@lang('main.langs')</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('groups.mainInterface') }}">
+                        <span>@lang('main.interface-trans')</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('groups.mainSystems') }}">
+                        <span>@lang('main.system-trans')</span>
+                    </a>
+                </li>
             @yield('content')
             </div>
         </div>

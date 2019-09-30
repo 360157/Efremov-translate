@@ -14,7 +14,7 @@ class AddForeignKeysToTransTable extends Migration
     public function up()
     {
         Schema::table('trans', function (Blueprint $table) {
-            $table->foreign('group_id')->references('id')->on('groups');
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });
     }
 
