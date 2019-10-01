@@ -38,8 +38,8 @@ class Trans extends Model
         return self::where('id', $id)->first();
     }
 
-    /*public static function getWithData()
+    public static function getTransCount($group_id, $key)
     {
-      //  return self::join('trans_data', 'trans.id', '=', 'trans_data.translation_id')->get();
-    }*/
+        return self::where('group_id', $group_id)->where('key', $key)->count();
+    }
 }

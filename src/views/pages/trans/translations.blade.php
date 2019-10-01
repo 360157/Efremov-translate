@@ -71,6 +71,23 @@
             </div>
         </form>
 
+        <form action="{{ route('translate.index') }}" method="get" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{ $group_id }}" class="form-control">
+            <input type="hidden" name="type" value="{{ $type }}" class="form-control">
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Lang select</label>
+                <select name="lang_id" class="form-control" id="exampleFormControlSelect1">
+                    <option value="all">All</option>
+                    @foreach($all_langs as $lang)
+                        <option value="{{ $lang->id }}">{{ $lang->name }}</option>
+                    @endforeach
+                </select>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">@lang('main.filter')<i class="icon-arrow-right14 position-right"></i></button>
+                </div>
+            </div>
+        </form>
+
         <form id="translate" action="{{ route('translate.update', [ 'id' => $group_id ]) }}" method="post" enctype="multipart/form-data">
             {{ csrf_field() }}
             <input type="hidden" name="_method" value="PUT" />
@@ -103,7 +120,7 @@
         </table>
             {{ $trans->links() }}
             <div class="text-right">
-                <button type="submit" class="btn btn-primary">@lang('main.create')<i class="icon-arrow-right14 position-right"></i></button>
+                <button type="submit" class="btn btn-primary">@lang('main.update')<i class="icon-arrow-right14 position-right"></i></button>
             </div>
         </form>
     </div>

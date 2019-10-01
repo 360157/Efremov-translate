@@ -33,6 +33,11 @@ trait Langs
         return Model::getLangs($isActive);
     }
 
+    public function getLangsById($lang_id = null)
+    {
+        return Model::getLangsById($lang_id);
+    }
+
     public function postLang($name, $index)
     {
         $lang = Model::postLangs($name, $index);

@@ -43,6 +43,11 @@ class Groups extends Model
         return self::where('id', $id)->value('name');
     }
 
+    public static function getGroupCount($name, $type)
+    {
+        return self::where('name', $name)->where('type', $type)->count();
+    }
+
     public static function getTransCount($id, $status = null)
     {
         $orders = self::join('trans', 'groups.id', '=', 'trans.group_id')

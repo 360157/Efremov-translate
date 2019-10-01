@@ -14,6 +14,10 @@ trait Groups
 {
     public function storeGroup($name, $type)
     {
+        if (Model::getGroupCount($name, $type) > 0) {
+            return redirect()->back()->withErrors('Duplicate group');
+        }
+
         Model::storeGroup($name, $type);
     }
 
@@ -37,5 +41,4 @@ trait Groups
     {
         return Model::getAllGroups();
     }
-
 }

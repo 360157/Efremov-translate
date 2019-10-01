@@ -3,6 +3,7 @@
 namespace Sashaef\TranslateProvider\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Sashaef\TranslateProvider\Models\Groups;
 
 class GroupsStoreRequest extends FormRequest
 {
@@ -23,6 +24,7 @@ class GroupsStoreRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
             'name' => 'required|string|max:191',
             'type' => 'required|string|max:191'

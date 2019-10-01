@@ -20,6 +20,9 @@ trait Translations
 {
     public function storeTranslation($key, $group_id, $type)
     {
+        if ( Trans::getTransCount($group_id, $key) > 0) {
+            return redirect()->back()->withErrors('Duplicate keys');
+        }
         $trans = Trans::postTrans($group_id, $key);
         $groupKey = Groups::getGroupName($group_id);
         foreach (Langs::getLangs() as $lang) {
@@ -28,18 +31,23 @@ trait Translations
         }
     }
 
-    public function getTranslations($group_id, $type, $isFilter)
+    public function getTranslations($group_id, $type, $isFilter, $lang_id)
     {
-
         $trans = Trans::getByGroup($group_id);
         $groupKey = Groups::getGroupName($group_id);
         $transData = array();
         foreach ($trans as $value) {
-            $transData[$value->id] = $value->data->toArray();
+            if (is_null($lang_id) || $lang_id == 'all') {
+                $transData[$value->id] = $value->data->toArray();
+            } else {
+                $transCollection = $value->data->where('lang_id',2);
+                $transData[$value->id] = $transCollection->toArray();
+            }
             foreach ($transData[$value->id] as $k => $transArray) {
                 $transData[$value->id][$k]['key'] = $value->key;
             }
         }
+
         foreach ($transData as $k => $value) {
             foreach ($value as $i => $item) {
                 $transData[$k][$i]['value'] = Redis::get($type.':'.$groupKey.':'.$transData[$k][$i]['key'].':'.$item['lang_id']);
@@ -50,7 +58,7 @@ trait Translations
             $trans = $this->filterTrans($trans);
         }
 
-        $trans = $this->paginate($trans, 1);
+        $trans = $this->paginate($trans, 20);
 
         return [
             'trans' => $trans,
@@ -61,6 +69,7 @@ trait Translations
     public function updateTranslation($translations, $group_id, $type, $isChecked)
     {
         $isChecked = is_null($isChecked) ? [] : array_keys($isChecked);
+        $translations = is_null($translations) ? [] : $translations;
         $groupKey = Groups::getGroupName($group_id);
         foreach ($translations as $k => $trans) {
             $transDbRow = Trans::getById($k);

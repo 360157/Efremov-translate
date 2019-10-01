@@ -20,12 +20,13 @@ class TranslateController extends Controller
      */
     public function index(GetTranslationRequest $request)
     {
-        $data = $this->getTranslations($request->id, $request->type, $request->isFilter);
+        $data = $this->getTranslations($request->id, $request->type, $request->isFilter, $request->lang_id);
         return view('vocabulare::pages.trans.translations', [
             'group_id' => $request->id,
             'trans' => $data['trans'],
             'transData' => $data['transData'],
-            'langs' => $this->getLangs(),
+            'langs' => $this->getLangsById($request->lang_id),
+            'all_langs' => $this->getLangs(),
             'type' => $request->type
         ]);
     }
@@ -96,5 +97,10 @@ class TranslateController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function filterLang()
+    {
+
     }
 }

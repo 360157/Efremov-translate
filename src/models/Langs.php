@@ -26,6 +26,17 @@ class Langs extends Model
         return $result;
     }
 
+    public static function getLangsById($lang_id = null)
+    {
+        if (is_null($lang_id) || $lang_id == 'all') {
+            $result = self::get();
+        } else {
+            $result = self::where('id', $lang_id)->get();
+        }
+
+        return $result;
+    }
+
     public static function postLangs($name, $index)
     {
         return self::create([

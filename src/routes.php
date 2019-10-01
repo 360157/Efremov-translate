@@ -12,5 +12,6 @@ Route::resource('langs', 'Sashaef\TranslateProvider\Controllers\LangsController'
 Route::get('interface-trans', 'Sashaef\TranslateProvider\Controllers\GroupsController@showInterface')->name('groups.mainInterface');
     Route::get('system-trans', 'Sashaef\TranslateProvider\Controllers\GroupsController@showSystem')->name('groups.mainSystems');
     Route::get('translate/show', 'Sashaef\TranslateProvider\Controllers\GroupsController@showSystem');
+    Route::get('translate/langs', 'Sashaef\TranslateProvider\Controllers\TranslateController@filterLang')->name('translate.lang');;
 
 });
