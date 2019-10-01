@@ -101,6 +101,7 @@
             @endforeach
             </tbody>
         </table>
+            {{ $trans->links() }}
             <div class="text-right">
                 <button type="submit" class="btn btn-primary">@lang('main.create')<i class="icon-arrow-right14 position-right"></i></button>
             </div>

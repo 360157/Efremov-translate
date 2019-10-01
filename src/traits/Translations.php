@@ -12,6 +12,9 @@ use Sashaef\TranslateProvider\Models\TransData;
 use Sashaef\TranslateProvider\Models\Langs;
 use Sashaef\TranslateProvider\Models\Groups;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Collection;
 
 trait Translations
 {
@@ -46,6 +49,8 @@ trait Translations
         if (!is_null( $isFilter)) {
             $trans = $this->filterTrans($trans);
         }
+
+        $trans = $this->paginate($trans, 1);
 
         return [
             'trans' => $trans,
@@ -99,5 +104,18 @@ trait Translations
         }
 
         return array_merge($withoutTrans, $withTrans);
+    }
+
+    public function paginate($items, $perPage,$setDefaultOption = true, $options = [])
+    {
+        if($setDefaultOption){
+            $options = ['path' => request()->url(), 'query' => request()->query()];
+        }
+        $page = Input::get('page', 1); // Get the current page or default to 1
+
+
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 }
