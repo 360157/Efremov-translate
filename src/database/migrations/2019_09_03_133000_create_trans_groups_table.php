@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTransDataTable extends Migration
+class CreateTransGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateTransDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('trans_data', function (Blueprint $table) {
+        Schema::create('trans_groups', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('translation_id')->unsigned();
-            $table->bigInteger('lang_id')->unsigned();
-            $table->text('translation')->nullable();
-            $table->integer('status')->default(1);
+            $table->string('name');
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateTransDataTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trans_data');
+        Schema::dropIfExists('trans_groups');
     }
 }

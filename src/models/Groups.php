@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Groups extends Model
 {
-    protected $table = 'groups';
+    protected $table = 'trans_groups';
 
     protected $fillable = ['name', 'type'];
 
@@ -45,9 +45,9 @@ class Groups extends Model
 
     public static function getTransCount($id, $status = null)
     {
-        $orders = self::join('trans', 'groups.id', '=', 'trans.group_id')
+        $orders = self::join('trans', 'trans_groups.id', '=', 'trans.group_id')
             ->join('trans_data', 'trans.id', '=', 'trans_data.translation_id')
-            ->where('groups.id', $id);
+            ->where('trans_groups.id', $id);
         if (!is_null($status)) {
             $orders = $orders->where('trans_data.status', 2);
         } else {

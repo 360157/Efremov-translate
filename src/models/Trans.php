@@ -10,6 +10,8 @@ class Trans extends Model
 
     protected $fillable = ['group_id', 'key'];
 
+    protected $perPage = 10;
+
     public function group()
     {
         return $this->belongsTo(Groups::class);
@@ -17,12 +19,12 @@ class Trans extends Model
 
     public function data()
     {
-        return $this->hasMany(TransData::class, 'translation_id');
+        return $this->hasMany(TransData::class, 'translation_id')->orderBy('lang_id');
     }
 
     public static function postTrans($group_id, $key)
     {
-        return self::create([
+        return self::firstOrCreate([
             'group_id' => $group_id,
             'key' => $key
         ]);

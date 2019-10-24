@@ -54,9 +54,9 @@
                 </div>
             @endif
             @foreach($groups as $value)
-                <tr onclick="trClick({{ $value['id']  }})">
+                <tr>
                     <td>{{ $value['id'] }}</td>
-                    <td>{{ $value['name'] }}</td>
+                    <td><a href="{{ route('translates.show', ['type' => 'interface', 'id' => $value['id']]) }}">{{ $value['name'] }}</a></td>
                     <td>{{ $value['trans'] }}/{{ $value['not_trans'] }}</td>
                     <td class="text-center">
                         <ul class="icons-list">
@@ -82,15 +82,8 @@
             @endforeach
             </tbody>
     </div>
-    <form id="transForm" action="{{ route('translate.index') }}" method="get" enctype="multipart/form-data">
+    <form id="transForm" action="{{ route('translates.index') }}" method="get" enctype="multipart/form-data">
         <input type="hidden" name="type" value="{{ $type }}" class="form-control">
         <input id="group_id" type="hidden" name="id" value="" class="form-control">
     </form>
-    <script type='text/javascript'>
-        function trClick(id){
-            $("#group_id").attr("value", id);
-            document.getElementById("transForm").submit();
-        }
-    </script>
-
 @endsection

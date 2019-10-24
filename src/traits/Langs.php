@@ -21,10 +21,10 @@ trait Langs
     {
         switch ($select) {
             case 'active':
-                $isActive = 1;
+                $isActive = true;
                 break;
             case 'notActive':
-                $isActive = 0;
+                $isActive = false;
                 break;
             default:
                 $isActive = null;

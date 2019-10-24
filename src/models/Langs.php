@@ -17,13 +17,11 @@ class Langs extends Model
 
     public static function getLangs($isActive = null)
     {
-        if (!is_null($isActive)) {
-            $result = self::where('is_active', $isActive)->get();
-        } else {
-            $result = self::get();
-        }
+        $result = self::query();
+        if (!is_null($isActive)) {$result->where('is_active', $isActive);}
 
-        return $result;
+        return $result->orderBy('id')
+            ->get();
     }
 
     public static function postLangs($name, $index)

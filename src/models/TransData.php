@@ -8,7 +8,7 @@ class TransData extends Model
 {
     protected $table = 'trans_data';
 
-    protected $fillable = ['translation_id', 'lang_id', 'status'];
+    protected $fillable = ['translation_id', 'lang_id', 'translation', 'status'];
 
     public function trans()
     {
@@ -20,11 +20,14 @@ class TransData extends Model
         return $this->belongsTo(Langs::class);
     }
 
-    public static function postTransData($trans_id, $lang_id, $status)
+    public static function postTransData($trans_id, $lang_id, $translation, $status)
     {
-        return self::create([
+        return self::updateOrCreate([
             'translation_id' => $trans_id,
             'lang_id' => $lang_id,
+        ], [
+
+            'translation' => $translation,
             'status' => $status
         ]);
     }

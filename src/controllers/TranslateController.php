@@ -4,31 +4,53 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Sashaef\TranslateProvider\Requests\GetTranslationRequest;
+use Sashaef\TranslateProvider\Models\Trans;
 use Sashaef\TranslateProvider\Requests\TransStoreRequest;
-use Sashaef\TranslateProvider\Traits\Langs as LangModel;
-use Sashaef\TranslateProvider\Models\Langs;
+use Sashaef\TranslateProvider\Traits\Langs as LangTrait;
 use Sashaef\TranslateProvider\Traits\Translations;
+use Sashaef\TranslateProvider\Resources\TransResource;
 
 class TranslateController extends Controller
 {
-    use Translations, LangModel;
+    use Translations, LangTrait;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(GetTranslationRequest $request)
+    public function index(Request $request)
     {
-        $data = $this->getTranslations($request->id, $request->type, $request->isFilter);
-        return view('vocabulare::pages.trans.translations', [
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        return view('vocabulare::pages.trans.index', [
             'group_id' => $request->id,
-            'trans' => $data['trans'],
-            'transData' => $data['transData'],
-            'langs' => $this->getLangs(),
-            'type' => $request->type
+            'type' => $request->type,
+            'langs' => $this->getLangs()
         ]);
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\ResourceCollection
+     */
+    public function list(Request $request)
+    {
+        $data = $this->getTranslations($request->filter);
+
+        return TransResource::collection($data);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -48,19 +70,19 @@ class TranslateController extends Controller
      */
     public function store(TransStoreRequest $request)
     {
-        $this->storeTranslation($request->key, $request->group_id, $request->type);
-        return redirect()->back()->withSuccess('Done!');
-    }
+        if ($this->storeTranslation($request->type, $request->group_id, $request->key, $request->translates, $request->statuses)) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'The translation has created!'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The key is already exists!'
+            ], 200);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request)
-    {
-        return response()->json($this->getTransByKey($request->keys));
+        return redirect()->back()->withSuccess('Done!');
     }
 
     /**
@@ -81,10 +103,35 @@ class TranslateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $group_id)
+    public function update(Request $request)
     {
-        $this->updateTranslation($request->trans, $group_id, $request->type, $request->isChecked);
-        return redirect()->back()->withSuccess('Done!');
+        if ($request->obj === 'key') {
+            if (self::updateKey($request->id, $request->value)) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'The key has updated!'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'The key has not updated!'
+                ], 200);
+            }
+        }
+
+        if ($request->obj === 'translation') {
+            if (self::updateTranslation($request->type, $request->group_id, $request->key, $request->lang, $request->all())) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'The translation has updated!'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'The translation has not updated!'
+                ], 200);
+            }
+        }
     }
 
     /**
