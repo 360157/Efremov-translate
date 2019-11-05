@@ -20,7 +20,18 @@ class TranslateController extends Controller
      */
     public function index(Request $request)
     {
+        if (empty($request->type) || empty($request->id)) {
+            return redirect()
+                ->route('translate.groups.type', ['type' => 'interface'])
+                ->withError('The type or the group is missing!');
+        }
 
+        return view('vocabulare::pages.trans.index', [
+            'group_id' => $request->id,
+            'type' => $request->type,
+            'langs' => $this->getLangs(),
+            'trans' => $this->getTranslations($request->filter)
+       ]);
     }
 
     /**
@@ -31,11 +42,7 @@ class TranslateController extends Controller
      */
     public function show(Request $request)
     {
-        return view('vocabulare::pages.trans.index', [
-            'group_id' => $request->id,
-            'type' => $request->type,
-            'langs' => $this->getLangs()
-        ]);
+        //
     }
 
     /**
@@ -50,7 +57,6 @@ class TranslateController extends Controller
 
         return TransResource::collection($data);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -70,19 +76,16 @@ class TranslateController extends Controller
      */
     public function store(TransStoreRequest $request)
     {
-        if ($this->storeTranslation($request->type, $request->group_id, $request->key, $request->translates, $request->statuses)) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'The translation has created!'
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'The key is already exists!'
-            ], 200);
-        }
+        if ($this->storeTranslation($request->type, $request->group_id, $request->key, $request->description, $request->translates, $request->statuses)) {
 
-        return redirect()->back()->withSuccess('Done!');
+            return redirect()
+                ->route('translate.translates.index', ['type' => $request->type, 'group_id' => $request->group_id])
+                ->withSuccess('The key "'.$request->key.'" has created!');
+        } else {
+            return redirect()
+                ->route('translate.translates.index', ['type' => $request->type, 'group_id' => $request->group_id])
+                ->withError('The key "'.$request->key.'" is already exists!');
+        }
     }
 
     /**
@@ -106,7 +109,7 @@ class TranslateController extends Controller
     public function update(Request $request)
     {
         if ($request->obj === 'key') {
-            if (self::updateKey($request->id, $request->value)) {
+            if (self::updateKey($request->id, $request->key, $request->description)) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'The key has updated!'

@@ -3,6 +3,7 @@
 namespace Sashaef\TranslateProvider\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Sashaef\TranslateProvider\Traits\Groups;
 use App\Http\Controllers\Controller;
 use Sashaef\TranslateProvider\Requests\GroupsStoreRequest;
@@ -13,11 +14,15 @@ class GroupsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param string $type
+     * @return View
      */
-    public function index()
+    public function index($type = 'interface')
     {
-        //
+        return view('vocabulare::pages.groups.index', [
+            'type' => $type,
+            'groups' => $this->getGroups($type)
+        ]);
     }
 
     /**
@@ -39,8 +44,10 @@ class GroupsController extends Controller
     public function store(GroupsStoreRequest $request)
     {
         $this->storeGroup($request->name, $request->type);
-        $route = ($request->type == 'interface') ? 'groups.mainInterface' : 'groups.mainSystems';
-        return redirect()->route($route)->withSuccess('Updated!');
+
+        return redirect()
+            ->route('translate.groups.type', ['type' => $request->type])
+            ->withSuccess('The group has created!');
     }
 
     /**
@@ -74,7 +81,14 @@ class GroupsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->updateGroup(
+            $request->id,
+            $request->name
+        );
+
+        return redirect()
+            ->route('translate.groups.type', ['type' => $request->type])
+            ->withSuccess('The group has updated!');
     }
 
     /**
@@ -85,23 +99,12 @@ class GroupsController extends Controller
      */
     public function destroy($id)
     {
-        $this->deleteGroup($id);
-        return redirect()->route('groups.mainInterface')->withSuccess('Updated!');
-    }
+        $response = $this->deleteGroup($id);
 
-    public function showInterface()
-    {
-        return view('vocabulare::pages.trans.vocabulare', [
-            'type' => 'interface',
-            'groups' => $this->getGroups('interface')
-        ]);
-    }
-
-    public function showSystem()
-    {
-        return view('vocabulare::pages.trans.vocabulare', [
-            'type' => 'system',
-            'groups' => $this->getGroups('system')
-        ]);
+        if ($response['status'] === 'success') {
+            return redirect()->route('translate.groups.index')->withSuccess($response['message']);
+        } else {
+            return redirect()->route('translate.groups.index')->withError($response['message']);
+        }
     }
 }

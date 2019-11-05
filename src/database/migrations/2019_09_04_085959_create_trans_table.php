@@ -16,7 +16,8 @@ class CreateTransTable extends Migration
         Schema::create('trans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('group_id')->unsigned();
-            $table->string('key')->nullable();
+            $table->string('key');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

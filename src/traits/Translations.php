@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Redis;
 
 trait Translations
 {
-    public function storeTranslation($type, $group_id, $key, $translates, $statuses)
+    public function storeTranslation($type, $group_id, $key, $description, $translates, $statuses)
     {
         $groupKey = Groups::getGroupName($group_id);
 
-        $trans = Trans::postTrans($group_id, $key);
+        $trans = Trans::createKey($group_id, $key, $description);
 
         if ($trans->wasRecentlyCreated) {
             foreach (Langs::getLangs() as $lang) {
@@ -109,11 +109,11 @@ trait Translations
         return array_merge($withoutTrans, $withTrans);
     }
 
-    function updateKey($id, $value)
+    function updateKey($id, $value, $description)
     {
         $trans = Trans::find($id);
 
-        return $trans->update(['key' => $value]);
+        return $trans->update(['key' => $value, 'description' => $description]);
     }
 
     function updateTranslation($type, $group_id, $key, $lang, $inputs)

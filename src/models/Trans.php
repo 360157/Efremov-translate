@@ -8,9 +8,9 @@ class Trans extends Model
 {
     protected $table = 'trans';
 
-    protected $fillable = ['group_id', 'key'];
+    protected $fillable = ['group_id', 'key', 'description'];
 
-    protected $perPage = 10;
+    protected $perPage = 20;
 
     public function group()
     {
@@ -22,11 +22,15 @@ class Trans extends Model
         return $this->hasMany(TransData::class, 'translation_id')->orderBy('lang_id');
     }
 
-    public static function postTrans($group_id, $key)
+    public static function createKey($group_id, $key, $description = null)
     {
         return self::firstOrCreate([
             'group_id' => $group_id,
             'key' => $key
+        ], [
+            'group_id' => $group_id,
+            'key' => $key,
+            'description' => $description
         ]);
     }
 
@@ -39,9 +43,4 @@ class Trans extends Model
     {
         return self::where('id', $id)->first();
     }
-
-    /*public static function getWithData()
-    {
-      //  return self::join('trans_data', 'trans.id', '=', 'trans_data.translation_id')->get();
-    }*/
 }

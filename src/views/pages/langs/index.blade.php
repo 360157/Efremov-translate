@@ -1,163 +1,301 @@
 @extends('vocabulare::layouts.main')
 
 @section('content')
+    <style>
+        .panel{
+            background-color: #fff;
+            border-radius: 4px;
+        }
+        .panel-heading {
+            height: 40px;
+            border-bottom: 1px solid #E8EBED;
+            padding: 0 30px;
+            margin-bottom: 42px;
+        }
+        .panel-title {
+            font: 400 14px/40px Roboto;
+        }
+        .panel-content {
+            padding: 0 30px;
+        }
+        label {
+            padding-left: 7px;
+        }
+        .form-control {
+            height: 30px;
+            border: 1px solid #E5E5E5;
+            padding: 4px 7px;
+            font: 300 14px/19px Roboto;
+        }
+        .form-control::placeholder {
+            color: #E5E5E5;
+        }
+        .select {
+            width: calc(100% - 124px - 15px);
+        }        
+        .btn {
+            width: 124px;
+            height: 30px;
+            position: absolute;
+            bottom: 0;
+            right: 15px;
+            border-radius: 15px;
+            background: #5670FF;
+            padding: 0;
+        }
+        .table th {
+            border: none;
+        }
+        .table thead th {
+            border-bottom: 1px solid #E8EBED;
+            font: 400 14px/19px Roboto;
+            text-align: left;
+            max-width: 25%;
+        }
+        .table tbody tr td {
+            height: 48px;
+            font: 300 14px/19px Roboto;
+            text-align: left;
+            max-width: 25%;
+        }
+        td {
+            overflow-y: hidden;
+        }
+        th:last-child, td:last-child{
+            text-align: right !important;
+        }
+        .dropdown {
+            overflow-y: visible;
+        }
+        .icons-list {
+            padding: 0;
+            margin: 0;
+            padding-right: 17px;
+            list-style: none;
+            text-align: right;
+        }
 
+
+        .modal-dialog {
+            margin-top: 283px;
+            width: 500px;
+        }
+        .modal-dialog .col-md-6 {
+            padding: 5px;
+        }
+        .modal-header {
+            height: 45px;
+            padding-left: 29px;
+            padding-right: 15px;
+        }
+        .modal-title {
+            font: 500 18px/24px Roboto;
+        }
+        .close {
+            border-radius: 50%;
+            width: 17px;
+            height: 17px;
+            padding: 0 !important;
+            margin: 0 !important;
+            background-color: #F3F5F6!important;
+            line-height: 16px !important;
+            color: #fff;
+            position: relative;
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 1;
+            outline: none;
+        }
+        .close:after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 7px;
+            height: 7px;
+            background: url("/img/close.svg");
+        }
+        .modal-body {
+            height: 190px;
+            padding: 15px 29px 30px 29px;
+        }
+        .modal-body .btn {
+            position: relative;
+            right: 0;
+            margin: 0 auto;
+        }
+        .row {
+            padding: 0 -5px;
+        }
+
+        td {
+            overflow-y: hidden;
+        }
+        .dropdown {
+            overflow-y: visible;
+        }
+        .dropdown-menu {
+            padding: 0;
+            border-radius: 4px;
+            border: none;
+            -moz-box-shadow: 0px 1px 2px #939292;
+            -webkit-box-shadow: 0px 1px 2px #939292;
+            box-shadow: 0px 1px 2px #939292;
+        }
+        .dropdown-menu li {
+            height: 37px;
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .dropdown-menu li:hover {
+            background: #E8EBED;
+        }
+        th:last-child, td:last-child{
+            text-align: right !important;
+        }
+        .dropdown-toggle {
+            position: absolute;
+            top: 19px;
+            right: 12px;
+            width: 12px;
+            height: 7px;
+            background: url("/img/arrow.svg") no-repeat;
+            cursor: pointer;
+        }
+        .dropdown-toggle::after {
+            display: none;
+        }
+        .form .delete-text {
+            line-height: 100%;
+            -webkit-appearance: none;
+        }
+        .delete-text {
+            line-height: 100%;
+            -webkit-appearance: none;
+            background: transparent;
+            border: none;
+            font: 300 14px/19px Roboto;
+            outline: none;
+        }
+        .delete-icon {
+            width: 18px;
+            height: 21px;
+            margin-right: 12px;
+            background: url("/img/delete.svg") no-repeat;
+        }
+        .edit-icon {
+            width: 16px;
+            height: 17px;
+            margin-right: 12px;
+            background: url("/img/edit.svg") no-repeat;
+        }
+        #isActiveCheck {
+            margin: 0;
+            width: 27px;
+            position: relative;
+        }
+        #isActiveCheck:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: 0;
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            border: 2px solid #6E6E6E;
+            background: #fff;
+        }
+        #isActiveCheck:checked:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: 0;
+            width: 27px;
+            height: 27px;
+            border: none;
+            background: url("/img/isActive.svg") no-repeat;
+        }
+    </style>
     <div class="panel panel-flat">
         <div class="panel-heading">
-
             <h5 class="panel-title">Langs</h5>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel-body">
-                    <form action="{{ route('langs.store') }}" method="post" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>@lang('main.name')</label>
-                                    <input type="text" name="name" value="" class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label>@lang('main.index')</label>
-                                    <input type="text" name="index" value="" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-primary">@lang('main.create')<i class="icon-arrow-right14 position-right"></i></button>
-                        </div>
-                    </form>
-                </div>
-
-                <form action="{{ route('langs.index') }}" method="get" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                <div class="form-group">
+        <div class="panel-content">
+            <div class="panel-body">
+                @include('vocabulare::pages.langs.create')
+            </div>
+            <form action="{{ route('translate.langs.index') }}" method="get" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <div class="row">
+                <div class="form-group col-md-5">
                     <label for="exampleFormControlSelect1">Example select</label>
-                    <select name="select" class="form-control" id="exampleFormControlSelect1">
-                        <option value="all">All</option>
-                        <option value="active">Active</option>
-                        <option value="notActive">Not active</option>
+                    <select name="isActive" class="form-control select" id="exampleFormControlSelect1">
+                        <option value="">All</option>
+                        <option value="yes" {{ request()->isActive === 'yes'  ? 'selected' : '' }}>Active</option>
+                        <option value="no" {{ request()->isActive === 'no'  ? 'selected' : '' }}>Not active</option>
                     </select>
                     <div class="text-right">
                         <button type="submit" class="btn btn-primary">@lang('main.filter')<i class="icon-arrow-right14 position-right"></i></button>
                     </div>
                 </div>
-                </form>
-
-
+                </div>
+            </form>
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>@lang('main.id')</th>
-                        <th>@lang('main.index')</th>
-                        <th>@lang('main.name')</th>
-                        <th>@lang('main.isActive')</th>
-                        <th>@lang('main.created_at')</th>
-                        <th>@lang('main.updated_at')</th>
-                        <th>@lang('main.actions')</th>
+                        <th scope="col">@lang('main.id')</th>
+                        <th scope="col">@lang('main.index')</th>
+                        <th scope="col">@lang('main.name')</th>
+                        <th scope="col">@lang('main.isActive')</th>
+                        <th scope="col">@lang('main.created_at')</th>
+                        <th scope="col">@lang('main.updated_at')</th>
+                        <th scope="col">@lang('main.actions')</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <div id="myModal" class="modal fade">
-                        <form id="myForm" action="{{ route('langs.update', [ 'id' => 0 ]) }}" method="POST" enctype="multipart/form-data">
-                            {{ csrf_field() }}
-                            <input type="hidden" name="_method" value="PUT" />
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header"><button class="close" type="button" data-dismiss="modal">×</button>
-                                    <h4 class="modal-title">Edit langs</h4>
-                                </div>
-                                <div class="modal-body">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <input id="id" type="hidden" name="id" value="" class="form-control">
-                                                <div class="col-md-4">
-                                                    <label>@lang('main.name')</label>
-                                                    <input id="name" type="text" name="name" value="" class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>@lang('main.index')</label>
-                                                    <input id="index" type="text" name="index" value="" class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>@lang('main.index')</label>
-                                                    <input id="isActiveCheck" type="checkbox" value="1" name="is_active">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="text-right">
-                                            <button type="submit" class="btn btn-primary">@lang('main.create') <i class="icon-arrow-right14 position-right"></i></button>
-                                        </div>
-                                </div>
-                                <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                    @if (!empty($success))
-                        <h1>{{$success}}</h1>
-                    @endif
-                    @if (count($errors) > 0)
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
                     @foreach($langs as $value)
                         <tr>
                             <td>{{ $value->id }}</td>
                             <td>{{ $value->index }}</td>
                             <td>{{ $value->name }}</td>
-                            <td><input type="checkbox" name @if($value->is_active) checked @endif>{{ $value->is_active }}</td>
+                            <td>{!! $value->is_active ? '<span class="badge badge-success">active</span>' : '<span class="badge badge-danger">not active</span>' !!}</td>
                             <td>{{ $value->created_at }}</td>
                             <td>{{ $value->updated_at }}</td>
-                            <td class="text-center">
-                                <ul class="icons-list">
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="icon-menu9"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li>
-                                                <button class="btn btn-info" id="but1" type="button" data-toggle="modal" data-target="#myModal" OnClick="edit('{{ $value->id }}', '{{ $value->index }}', '{{ $value->name }}', '{{ $value->is_active }}');">Edit</button>
-                                            </li>
-                                            <li>
-                                                <form id="destroy-form-{{ $value->id }}" action="{{ route('langs.destroy', ['id'=>$value->id]) }}" method="post" onsubmit="return submitForm()">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    {{ csrf_field() }}
-                                                    <button type="submit" class="btn btn-primary">@lang('main.delete') <i class="icon-arrow-right14 position-right"></i></button>
-                                                </form>
-                                                <a onclick="$('#destroy-form-{{ $value->id }}').submit()"><i class="icon-trash"></i>@lang('main.delete')</a>
-                                            </li>
-                                        </ul>
+                            <td class="text-center dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown"></a>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li data-toggle="modal" data-target="#myModal" OnClick="edit('{{ $value->id }}', '{{ $value->index }}', '{{ $value->name }}', '{{ $value->is_active }}');">
+                                        <div class="edit-icon"></div>
+                                        <span>@lang('main.edit')</span>
+                                    </li>
+                                    <li>
+                                        <div class="delete-icon"></div>
+                                        <form id="destroy-form-{{ $value->id }}" action="{{ route('translate.langs.destroy', ['id'=>$value->id]) }}" method="post" onsubmit="return submitForm()">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="delete-text">@lang('main.delete') </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </td>
                         </tr>
-                    @endforeach
+                @endforeach
                     </tbody>
                 </table>
-            </div>
         </div>
     </div>
+
+    @include('vocabulare::pages.langs.edit')
+
     <script type='text/javascript'>
         function edit(id, index, name, isActive){
             $("#id").attr("value", id);
             $("#name").attr("value", index);
             $("#index").attr("value", name);
-            if(isActive == 1) {
-                document.getElementById("isActiveCheck").checked = true;
-            } else {
-                document.getElementById("isActiveCheck").checked = false;
-            }
+            document.getElementById("isActiveCheck").checked = isActive == 1;
         }
     </script>
 

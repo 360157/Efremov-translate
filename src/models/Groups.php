@@ -10,6 +10,8 @@ class Groups extends Model
 
     protected $fillable = ['name', 'type'];
 
+    protected $perPage = 20;
+
     public function trans()
     {
         return $this->hasMany(Trans::class, 'group_id');
@@ -30,7 +32,7 @@ class Groups extends Model
 
     public static function getGroups($type)
     {
-        return self::where('type', $type)->get();
+        return self::where('type', $type)->orderBy('id')->paginate();
     }
 
     public static function getAllGroups()

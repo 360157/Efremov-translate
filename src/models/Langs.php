@@ -12,7 +12,7 @@ class Langs extends Model
 
     public function transData()
     {
-        return $this->hasMany(TransData::class);
+        return $this->hasMany(TransData::class, 'lang_id');
     }
 
     public static function getLangs($isActive = null)
@@ -26,7 +26,9 @@ class Langs extends Model
 
     public static function postLangs($name, $index)
     {
-        return self::create([
+        return self::firstOrCreate([
+            'index' => $index
+        ], [
             'name' => $name,
             'index' => $index
         ]);

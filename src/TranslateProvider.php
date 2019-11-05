@@ -25,9 +25,7 @@ class TranslateProvider extends ServiceProvider
             return $trans;
         });
 
-        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
         $this->app->make('Sashaef\TranslateProvider\Controllers\TranslateController');
-        $this->loadViewsFrom(__DIR__.'/views', 'vocabulare');
     }
 
     /**
@@ -37,6 +35,11 @@ class TranslateProvider extends ServiceProvider
      */
     public function boot()
     {
-        include __DIR__.'/routes.php';
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadViewsFrom(__DIR__.'/views', 'vocabulare');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->publishes([
+            __DIR__.'/views/assets' => public_path('vendor/vocabulare'),
+        ], 'public');
     }
 }

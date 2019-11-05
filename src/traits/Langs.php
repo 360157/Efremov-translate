@@ -20,29 +20,28 @@ trait Langs
     public function getLangs($select = null)
     {
         switch ($select) {
-            case 'active':
+            case 'yes':
                 $isActive = true;
                 break;
-            case 'notActive':
+            case 'no':
                 $isActive = false;
                 break;
             default:
                 $isActive = null;
                 break;
         }
+
         return Model::getLangs($isActive);
+    }
+
+    public function getLang($id)
+    {
+        return Model::find($id);
     }
 
     public function postLang($name, $index)
     {
-        $lang = Model::postLangs($name, $index);
-        $groups = $this->getAllGroups();
-        foreach ($groups as $group) {
-            foreach ($group->trans as $trans) {
-                TransData::postTransData($trans->id, $lang->id, 0);
-                Redis::set($group->type.':'.$group->name.':'.$trans->key.':'.$lang->id, '');
-            }
-        }
+        return Model::postLangs($name, $index);
     }
 
     public function updateLang($id, $name, $index, $isActive)
@@ -53,8 +52,16 @@ trait Langs
 
     public function deleteLang($id)
     {
-        Model::deleteLangs($id);
+        $lang = $this->getLang($id);
+
+        if ($lang === null) {return ['status' => 'error', 'message' => 'The language is missing!'];}
+
+        if ($lang->transData->isNotEmpty()) {return ['status' => 'error', 'message' => 'The language has translations!'];}
+
+        if ($lang->delete()) {
+            return ['status' => 'success', 'message' => 'The language has deleted!'];
+        } else {
+            return ['status' => 'error', 'message' => 'Server error!'];
+        }
     }
-
-
 }

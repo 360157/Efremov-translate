@@ -19,7 +19,7 @@ class LangsController extends Controller
     public function index(Request $request)
     {
         return view('vocabulare::pages.langs.index', [
-            'langs' => $this->getLangs($request->select)
+            'langs' => $this->getLangs($request->isActive)
         ]);
     }
 
@@ -41,8 +41,13 @@ class LangsController extends Controller
      */
     public function store(LangCreateRequest $request)
     {
-        $this->postLang($request->name, $request->index);
-        return redirect()->route('langs.index')->withSuccess('Done!');
+        $response = $this->postLang($request->name, $request->index);
+
+        if ($response->wasRecentlyCreated) {
+            return redirect()->route('translate.langs.index')->withSuccess('The language has created!');
+        } else {
+            return redirect()->route('translate.langs.index')->withError('The language is already exists!');
+        }
     }
 
     /**
@@ -64,7 +69,7 @@ class LangsController extends Controller
      */
     public function edit($id)
     {
-        //
+        return redirect()->route('translate.langs.index');
     }
 
     /**
@@ -82,7 +87,8 @@ class LangsController extends Controller
             $request->name,
             $request->is_active
         );
-        return redirect()->route('langs.index')->withSuccess('Updated!');
+
+        return redirect()->route('translate.langs.index')->withSuccess('Updated!');
     }
 
     /**
@@ -93,7 +99,12 @@ class LangsController extends Controller
      */
     public function destroy($id)
     {
-        $this->deleteLang($id);
-        return redirect()->route('langs.index')->withSuccess('Deleted!');
+        $response = $this->deleteLang($id);
+
+        if ($response['status'] === 'success') {
+            return redirect()->route('translate.langs.index')->withSuccess($response['message']);
+        } else {
+            return redirect()->route('translate.langs.index')->withError($response['message']);
+        }
     }
 }
