@@ -526,7 +526,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
                 </table>
 
                 <div class="panel-footer">
-                    {{ $trans->appends(['sort' => 'id'])->links('vocabulare::includes.pagination') }}
+                    {{ $trans->appends(['filter' => ['type' => $type, 'group' => $group_id]])->links('vocabulare::includes.pagination') }}
                 </div>
             </div>
         </div>

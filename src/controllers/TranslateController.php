@@ -20,15 +20,15 @@ class TranslateController extends Controller
      */
     public function index(Request $request)
     {
-        if (empty($request->type) || empty($request->id)) {
+        if (isset($request->filter) && empty($request->filter['type']) || empty($request->filter['group'])) {
             return redirect()
                 ->route('translate.groups.type', ['type' => 'interface'])
                 ->withError('The type or the group is missing!');
         }
 
         return view('vocabulare::pages.trans.index', [
-            'group_id' => $request->id,
-            'type' => $request->type,
+            'type' => $request->filter['type'],
+            'group_id' => $request->filter['group'],
             'langs' => $this->getLangs(),
             'trans' => $this->getTranslations($request->filter)
        ]);
@@ -79,11 +79,11 @@ class TranslateController extends Controller
         if ($this->storeTranslation($request->type, $request->group_id, $request->key, $request->description, $request->translates, $request->statuses)) {
 
             return redirect()
-                ->route('translate.translates.index', ['type' => $request->type, 'group_id' => $request->group_id])
+                ->route('translate.translates.index', ['filter[type]' => $request->type, 'filter[group]' => $request->group_id])
                 ->withSuccess('The key "'.$request->key.'" has created!');
         } else {
             return redirect()
-                ->route('translate.translates.index', ['type' => $request->type, 'group_id' => $request->group_id])
+                ->route('translate.translates.index', ['filter[type]' => $request->type, 'filter[group]' => $request->group_id])
                 ->withError('The key "'.$request->key.'" is already exists!');
         }
     }
