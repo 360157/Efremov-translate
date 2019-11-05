@@ -123,7 +123,7 @@ class TranslateController extends Controller
         }
 
         if ($request->obj === 'translation') {
-            if (self::updateTranslation($request->type, $request->group_id, $request->key, $request->lang, $request->all())) {
+            if (self::updateTranslation($request->key, $request->lang, $request->all())) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'The translation has updated!'

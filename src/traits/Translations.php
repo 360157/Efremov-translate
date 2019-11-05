@@ -116,13 +116,13 @@ trait Translations
         return $trans->update(['key' => $value, 'description' => $description]);
     }
 
-    function updateTranslation($type, $group_id, $key, $lang, $inputs)
+    function updateTranslation($key, $lang, $inputs)
     {
         $trans = Trans::find($key);
         $data = array_intersect_key($inputs, ['translation' => null, 'status' => null]);
 
         if (!empty($inputs['translation'])) {
-            Redis::set($type.':'.$trans->group->name.':'.$trans->key.':'.$lang, $data['translation']);
+            Redis::set($trans->group->type.':'.$trans->group->name.':'.$trans->key.':'.$lang, $data['translation']);
         }
 
         return $trans->data()->updateOrCreate(['lang_id' => $lang], $data);
