@@ -32,13 +32,6 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     protected $locale;
 
     /**
-     * The type.
-     *
-     * @var string
-     */
-    protected $type;
-
-    /**
      * The fallback locale used by the translator.
      *
      * @var string
@@ -114,12 +107,12 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
      */
     public function get($key, array $replace = [], $locale = null, $fallback = true)
     {
-        [$group, $item] = $this->parseKey($key);
+        [$type, $group, $item] = $this->parseKey($key);
 
         $locales = $fallback ? $this->localeArray($locale) : [$locale ?: $this->locale];
 
         foreach ($locales as $locale) {
-            if (!is_null($line = $this->getLine($this->type, $group, $locale, $item, $replace))) {
+            if (!is_null($line = $this->getLine($type, $group, $locale, $item, $replace))) {
                 break;
             }
         }
@@ -256,9 +249,9 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     public function addLines(array $lines, $locale)
     {
         foreach ($lines as $key => $value) {
-            [$group, $item] = $this->parseKey($key);
+            [$type, $group, $item] = $this->parseKey($key);
 
-            $this->loader::set($this->type.':'.$group.':'.$item.':'.$this->getLangId($locale), $value);
+            $this->loader::set($type.':'.$group.':'.$item.':'.$this->getLangId($locale), $value);
         }
     }
 
@@ -270,9 +263,13 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
      */
     public function parseKey($key)
     {
-        $group = explode('.', $key, 2);
+        $segments = parent::parseKey($key);
 
-        return [$group[0], $key];
+        if (is_null($segments[0])) {
+            $segments[0] = '*';
+        }
+
+        return $segments;
     }
 
     /**
@@ -371,17 +368,6 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     public function setFallback($fallback)
     {
         $this->fallback = $fallback;
-    }
-
-    /**
-     * Set the loaded translation groups.
-     *
-     * @param string $type
-     * @return void
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     /**

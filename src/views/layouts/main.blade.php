@@ -11,8 +11,8 @@
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/css/bootstrap-notify.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link href="/vendor/vocabulare/css/style.css" rel="stylesheet" type="text/css">
 
     <style>
@@ -185,25 +185,25 @@
         #statusOptions {
             display: none;
         }
-        #langs-options {
+        #lang-options {
             display: none;
             padding: 10px 19px;
             border-top: 1px solid #E8EBED;
         }
-        #langs-options ul {
+        #lang-options ul {
             margin: 0;
             padding: 0;
             padding-top: 10px;
         }
-        #langs-options ul li {
+        #lang-options ul li {
             padding: 0 10px;
         }
-        #langsLink, #statusLink {
+        #langFilter, #statusFilter {
             position: relative;
             margin: 0;
             padding: 10px 20px !important;
         }
-        #langsLink:after, #statusLink:after {
+        #langFilter:after, #statusFilter:after {
             content: '';
             position: absolute;
             top: 21px;
@@ -262,75 +262,18 @@
 </head>
 
 <body>
-    <div class="btn-group">
-        <div class="icon save"></div>
-        <div class="icon sort"></div>
-        <div class="icon options">
-            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
-            <div class="dropdown-menu aside-menu dropdown-options" >
-                    <div id="langsLink" class="field-wrapper">
-                        @lang('main.translate')
-                    </div>
-
-                    <div id="langs-options">
-                        <form id="searchLanguageForm" action="#" method="get" enctype="multipart/form-data">
-                            <input type="text" placeholder="Search" class="find-field">
-                        </form>
-                        <ul>
-                            <li>English</li>
-                            <li>French</li>
-                            <li>Italy</li>
-                        </ul>
-                    </div>
-                    <div id="statusLink" class="field-wrapper">
-                        status
-                    </div>
-
-                    <div id="statusOptions">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" id="not-translated" value="">
-                            <label class="form-check-label" for="not-translated">
-                                not translated
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" id="translated" value="">
-                            <label class="form-check-label" for="translated">
-                                translated
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" id="checked" value="">
-                            <label class="form-check-label" for="checked">
-                                checked
-                            </label>
-                        </div>
-                    </div>
-            </div>
-        </div>
-        <div class="icon find">
-            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
-            <div class="dropdown-menu aside-menu dropdown-find">
-                <div class="field-wrapper">
-                    <form id="searchForm" action="#" method="get" enctype="multipart/form-data">
-                        <input type="text" placeholder="Search" class="find-field">
-                    </form> 
-                </div>                          
-            </div>
-        </div>
-    </div>
     <div class="container-fluid">
         <nav id="navbar" class="navbar">
-            <span class="navbar-brand">@lang('main.translate')</span>
+            <span class="navbar-brand">@lang('system::main.translate')</span>
             <ul class="nav nav-pills">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('translate.langs.index') }}"><span>@lang('main.langs')</span></a>
+                    <a class="nav-link" href="{{ route('translate.langs.index') }}"><span>@lang('system::main.langs')</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('translate.groups.type', ['type' => 'interface']) }}"><span>@lang('main.interface-trans')</span></a>
+                    <a class="nav-link" href="{{ route('translate.groups.type', ['type' => 'interface']) }}"><span>@lang('system::main.interface-trans')</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('translate.groups.type', ['type' => 'system']) }}"><span>@lang('main.system-trans')</span></a>
+                    <a class="nav-link" href="{{ route('translate.groups.type', ['type' => 'system']) }}"><span>@lang('system::main.system-trans')</span></a>
                 </li>
             </ul>
         </nav>
@@ -358,25 +301,8 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="http://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/js/bootstrap-notify.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="/vendor/vocabulare/js/script.js"></script>
-
-<script type='text/javascript'>
-    langsLink.onclick  = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const options = document.getElementById("langs-options");
-        options.classList.toggle("show-options");
-    };
-    statusLink.onclick = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const options = document.getElementById("statusOptions");
-        options.classList.toggle("show-options");
-    };
-    statusOptions.onclick = function(e) {
-        // e.preventDefault();
-        e.stopPropagation();
-    }
-</script>
+@yield('vocabulare-js')
 </html>

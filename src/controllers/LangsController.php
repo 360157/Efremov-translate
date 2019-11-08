@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Sashaef\TranslateProvider\Traits\Langs;
 use Sashaef\TranslateProvider\Requests\LangCreateRequest;
 use Sashaef\TranslateProvider\Requests\LangUpdateRequest;
+use Sashaef\TranslateProvider\Resources\LangCollection;
 
 class LangsController extends Controller
 {
@@ -14,13 +15,36 @@ class LangsController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        return view('vocabulare::pages.langs.index', [
-            'langs' => $this->getLangs($request->isActive)
-        ]);
+        return view('vocabulare::pages.langs.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\ResourceCollection
+     */
+    public function get(Request $request)
+    {
+        $langs = $this->filterLangs($request);
+
+        return new LangCollection($langs);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
     }
 
     /**
@@ -44,21 +68,10 @@ class LangsController extends Controller
         $response = $this->postLang($request->name, $request->index);
 
         if ($response->wasRecentlyCreated) {
-            return redirect()->route('translate.langs.index')->withSuccess('The language has created!');
+            return response()->json(['status' => 'success', 'message' => 'The language has created!'], 200);
         } else {
-            return redirect()->route('translate.langs.index')->withError('The language is already exists!');
+            return response()->json(['status' => 'success', 'message' => 'The language is already exists!'], 200);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -79,16 +92,16 @@ class LangsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(LangUpdateRequest $request, $id)
+    public function update(LangUpdateRequest $request)
     {
-        $this->updateLang(
+        $response = $this->updateLang(
             $request->id,
             $request->index,
             $request->name,
             $request->is_active
         );
 
-        return redirect()->route('translate.langs.index')->withSuccess('Updated!');
+        return response()->json($response, 200);
     }
 
     /**
@@ -97,14 +110,10 @@ class LangsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $response = $this->deleteLang($id);
+        $response = $this->deleteLang($request->id);
 
-        if ($response['status'] === 'success') {
-            return redirect()->route('translate.langs.index')->withSuccess($response['message']);
-        } else {
-            return redirect()->route('translate.langs.index')->withError($response['message']);
-        }
+        return response()->json($response, 200);
     }
 }

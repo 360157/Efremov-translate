@@ -7,10 +7,12 @@ use Illuminate\View\View;
 use Sashaef\TranslateProvider\Traits\Groups;
 use App\Http\Controllers\Controller;
 use Sashaef\TranslateProvider\Requests\GroupsStoreRequest;
+use Sashaef\TranslateProvider\Resources\GroupCollection;
 
 class GroupsController extends Controller
 {
     use Groups;
+
     /**
      * Display a listing of the resource.
      *
@@ -21,8 +23,20 @@ class GroupsController extends Controller
     {
         return view('vocabulare::pages.groups.index', [
             'type' => $type,
-            'groups' => $this->getGroups($type)
         ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param string $type
+     * @return \Illuminate\Http\Resources\Json\ResourceCollection
+     */
+    public function get(Request $request)
+    {
+        $groups = $this->filterGroups($request);
+
+        return new GroupCollection($groups);
     }
 
     /**
@@ -43,11 +57,13 @@ class GroupsController extends Controller
      */
     public function store(GroupsStoreRequest $request)
     {
-        $this->storeGroup($request->name, $request->type);
+        $response = $this->storeGroup($request->name, $request->type);
 
-        return redirect()
-            ->route('translate.groups.type', ['type' => $request->type])
-            ->withSuccess('The group has created!');
+        if ($response->wasRecentlyCreated) {
+            return response()->json(['status' => 'success', 'message' => 'The group has created!'], 200);
+        } else {
+            return response()->json(['status' => 'success', 'message' => 'The group is already exists!'], 200);
+        }
     }
 
     /**
@@ -81,14 +97,6 @@ class GroupsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->updateGroup(
-            $request->id,
-            $request->name
-        );
-
-        return redirect()
-            ->route('translate.groups.type', ['type' => $request->type])
-            ->withSuccess('The group has updated!');
     }
 
     /**
@@ -97,14 +105,10 @@ class GroupsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $response = $this->deleteGroup($id);
+        $response = $this->deleteGroup($request->id);
 
-        if ($response['status'] === 'success') {
-            return redirect()->route('translate.groups.index')->withSuccess($response['message']);
-        } else {
-            return redirect()->route('translate.groups.index')->withError($response['message']);
-        }
+        return response()->json($response, 200);
     }
 }

@@ -9,13 +9,19 @@
 namespace Sashaef\TranslateProvider\Traits;
 
 use Sashaef\TranslateProvider\Models\Langs as Model;
-use Sashaef\TranslateProvider\Traits\Groups;
-use Sashaef\TranslateProvider\Models\TransData;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Pagination\Paginator;
 
 trait Langs
 {
     use Groups;
+    public static $langColumns = [
+        'id',
+        'index',
+        'name',
+        'is_active',
+        'created_at',
+        'updated_at'
+    ];
 
     public function getLangs($select = null)
     {
@@ -34,6 +40,23 @@ trait Langs
         return Model::getLangs($isActive);
     }
 
+    public function filterLangs($request)
+    {
+        switch ($request->isActive) {
+            case 'yes': $request->isActive = true; break;
+            case 'no': $request->isActive = false; break;
+        }
+
+        $order = [self::$langColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
+        $page = $request->start / $request->length + 1;
+        Paginator::currentPageResolver(function() use ($page) {return $page;});
+
+        return Model::filterLangs([
+            'is_active' => $request->isActive,
+            'search' => $request->search
+        ], $order, $request->length);
+    }
+
     public function getLang($id)
     {
         return Model::find($id);
@@ -44,10 +67,21 @@ trait Langs
         return Model::postLangs($name, $index);
     }
 
-    public function updateLang($id, $name, $index, $isActive)
+    public function updateLang($id, $index, $name, $isActive)
     {
-        $isActive = is_null($isActive) ? 0 : 1;
-        Model::updateLangs($id, $name, $index, $isActive);
+        $lang = $this->getLang($id);
+
+        if ($lang === null) {return ['status' => 'error', 'message' => 'The language is missing!'];}
+
+        if ($lang->update([
+            'name' => $name,
+            'index' => $index,
+            'is_active' => is_null($isActive) ? 0 : 1
+        ])) {
+            return ['status' => 'success', 'message' => 'The language has updated!'];
+        } else {
+            return ['status' => 'error', 'message' => 'Server error!'];
+        }
     }
 
     public function deleteLang($id)

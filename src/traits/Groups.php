@@ -9,12 +9,29 @@
 namespace Sashaef\TranslateProvider\Traits;
 
 use Sashaef\TranslateProvider\Models\Groups as Model;
+use Illuminate\Pagination\Paginator;
 
 trait Groups
 {
-    public function getGroups($type)
+    public static $groupColumns = [
+        'id',
+        'name',
+        'type',
+        'created_at',
+        'updated_at'
+    ];
+
+    public function filterGroups($request)
     {
-        $groups = Model::getGroups($type);
+        $order = [self::$groupColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
+
+        $page = $request->start / $request->length + 1;
+        Paginator::currentPageResolver(function() use ($page) {return $page;});
+
+        $groups = Model::filterGroups([
+            'type' => $request->type,
+            'search' => $request->search
+        ], $order, $request->length);
 
         foreach ($groups as $k => $group) {
             $groups[$k]['trans'] = Model::getTransCount($group['id'], 'active');
@@ -31,7 +48,7 @@ trait Groups
 
     public function storeGroup($name, $type)
     {
-        Model::storeGroup($name, $type);
+        return Model::storeGroup($name, $type);
     }
 
     public function updateGroup($id, $name)

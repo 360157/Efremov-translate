@@ -43,4 +43,27 @@ class Trans extends Model
     {
         return self::where('id', $id)->first();
     }
+
+    public static function filterTranslates($filter, array $order = ['id', 'desc'], $perPage)
+    {
+        return self::query()
+            ->when($filter['group'], function ($q) use ($filter) {
+                return $q->where('group_id', $filter['group']);
+            })
+            ->when(!empty($filter['key']), function ($q) use ($filter) {
+                return $q->where('key', 'LIKE', '%'.$filter['key'].'%');
+            })
+            ->when(!empty($filter['translation']), function ($q) use ($filter) {
+                return $q->whereHas('data', function($q) use ($filter) {
+                    return $q->where('translation', 'LIKE', '%'.$filter['translation'].'%');
+                });
+            })
+            ->when(isset($filter['status']), function ($q) use ($filter) {
+                return $q->whereHas('data', function($q) use ($filter) {
+                    return $q->where('status', $filter['status']);
+                });
+            })
+            ->orderBy($order[0], $order[1])
+            ->paginate($perPage);
+    }
 }

@@ -10,7 +10,7 @@ class Groups extends Model
 
     protected $fillable = ['name', 'type'];
 
-    protected $perPage = 20;
+    protected $perPage = 10;
 
     public function trans()
     {
@@ -19,7 +19,10 @@ class Groups extends Model
 
     public static function storeGroup($name, $type)
     {
-        self::create([
+        return self::firstOrCreate([
+            'name' => $name,
+            'type' => $type
+        ], [
             'name' => $name,
             'type' => $type
         ]);
@@ -30,9 +33,16 @@ class Groups extends Model
         self::where('id', $id)->delete();
     }
 
-    public static function getGroups($type)
+    public static function filterGroups($filter, array $order = ['id', 'desc'], $perPage)
     {
-        return self::where('type', $type)->orderBy('id')->paginate();
+        $result = self::query()
+            ->where('type', $filter['type']);
+
+        return $result->when($filter['search'], function ($q) use ($filter) {
+            return $q->where('name', 'LIKE', '%'.$filter['search'].'%');
+        })
+            ->orderBy($order[0], $order[1])
+            ->paginate($perPage);
     }
 
     public static function getAllGroups()

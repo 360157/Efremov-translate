@@ -4,13 +4,27 @@ Route::group(['middleware' => ['web'], 'prefix' => 'admin/trans', 'namespace' =>
     Route::get('/', 'GroupsController@index')->name('groups.index');
     Route::get('/{type}', 'GroupsController@index')->name('groups.type')->where('type', 'interface|system');
 
-    Route::group(['prefix' => 'translates', ], function () {
-        Route::get('/', 'TranslateController@index')->name('translates.index');
-        Route::post('/', 'TranslateController@store')->name('translates.store');
-        Route::patch('/', 'TranslateController@update')->name('translates.update');
-        Route::delete('/', 'TranslateController@destroy')->name('translates.destroy');
+    Route::group(['prefix' => 'translates', 'as' => 'translates.'], function () {
+        Route::get('/', 'TranslateController@index')->name('index');
+        Route::get('/get', 'TranslateController@get')->name('get');
+        Route::post('/', 'TranslateController@store')->name('store');
+        Route::patch('/', 'TranslateController@update')->name('update');
+        Route::delete('/', 'TranslateController@destroy')->name('destroy');
     });
 
-    Route::resource('langs', 'LangsController');
-    Route::resource('groups', 'GroupsController');
+    Route::group(['prefix' => 'langs', 'as' => 'langs.'], function () {
+        Route::get('/', 'LangsController@index')->name('index');
+        Route::get('/get', 'LangsController@get')->name('get');
+        Route::post('/', 'LangsController@store')->name('store');
+        Route::patch('/', 'LangsController@update')->name('update');
+        Route::delete('/', 'LangsController@destroy')->name('destroy');
+    });
+
+    Route::group(['prefix' => 'groups', 'as' => 'groups.'], function () {
+        Route::get('/', 'GroupsController@index')->name('index');
+        Route::get('/get', 'GroupsController@get')->name('get');
+        Route::post('/', 'GroupsController@store')->name('store');
+        Route::patch('/', 'GroupsController@update')->name('update');
+        Route::delete('/', 'GroupsController@destroy')->name('destroy');
+    });
 });

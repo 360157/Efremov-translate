@@ -115,10 +115,7 @@
             height: 7px;
             background: url("/img/close.svg");
         }
-        .modal-body {
-            height: 190px;
-            padding: 15px 29px 30px 29px;
-        }
+
         .modal-body .btn {
             position: relative;
             right: 0;
@@ -226,77 +223,211 @@
             <div class="panel-body">
                 @include('vocabulare::pages.langs.create')
             </div>
-            <form action="{{ route('translate.langs.index') }}" method="get" enctype="multipart/form-data">
-                {{ csrf_field() }}
-                <div class="row">
-                <div class="form-group col-md-5">
-                    <label for="exampleFormControlSelect1">Example select</label>
-                    <select name="isActive" class="form-control select" id="exampleFormControlSelect1">
-                        <option value="">All</option>
-                        <option value="yes" {{ request()->isActive === 'yes'  ? 'selected' : '' }}>Active</option>
-                        <option value="no" {{ request()->isActive === 'no'  ? 'selected' : '' }}>Not active</option>
-                    </select>
-                    <div class="text-right">
-                        <button type="submit" class="btn btn-primary">@lang('main.filter')<i class="icon-arrow-right14 position-right"></i></button>
-                    </div>
-                </div>
-                </div>
-            </form>
-                <table class="table">
+                <table id="langTable" class="table table-striped" style="width: 100%;">
                     <thead>
                     <tr>
-                        <th scope="col">@lang('main.id')</th>
-                        <th scope="col">@lang('main.index')</th>
-                        <th scope="col">@lang('main.name')</th>
-                        <th scope="col">@lang('main.isActive')</th>
-                        <th scope="col">@lang('main.created_at')</th>
-                        <th scope="col">@lang('main.updated_at')</th>
-                        <th scope="col">@lang('main.actions')</th>
+                        <th scope="col">@lang('system::main.id')</th>
+                        <th scope="col">@lang('system::main.index')</th>
+                        <th scope="col">@lang('system::main.name')</th>
+                        <th scope="col">@lang('system::main.is_active')</th>
+                        <th scope="col">@lang('system::main.created_at')</th>
+                        <th scope="col">@lang('system::main.updated_at')</th>
+                        <th scope="col">@lang('system::main.actions')</th>
                     </tr>
                     </thead>
-
                     <tbody>
-                    @foreach($langs as $value)
-                        <tr>
-                            <td>{{ $value->id }}</td>
-                            <td>{{ $value->index }}</td>
-                            <td>{{ $value->name }}</td>
-                            <td>{!! $value->is_active ? '<span class="badge badge-success">active</span>' : '<span class="badge badge-danger">not active</span>' !!}</td>
-                            <td>{{ $value->created_at }}</td>
-                            <td>{{ $value->updated_at }}</td>
-                            <td class="text-center dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown"></a>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li data-toggle="modal" data-target="#myModal" OnClick="edit('{{ $value->id }}', '{{ $value->index }}', '{{ $value->name }}', '{{ $value->is_active }}');">
-                                        <div class="edit-icon"></div>
-                                        <span>@lang('main.edit')</span>
-                                    </li>
-                                    <li>
-                                        <div class="delete-icon"></div>
-                                        <form id="destroy-form-{{ $value->id }}" action="{{ route('translate.langs.destroy', ['id'=>$value->id]) }}" method="post" onsubmit="return submitForm()">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="delete-text">@lang('main.delete') </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                @endforeach
                     </tbody>
                 </table>
+            </tr>
         </div>
     </div>
 
+    <div class="btn-group">
+        <div class="icon save"></div>
+        <div class="icon sort">
+            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
+            <div class="dropdown-menu aside-menu">
+                <div class="field-wrapper">@lang('system::main.index')</div>
+                <div class="field-wrapper">@lang('system::main.name')</div>
+            </div>
+        </div>
+        <div class="icon options">
+            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
+            <div class="dropdown-menu aside-menu dropdown-options" >
+                <div id="statusLink" class="field-wrapper">status</div>
+                <div id="statusOptions">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="not-translated" value="">
+                        <label class="form-check-label" for="not-translated">All</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="not-translated" value="yes">
+                        <label class="form-check-label" for="not-translated">Active</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="translated" value="no">
+                        <label class="form-check-label" for="translated">Not active</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="icon find">
+            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
+            <div class="dropdown-menu aside-menu dropdown-find">
+                <div class="field-wrapper">
+                    <form id="langSearchForm">
+                        <input type="text" placeholder="Search" class="find-field">
+                        <button type="submit" class="find-field">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     @include('vocabulare::pages.langs.edit')
-
+@endsection
+@section('vocabulare-js')
     <script type='text/javascript'>
-        function edit(id, index, name, isActive){
-            $("#id").attr("value", id);
-            $("#name").attr("value", index);
-            $("#index").attr("value", name);
-            document.getElementById("isActiveCheck").checked = isActive == 1;
-        }
-    </script>
+    statusLink.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const options = document.getElementById("statusOptions");
+        options.classList.toggle("show-options");
+    };
+    statusOptions.onclick = function(e) {
+        e.stopPropagation();
+    }
 
+    $(function () {
+        let langApp = {
+            dataTable: {},
+            isActive: null,
+            searchText: null,
+            get() {
+                this.dataTable = $('#langTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    searching: false,
+                    stateSave: true,
+                    order: [[0, "desc"]],
+                    ajax: {
+                        url: '{{ route('translate.langs.get') }}',
+                        'data': function(data){
+                            data.isActive = langApp.isActive;
+                            data.search = langApp.searchText;
+                        }
+                    },
+                    columns: [
+                        { data: 'id' },
+                        { data: 'index' },
+                        { data: 'name' },
+                        {
+                            data: 'is_active',
+                            'render': function (data, type, full, meta) {
+                                return '<span class="badge badge-' + (data ? 'success' : 'danger') + '">' + data + '</span>';
+                            }
+                        },
+                        { data: 'created_at' },
+                        { data: 'updated_at' },
+                        {
+                            data: null, defaultContent: '<span class="action-edit"><div class="edit-icon"></div> @lang('system::main.edit')</span>' +
+                                '<span class="action-delete"><div class="delete-icon"></div> @lang('system::main.delete')</span>'
+                        }
+                    ],
+                    columnDefs: [
+                        {targets: 6, orderable: false}
+                    ]
+                });
+            },
+            create(el) {
+                $.ajax({
+                    type: "POST",
+                    url: '{{ route('translate.langs.store') }}',
+                    data: {
+                        index: $(el).find('[name="index"]').val(),
+                        name: $(el).find('[name="name"]').val(),
+                    },
+                    success: function (res) {
+                        if (res.status === 'success') {
+                            langApp.dataTable.ajax.reload();
+                            console.log(res.message);
+                        } else {
+                            console.log(res.message);
+                        }
+                    }
+                });
+            },
+            update(data, modal) {
+                $.ajax({
+                    type: "PATCH",
+                    url: '{{ route('translate.langs.update') }}',
+                    data: data,
+                    success: function (res) {
+                        if (res.status === 'success') {
+                            langApp.dataTable.ajax.reload(null, false);
+                            modal.modal('hide')
+                            console.log(res.message);
+                        } else {
+                            console.log(res.message);
+                        }
+                    }
+                });
+            },
+            delete(el) {
+                $.ajax({
+                    type: "DELETE",
+                    url: '{{ route('translate.langs.destroy') }}',
+                    data: {id: el.data().id},
+                    success: function (res) {
+                        if (res.status === 'success') {
+                            el.remove().draw(false);
+                            console.log(res.message);
+                        } else {
+                            console.log(res.message);
+                        }
+                    }
+                });
+            },
+            init() {
+                this.get();
+
+                $('#langCreateForm').on('submit', function (e) {
+                    e.preventDefault();
+                    langApp.create(this)
+                });
+
+                $('#langTable tbody').on('click', 'span.action-edit', function () {
+                    let tr = langApp.dataTable.row($(this).parents('tr'));
+                    let el = tr.data();
+                    $('#langEditModal [name="id"]').val(el.id);
+                    $('#langEditModal [name="index"]').val(el.index);
+                    $('#langEditModal [name="name"]').val(el.name);
+                    $('#langEditModal [name="is_active"]').prop('checked', el.is_active);
+                    $('#langEditModal').modal()
+                });
+
+                $('#langEditForm').on('submit', function (e) {
+                    e.preventDefault();
+                    langApp.update($(this).serializeArray(), $('#langEditModal'))
+                });
+
+                $('#langTable tbody').on('click', 'span.action-delete', function () {
+                    let el = langApp.dataTable.row($(this).parents('tr'));
+                    langApp.delete(el)
+                });
+
+                $('#statusOptions input').on('click', function () {
+                    langApp.isActive = $(this).val();
+                    langApp.dataTable.draw();
+                });
+
+                $('#langSearchForm').on('submit', function (e) {
+                    e.preventDefault();
+                    langApp.searchText = $(this).find('input').val();
+                    langApp.dataTable.draw();
+                });
+            },
+        };
+        langApp.init();
+    });
+</script>
 @endsection

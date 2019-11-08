@@ -12,9 +12,15 @@ use Sashaef\TranslateProvider\Models\TransData;
 use Sashaef\TranslateProvider\Models\Langs;
 use Sashaef\TranslateProvider\Models\Groups;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Pagination\Paginator;
 
 trait Translations
 {
+    public static $translateColumns = [
+        'id',
+        'key',
+    ];
+
     public function storeTranslation($type, $group_id, $key, $description, $translates, $statuses)
     {
         $groupKey = Groups::getGroupName($group_id);
@@ -36,29 +42,18 @@ trait Translations
         return false;
     }
 
-    public function getTranslations($filter)
+    public function filterTranslates($request)
     {
-        $trans = Trans::query()
-            ->when($filter['group'], function ($q) use ($filter) {
-                return $q->where('group_id', $filter['group']);
-            })
-            ->when(isset($filter['key']), function ($q) use ($filter) {
-                return $q->where('key', 'LIKE', '%'.$filter['key'].'%');
-            })
-            ->when(!empty($filter['translation']), function ($q) use ($filter) {
-                return $q->whereHas('data', function($q) use ($filter) {
-                    return $q->where('translation', 'LIKE', '%'.$filter['translation'].'%');
-                });
-            })
-            ->when(isset($filter['status']), function ($q) use ($filter) {
-                return $q->whereHas('data', function($q) use ($filter) {
-                    return $q->where('status', $filter['status']);
-                });
-            })
-            ->orderBy('id', 'DESC')
-            ->paginate();
+        $order = [self::$translateColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
+        $page = $request->start / $request->length + 1;
+        Paginator::currentPageResolver(function() use ($page) {return $page;});
 
-        return $trans;
+        return Trans::filterTranslates([
+            'group' => $request->group_id,
+            'key' => $request->keyText,
+            'translation' => $request->translationText,
+            'status' => $request->status,
+        ], $order, $request->length);
     }
 
     public function updateTranslation_($translations, $group_id, $type, $isChecked)
@@ -116,15 +111,19 @@ trait Translations
         return $trans->update(['key' => $value, 'description' => $description]);
     }
 
-    function updateTranslation($key, $lang, $inputs)
+    function updateTranslation($key, $lang, $translation, $status)
     {
         $trans = Trans::find($key);
-        $data = array_intersect_key($inputs, ['translation' => null, 'status' => null]);
 
-        if (!empty($inputs['translation'])) {
-            Redis::set($trans->group->type.':'.$trans->group->name.':'.$trans->key.':'.$lang, $data['translation']);
+        if (!empty($translation)) {
+            Redis::set($trans->group->type.':'.$trans->group->name.':'.$trans->key.':'.$lang, $translation);
         }
 
-        return $trans->data()->updateOrCreate(['lang_id' => $lang], $data);
+        return $trans->data()->updateOrCreate([
+            'lang_id' => $lang
+        ], [
+            'translation' => $translation,
+            'status' => $status ?? 1
+        ]);
     }
 }

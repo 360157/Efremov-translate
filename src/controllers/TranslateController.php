@@ -4,11 +4,10 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Sashaef\TranslateProvider\Models\Trans;
 use Sashaef\TranslateProvider\Requests\TransStoreRequest;
 use Sashaef\TranslateProvider\Traits\Langs as LangTrait;
 use Sashaef\TranslateProvider\Traits\Translations;
-use Sashaef\TranslateProvider\Resources\TransResource;
+use Sashaef\TranslateProvider\Resources\TransCollection;
 
 class TranslateController extends Controller
 {
@@ -20,18 +19,30 @@ class TranslateController extends Controller
      */
     public function index(Request $request)
     {
-        if (isset($request->filter) && empty($request->filter['type']) || empty($request->filter['group'])) {
+        if (empty($request->type) || empty($request->group)) {
             return redirect()
                 ->route('translate.groups.type', ['type' => 'interface'])
                 ->withError('The type or the group is missing!');
         }
 
         return view('vocabulare::pages.trans.index', [
-            'type' => $request->filter['type'],
-            'group_id' => $request->filter['group'],
-            'langs' => $this->getLangs(),
-            'trans' => $this->getTranslations($request->filter)
-       ]);
+            'type' => $request->type,
+            'group' => $this->getGroup($request->group),
+            'langs' => $this->getLangs(true)
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\ResourceCollection
+     */
+    public function get(Request $request)
+    {
+        $translations = $this->filterTranslates($request);
+
+        return new TransCollection($translations);
     }
 
     /**
@@ -43,19 +54,6 @@ class TranslateController extends Controller
     public function show(Request $request)
     {
         //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\ResourceCollection
-     */
-    public function list(Request $request)
-    {
-        $data = $this->getTranslations($request->filter);
-
-        return TransResource::collection($data);
     }
 
     /**
@@ -77,14 +75,9 @@ class TranslateController extends Controller
     public function store(TransStoreRequest $request)
     {
         if ($this->storeTranslation($request->type, $request->group_id, $request->key, $request->description, $request->translates, $request->statuses)) {
-
-            return redirect()
-                ->route('translate.translates.index', ['filter[type]' => $request->type, 'filter[group]' => $request->group_id])
-                ->withSuccess('The key "'.$request->key.'" has created!');
+            return response()->json(['status' => 'success', 'message' => 'The key "'.$request->key.'" has created!'], 200);
         } else {
-            return redirect()
-                ->route('translate.translates.index', ['filter[type]' => $request->type, 'filter[group]' => $request->group_id])
-                ->withError('The key "'.$request->key.'" is already exists!');
+            return response()->json(['status' => 'error', 'message' => 'The key "'.$request->key.'" is already exists!'], 200);
         }
     }
 
@@ -122,8 +115,8 @@ class TranslateController extends Controller
             }
         }
 
-        if ($request->obj === 'translation') {
-            if (self::updateTranslation($request->key, $request->lang, $request->all())) {
+        if ($request->obj === 'translate') {
+            if (self::updateTranslation($request->key, $request->lang, $request->translation, $request->status)) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'The translation has updated!'
@@ -143,8 +136,11 @@ class TranslateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The translation has not deleted!'
+        ], 200);
     }
 }

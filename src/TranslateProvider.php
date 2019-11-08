@@ -20,7 +20,6 @@ class TranslateProvider extends ServiceProvider
         $this->app->singleton('translator', function ($app) {
             $trans = new Translator(Redis::class, $app['config']['app.locale']);
             $trans->setFallback($app['config']['app.fallback_locale']);
-            $trans->setType('interface');
 
             return $trans;
         });

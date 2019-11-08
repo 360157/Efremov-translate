@@ -49,6 +49,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
             outline: none;
             padding: 4px 7px;
             font: 300 14px/19px Roboto;
+            cursor: pointer;
         }
 
         .form-control:focus {
@@ -74,7 +75,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
             bottom: 0;
             right: 15px;
             border-radius: 15px;
-            background: #5670FF;
             padding: 0;
         }
 
@@ -107,7 +107,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
         }
 
         .table_wrapper::-webkit-scrollbar-thumb {
-            background-color: #5670FF;
             border-radius: 60px;
             max-width: 100px
         }
@@ -182,7 +181,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
         }
 
         .modal-header {
-            height: 45px;
             padding-left: 29px;
             padding-right: 15px;
         }
@@ -284,13 +282,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
 
         .btn-disable {
             background: transparent;
-            color: #5670FF;
-            border: 1px solid #5670FF;
             cursor: default !important;
-        }
-
-        .btn-disable:hover {
-            color: #5670FF;
         }
 
         .dropdown-footer .btn span {
@@ -308,11 +300,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
             width: 12px;
             height: 12px;
             background: url("/img/check.svg") center no-repeat;
-        }
-
-        .modal-body {
-            height: 190px;
-            padding: 15px 29px 30px 29px;
         }
 
         .modal-body .btn {
@@ -350,10 +337,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
         /* #myTable {
             table-layout: fixed;
         } */
-
-        #myTable_filter, #myTable_info, .dataTables_length {
-            display: none;
-        }
 
         .dataTables_wrapper .dataTables_paginate {
             width: 100%;
@@ -437,7 +420,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
         }
 
         .dataTables_wrapper.no-footer .dataTables_scrollBody::-webkit-scrollbar-thumb {
-            background-color: #5670FF;
             border-radius: 60px;
             max-width: 100px
         }
@@ -452,150 +434,293 @@ use \Sashaef\TranslateProvider\Models\Trans;
     </style>
     <div class="panel panel-flat">
         <div class="panel-heading">
-            <h5 class="panel-title">Translations</h5>
+            <h5 class="panel-title">Translations: {{ $type }}::{{ $group->name }}</h5>
         </div>
         <div class="panel-content">
             <div class="panel-body">
                 @include('vocabulare::pages.trans.create')
-                <form action="{{ route('translate.translates.index', ['type' => $type, 'group_id' => $group_id]) }}" method="get" enctype="multipart/form-data">
+                <form action="{{ route('translate.translates.index', ['type' => $type, 'group_id' => $group->id]) }}" method="get" enctype="multipart/form-data">
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
                                 <input type="hidden" name="type" value="{{ $type }}" class="form-control">
-                                <input type="hidden" name="id" value="{{ $group_id }}" class="form-control">
+                                <input type="hidden" name="id" value="{{ $group->id }}" class="form-control">
                                 <input type="hidden" name="isFilter" value="1" class="form-control">
                             </div>
                         </div>
                     </div>
                 </form>
 
-                <table id="myTable" class="table table-sm" cellspacing="0" width="100%">
+                <table id="transTable" class="table table-striped" style="width: 100%;">
                     <thead>
-                    <tr>
-                        <th class="block">@lang('main.key')</th>
-                        @foreach($langs as $lang)
-                            <th class="block">{{ $lang->name }}</th>
-                        @endforeach
-                    </tr>
                     </thead>
 
                     <tbody>
-                    @foreach($trans as $translate)
-                        <tr>
-                            <td class="dropdown block">
-                                <span class="value" title="@lang('main.key')">{{ $translate->key }}</span>
-                                <div class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></div>
-                                <div class="dropdown-menu dropdown-value" aria-labelledby="dropdownMenuButton" data-id="{{ $translate->id }}">
-                                    <div class="dropdown-item">
-                                        <input name="key" cols="22" rows="2" class="dropdown-content" value="{{ $translate->key }}">
-                                        <textarea name="description" cols="22" rows="2" class="dropdown-content">{{ $translate->description }}</textarea>
-                                    </div>
-                                    <div class="dropdown-footer">
-                                        <button class="btn btn-primary save">
-                                            <div class="restart"></div>
-                                            <span>Save</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <?php $translations = $translate->data; ?>
-                            @foreach($langs as $lang)
-                                <?php $translation = $translations->where('lang_id', $lang->id)->first() ?? new Trans; ?>
-                                <td class="dropdown block">
-                                    <div class="form-control {{$translation->status === 1 ? 'unchecked' : ($translation->status === 2 ? 'checked' : '')}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $translation->translation }}</div>
-                                    <div class="dropdown-menu dropdown-translate-controller" aria-labelledby="dropdownButton" data-id="{{ $translation->id }}" data-key="{{ $translate->id }}" data-lang="{{ $lang->id }}">
-                                        <div class="dropdown-item">
-                                            <textarea cols="22" rows="2" class="dropdown-content">{{ $translation->translation }}</textarea>
-                                        </div>
-                                        <div class="dropdown-footer">
-                                            <button class="btn btn-disable check">
-                                                <div class="check"></div>
-                                                <span>Checked</span>
-                                            </button>
-                                            <button class="btn btn-primary save">
-                                                <div class="restart"></div>
-                                                <span>Save</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            @endforeach
-                        </tr>
-                    @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
 
-                <div class="panel-footer">
-                    {{ $trans->appends(['filter' => ['type' => $type, 'group' => $group_id]])->links('vocabulare::includes.pagination') }}
+    <div class="btn-group">
+        <div class="icon save"></div>
+        <div class="icon sort">
+            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
+            <div class="dropdown-menu aside-menu">
+                <div class="field-wrapper">@lang('system::main.index')</div>
+                <div class="field-wrapper">@lang('system::main.name')</div>
+            </div>
+        </div>
+        <div class="icon options">
+            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
+            <div class="dropdown-menu aside-menu dropdown-options" >
+                <div id="statusFilter" class="field-wrapper">status</div>
+                <div id="statusOptions" hidden>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="">
+                        <label class="form-check-label" for="translated">All</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="2">
+                        <label class="form-check-label" for="translated">Checked</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="1">
+                        <label class="form-check-label" for="not-translated">Not checked</label>
+                    </div>
+                </div>
+                <div id="langFilter" class="field-wrapper">languages</div>
+                <div id="langOptions" hidden>
+                    @foreach($langs as $lang)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="lang[{{ $lang->id }}]" value="{{ $lang->id }}">
+                            <label class="form-check-label" for="not-translated">{{ $lang->name }}</label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <div class="icon find">
+            <a class="dropdown-toggle-aside" data-toggle="dropdown" href="#"></a>
+            <div class="dropdown-menu aside-menu dropdown-find">
+                <div class="field-wrapper">
+                    <form id="searchFilter">
+                        <input type="text" placeholder="key" name="key" class="find-field">
+                        <input type="text" placeholder="translation" name="translation" class="find-field">
+                        <button type="submit" class="find-field">Search</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script type='text/javascript'>
+    @include('vocabulare::pages.trans.edit')
+@endsection
+@section('vocabulare-js')
+    <script>
+        statusFilter.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const options = document.getElementById("statusOptions");
+            options.classList.toggle("show-options");
+        };
+        langFilter.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const options = document.getElementById("langOptions");
+            options.classList.toggle("show-options");
+        };
+        statusOptions.onclick = function(e) {
+            e.stopPropagation();
+        }
 
-        /*$(document).ready(function () {
-            $('#myTable').DataTable({
-                "scrollX": true
-            });
-        });*/
+        let main = {
+            'group': {{ $group->id }},
+            'langs': {!! $langs->pluck('name', 'id') !!},
+        };
 
-        const elements = document.querySelectorAll('input.checkClass');
-        elements.forEach(function (el) {
-            el.addEventListener('input', function (e) {
-                e.target.classList.remove('td-aproved');
-                e.target.classList.add('td-default');
-            });
-        });
-
-        $(function() {
-            $('.dropdown-translate-controller .btn.save, .dropdown-translate-controller .btn.check').on('click', function () {
-                let translation = $(this).parent().parent();
-                let updateData = {
-                    obj: 'translation',
-                    key: translation.data('key'),
-                    lang: translation.data('lang'),
-                    translation: translation.find('.dropdown-content').val(),
-                    status: $(this).hasClass('check') ? 2 : 1
-                };
-
-                $.ajax({
-                    type: "PATCH",
-                    url: '{{ route('translate.translates.update') }}',
-                    data: updateData,
-                    success: function(data) {
-                        if (data.status === 'success') {
-                            translation.parent().find('.form-control')
-                                .html(updateData.translation)
-                                .attr('class', 'form-control' + (updateData.status === 1 ? ' unchecked' : ' checked'));
+        $(function () {
+            let transApp = {
+                dataTable: {},
+                groupId: main.group,
+                keyText: null,
+                translationText: null,
+                status: null,
+                langs: main.langs,
+                get() {
+                    this.dataTable = $('#transTable').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        searching: false,
+                        stateSave: true,
+                        order: [[0, "desc"]],
+                        ajax: {
+                            url: '{{ route('translate.translates.get') }}',
+                            'data': function(data) {
+                                data.group_id = transApp.groupId;
+                                data.keyText = transApp.keyText;
+                                data.translationText = transApp.translationText;
+                                data.status = transApp.status;
+                                data.langs = Object.keys(transApp.langs);
+                            }
+                        },
+                        columns: transApp.columns(),
+                        drawCallback: function(settings) {
+                            $('[data-toggle="tooltip"]').tooltip();
                         }
-                    }
-                });
-            })
-        });
-
-        $(function() {
-            $('.dropdown-value .btn.save').on('click', function () {
-                let key = $(this).parent().parent();
-                let updateData = {
-                    obj: 'key',
-                    id: key.data('id'),
-                    key: key.find('[name="key"]').val(),
-                    description: key.find('[name="description"]').val(),
-                };
-
-                $.ajax({
-                    type: "PATCH",
-                    url: '{{ route('translate.translates.update') }}',
-                    data: updateData,
-                    success: function(data) {
-                        if (data.status === 'success') {
-                            console.log(key.parent().find('span.value'));
-                            key.parent().find('span.value').html(updateData.key);
+                    });
+                },
+                create(el) {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ route('translate.translates.store') }}',
+                        data: {
+                            type: $(el).find('[name="type"]').val(),
+                            group_id: $(el).find('[name="group_id"]').val(),
+                            key: $(el).find('[name="key"]').val(),
+                            description: $(el).find('[name="description"]').val(),
+                        },
+                        success: function (res) {
+                            if (res.status === 'success') {
+                                transApp.dataTable.ajax.reload();
+                                console.log(res.message);
+                            } else {
+                                console.log(res.message);
+                            }
                         }
-                    }
-                });
-            })
+                    });
+                },
+                update(data, modal) {
+                    $.ajax({
+                        type: "PATCH",
+                        url: '{{ route('translate.translates.update') }}',
+                        data: data,
+                        success: function (res) {
+                            if (res.status === 'success') {
+                                transApp.dataTable.ajax.reload(null, false);
+                                modal.modal('hide')
+                                console.log(res.message);
+                            } else {
+                                console.log(res.message);
+                            }
+                        }
+                    });
+                },
+                delete(data, modal) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: '{{ route('translate.translates.destroy') }}',
+                        data: data,
+                        success: function (res) {
+                            if (res.status === 'success') {
+                                transApp.dataTable.ajax.reload(null, false);
+                                modal.modal('hide')
+                                console.log(res.message);
+                            } else {
+                                console.log(res.message);
+                            }
+                        }
+                    });
+                },
+                columns() {
+                    let columns = [];
+                    columns.push({
+                        data: 'id',
+                        title: 'ID'
+                    });
+                    columns.push({
+                        data: 'key',
+                        title: 'Key',
+                        'render': function (data, type, full, meta) {
+                            return '<div class="form-control key alert-primary" data-toggle="tooltip" title="' + full.description + '">' + data + '</div>';
+                        }
+                    });
+                    for (let id in transApp.langs) {
+                        console.log(transApp.langs);
+                        columns.push({
+                            data: 'items._' + id,
+                            title: transApp.langs[id],
+                            orderable: false,
+                            'render': function (data, type, full, meta) {
+                                let translation = '';
+                                let transStatus = 'secondary';
+                                if (data) {
+                                    translation = data.translation || '';
+                                    transStatus = (data.status === 1 ? 'danger' : (data.status === 2 ? 'success' : 'secondary'));
+                                }
+                                return '<div data-lang="' + id + '" class="translate form-control alert-' + transStatus + '">' + translation + '</div>';
+                            }
+                        });
+                    };
+
+                    return columns;
+                },
+                init() {
+                    this.get();
+
+                    $('#transCreateForm').on('submit', function (e) {
+                        e.preventDefault();
+                        transApp.create(this)
+                    });
+
+                    $('#transTable tbody').on('click', '.form-control', function () {
+                        let tr = transApp.dataTable.row($(this).parents('tr'));
+                        let el = tr.data();
+                        if ($(this).hasClass('key')) {
+                            $('#keyEditForm [name="id"]').val(el.id);
+                            $('#keyEditForm [name="key"]').val(el.key);
+                            $('#keyEditForm [name="description"]').val(el.description);
+                            $('#keyEditModal').modal()
+                        } else {
+                            let lang_id = $(this).data('lang');
+                            let translation = el.items['_' + lang_id] ? el.items['_' + lang_id].translation : '';
+                            $('#tranlateEditForm [name="key"]').val(el.id);
+                            $('#tranlateEditForm [name="lang"]').val(lang_id);
+                            $('#tranlateEditForm [name="translation"]').val(translation);
+                            $('#tranlateEditModal').modal()
+                        }
+                    });
+
+                    $('#keyEditForm button').on('click', function (e) {
+                        e.preventDefault();
+                        if ($(this).hasClass('action-delete')) {
+                            transApp.delete($(this).closest('form').serializeArray(), $('#keyEditModal'))
+                        } else {
+                            transApp.update($(this).closest('form').serializeArray(), $('#keyEditModal'))
+                        }
+                    });
+
+                    $('#tranlateEditForm button').on('click', function (e) {
+                        e.preventDefault();
+                        let data = $(this).closest('form').serializeArray();
+                        data.push({name: "status", value: $(this).val()});
+                        transApp.update(data, $('#tranlateEditModal'));
+                    });
+
+                    $('#statusOptions input').on('click', function () {
+                        transApp.status = $(this).val();
+                        transApp.dataTable.draw();
+                    });
+
+                    $('#langOptions input').on('click', function () {
+                        let langs = {};
+                        $('#langOptions input:checked').each(function(index, el) {
+                            langs[el.value] = main.langs[el.value];
+                        });
+                        transApp.langs = Object.keys(langs).length === 0 ? main.langs : langs;
+                        transApp.dataTable.clear().destroy();
+                        $('#transTable tr').remove();
+                        transApp.get();
+                    });
+
+                    $('#searchFilter').on('submit', function(e) {
+                        e.preventDefault();
+                        transApp.keyText = $(this).find('[name="key"]').val();
+                        transApp.translationText = $(this).find('[name="translation"]').val();
+                        transApp.dataTable.draw();
+                    });
+                },
+            };
+            transApp.init();
         });
     </script>
 @endsection
