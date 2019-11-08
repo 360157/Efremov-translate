@@ -273,11 +273,14 @@
                     success: function (res) {
                         if (res.status === 'success') {
                             groupApp.dataTable.ajax.reload();
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'success'});
                         } else {
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'danger'});
                         }
-                    }
+                    },
+                    error: function (res) {
+                        $.notify({message: res.message},{type: 'danger'});
+                    },
                 });
             },
             delete(el) {
@@ -288,9 +291,9 @@
                     success: function (res) {
                         if (res.status === 'success') {
                             el.remove().draw(false);
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'success'});
                         } else {
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'danger'});
                         }
                     }
                 });

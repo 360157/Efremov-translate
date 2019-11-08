@@ -582,11 +582,14 @@ use \Sashaef\TranslateProvider\Models\Trans;
                         success: function (res) {
                             if (res.status === 'success') {
                                 transApp.dataTable.ajax.reload();
-                                console.log(res.message);
+                                $.notify({message: res.message},{type: 'success'});
                             } else {
-                                console.log(res.message);
+                                $.notify({message: res.message},{type: 'danger'});
                             }
-                        }
+                        },
+                        error: function (res) {
+                            $.notify({message: res.message},{type: 'danger'});
+                        },
                     });
                 },
                 update(data, modal) {
@@ -598,9 +601,9 @@ use \Sashaef\TranslateProvider\Models\Trans;
                             if (res.status === 'success') {
                                 transApp.dataTable.ajax.reload(null, false);
                                 modal.modal('hide')
-                                console.log(res.message);
+                                $.notify({message: res.message},{type: 'success'});
                             } else {
-                                console.log(res.message);
+                                $.notify({message: res.message},{type: 'danger'});
                             }
                         }
                     });
@@ -614,9 +617,9 @@ use \Sashaef\TranslateProvider\Models\Trans;
                             if (res.status === 'success') {
                                 transApp.dataTable.ajax.reload(null, false);
                                 modal.modal('hide')
-                                console.log(res.message);
+                                $.notify({message: res.message},{type: 'success'});
                             } else {
-                                console.log(res.message);
+                                $.notify({message: res.message},{type: 'danger'});
                             }
                         }
                     });

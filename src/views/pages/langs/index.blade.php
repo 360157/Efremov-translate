@@ -349,11 +349,14 @@
                     success: function (res) {
                         if (res.status === 'success') {
                             langApp.dataTable.ajax.reload();
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'success'});
                         } else {
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'danger'});
                         }
-                    }
+                    },
+                    error: function (res) {
+                        $.notify({message: res.message},{type: 'danger'});
+                    },
                 });
             },
             update(data, modal) {
@@ -364,10 +367,10 @@
                     success: function (res) {
                         if (res.status === 'success') {
                             langApp.dataTable.ajax.reload(null, false);
-                            modal.modal('hide')
-                            console.log(res.message);
+                            modal.modal('hide');
+                            $.notify({message: res.message},{type: 'success'});
                         } else {
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'danger'});
                         }
                     }
                 });
@@ -380,9 +383,9 @@
                     success: function (res) {
                         if (res.status === 'success') {
                             el.remove().draw(false);
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'success'});
                         } else {
-                            console.log(res.message);
+                            $.notify({message: res.message},{type: 'danger'});
                         }
                     }
                 });
