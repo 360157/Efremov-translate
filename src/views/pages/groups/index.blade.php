@@ -262,14 +262,11 @@
                 let data = el.data();
                 window.location = '{{ route('translate.translates.index') }}' + '?type=' + data.type + '&group=' + data.id;
             },
-            create(el) {
+            create(data) {
                 $.ajax({
                     type: "POST",
                     url: '{{ route('translate.groups.store') }}',
-                    data: {
-                        type: $(el).find('[name="type"]').val(),
-                        name: $(el).find('[name="name"]').val(),
-                    },
+                    data: data,
                     success: function (res) {
                         if (res.status === 'success') {
                             groupApp.dataTable.ajax.reload();
@@ -303,7 +300,7 @@
 
                 $('#groupCreateForm').on('submit', function (e) {
                     e.preventDefault();
-                    groupApp.create(this)
+                    groupApp.create($(this).serializeArray())
                 });
 
                 $('#groupTable tbody').on('click', 'span.action-link', function () {

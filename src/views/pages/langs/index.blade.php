@@ -338,14 +338,11 @@
                     ]
                 });
             },
-            create(el) {
+            create(data) {
                 $.ajax({
                     type: "POST",
                     url: '{{ route('translate.langs.store') }}',
-                    data: {
-                        index: $(el).find('[name="index"]').val(),
-                        name: $(el).find('[name="name"]').val(),
-                    },
+                    data: data,
                     success: function (res) {
                         if (res.status === 'success') {
                             langApp.dataTable.ajax.reload();
@@ -395,7 +392,7 @@
 
                 $('#langCreateForm').on('submit', function (e) {
                     e.preventDefault();
-                    langApp.create(this)
+                    langApp.create($(this).serializeArray())
                 });
 
                 $('#langTable tbody').on('click', 'span.action-edit', function () {
