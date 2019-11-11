@@ -569,16 +569,11 @@ use \Sashaef\TranslateProvider\Models\Trans;
                         }
                     });
                 },
-                create(el) {
+                create(data) {
                     $.ajax({
                         type: "POST",
                         url: '{{ route('translate.translates.store') }}',
-                        data: {
-                            type: $(el).find('[name="type"]').val(),
-                            group_id: $(el).find('[name="group_id"]').val(),
-                            key: $(el).find('[name="key"]').val(),
-                            description: $(el).find('[name="description"]').val(),
-                        },
+                        data: data,
                         success: function (res) {
                             if (res.status === 'success') {
                                 transApp.dataTable.ajax.reload();
@@ -662,7 +657,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
 
                     $('#transCreateForm').on('submit', function (e) {
                         e.preventDefault();
-                        transApp.create(this)
+                        transApp.create($(this).serializeArray())
                     });
 
                     $('#transTable tbody').on('click', '.form-control', function () {
