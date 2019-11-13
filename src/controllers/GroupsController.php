@@ -34,6 +34,8 @@ class GroupsController extends Controller
      */
     public function get(Request $request)
     {
+        if (empty($request->type)) {$request->type = 'interface';}
+
         $groups = $this->filterGroups($request);
 
         return new GroupCollection($groups);

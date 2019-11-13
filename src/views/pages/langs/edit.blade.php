@@ -10,27 +10,24 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <div class="row">
+                        <div class="value-group">
                             <input id="id" type="hidden" name="id" value="" class="form-control">
                             <div class="col-md-6">
                                 <label>@lang('system::main.name')</label>
-                                <input id="name" type="text" name="name" value="" class="form-control">
+                                <input id="name" type="text" name="name" value="" class="lang-value">
                             </div>
                             <div class="col-md-6">
                                 <label>@lang('system::main.index')</label>
-                                <input id="index" type="text" name="index" value="" class="form-control">
+                                <input id="index" type="text" name="index" value="" class="lang-value">
                             </div>
-
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label>@lang('system::main.index')</label>
-                            <input id="isActiveCheck" type="checkbox" name="is_active" value="1">
-                        </div>
+                    <div class="active-status-wrapper">
+                        <input id="isActiveCheck" type="checkbox" name="is_active" value="1">               
+                        <label>@lang('system::main.index')</label>                                               
                     </div>
-                    <div class="row">
-                        <button type="submit" class="btn btn-primary">@lang('system::main.save') <i class="icon-arrow-right14 position-right"></i></button>
+                    <div class="value-group">
+                        <button type="submit" class="btn button btn-center">@lang('system::main.save') <i class="icon-arrow-right14 position-right"></i></button>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@
                     {!! $errors->first('index', '<span class="help-block text-danger">:message</span>') !!}
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary">@lang('system::main.create')<i class="icon-arrow-right14 position-right"></i></button>
+                    <button type="submit" class="btn button">@lang('system::main.create')<i class="icon-arrow-right14 position-right"></i></button>
                 </div>
             </div>
         </div>

@@ -13,11 +13,10 @@
                     </div>
                     <div class="form-group">
                         <label>@lang('system::main.description')</label>
-                        <textarea name="description" class="form-control"></textarea>
+                        <textarea name="description" class="form-control description"></textarea>
                     </div>
                     <div class="row">
-                        <button type="submit" class="btn btn-primary">@lang('system::main.update') <i class="icon-arrow-right14 position-right"></i></button>
-                        <button type="submit" class="btn btn-danger action-delete">@lang('system::main.delete') <i class="icon-arrow-right14 position-right"></i></button>
+                        <button type="submit" class="btn button btn-icon"><div class="update-icon"></div>@lang('system::main.update') </button>
                     </div>
                 </div>
             </div>
@@ -36,11 +35,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>@lang('system::main.translation')</label>
-                        <textarea name="translation" class="form-control"></textarea>
+                        <textarea name="translation" class="form-control description"></textarea>
                     </div>
-                    <div class="row">
-                        <button type="submit" class="btn btn-primary" name="status" value="1">@lang('system::main.save') <i class="icon-arrow-right14 position-right"></i></button>
-                        <button type="submit" class="btn btn-success" name="status" value="2">@lang('system::main.verify') <i class="icon-arrow-right14 position-right"></i></button>
+                    <div class="btn-center">                        
+                        <button type="submit" class="button btn-light btn-icon" name="status" value="1"><div class="check-icon"></div>@lang('system::main.verify')</button>
+                        <button type="submit" class="button btn-icon" name="status" value="2"><div class="update-icon"></div>@lang('system::main.save')</button>
                     </div>
                 </div>
             </div>
