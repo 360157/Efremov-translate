@@ -66,13 +66,13 @@ trait Groups
         }
     }
 
-    public function deleteGroup($id)
+    public function deleteGroup($id, $trans = false)
     {
         $group = $this->getGroup($id);
 
         if ($group === null) {return ['status' => 'error', 'message' => 'The group is missing!'];}
 
-        if ($group->trans->isNotEmpty()) {return ['status' => 'error', 'message' => 'The group has translations!'];}
+        if ($trans === false && $group->trans->isNotEmpty()) {return ['status' => 'error', 'message' => 'The group has translations!'];}
 
         if ($group->delete()) {
             return ['status' => 'success', 'message' => 'The group has deleted!'];

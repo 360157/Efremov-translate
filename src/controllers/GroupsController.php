@@ -109,7 +109,7 @@ class GroupsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $response = $this->deleteGroup($request->id);
+        $response = $this->deleteGroup($request->id, $request->trans);
 
         return response()->json($response, 200);
     }

@@ -29,13 +29,6 @@
     </div>
 
     <div class="btn-group aside">
-        <div class="aside-icon save"></div>
-        <div class="dropdown dropdown-btn">
-            <div class="dropdown-toggle" data-toggle="dropdown">
-                <div class="aside-icon sort"></div>
-            </div >
-        </div>
-
         <div class="dropdown dropdown-btn">
             <div class="dropdown-toggle" data-toggle="dropdown">
                 <div class="aside-icon options"></div>
@@ -100,7 +93,10 @@
                     stateSave: true,
                     order: [[0, "desc"]],
                     scrollX: true,
-                    scrollY: false,
+                    // scrollY: false,                    
+                    deferRender:    true,
+                    scrollCollapse: true,
+                    scroller:       true,
                     ajax: {
                         url: '{{ route('translate.langs.get') }}',
                         'data': function(data){
@@ -115,7 +111,7 @@
                         {
                             data: 'is_active',
                             'render': function (data, type, full, meta) {
-                                return '<span class="badge badge-' + (data ? 'success' : 'danger') + '">' + data + '</span>';
+                                return '<div class="badge badge-' + (data ? 'active' : 'not-active') + '"></div>';
                             }
                         },
                         { data: 'created_at' },

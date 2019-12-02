@@ -1,8 +1,7 @@
 @extends('vocabulare::layouts.main')
 
 @section('content')
-<style>
-</style>
+
     <div class="panel panel-flat">
         <div class="panel-heading">
             <h5 class="panel-title">Groups: {{ $type }}</h5>
@@ -33,14 +32,7 @@
 
 
 
-    <div class="btn-group aside">
-        <div class="aside-icon save"></div>
-        <div class="dropdown dropdown-btn">
-            <div class="dropdown-toggle" data-toggle="dropdown">
-                <div class="aside-icon sort"></div>
-            </div >
-        </div>
-        
+    <div class="btn-group btn-group-one-element aside">
         <div class="dropdown dropdown-btn">
             <div class="dropdown-toggle" data-toggle="dropdown">
                 <div class="aside-icon find"></div>
@@ -55,7 +47,7 @@
             </div>
         </div>
     </div>
-
+    @include('vocabulare::pages.groups.delete')
 @endsection
 @section('vocabulare-js')
 
@@ -94,7 +86,12 @@
                                 return '<div class="action-link">' + data + '</div>';
                             }
                         },
-                        { data: 'trans' },
+                        {
+                            data: 'trans',
+                            'render': function (data, type, full, meta) {
+                                return '<div class="action-link">' + full.trans + ' / ' + full.not_trans + '</div>';
+                            }
+                        },
                         {
                             data: null, defaultContent:
                             '<div class="edit-wrapper">' +
@@ -137,11 +134,11 @@
                     },
                 });
             },
-            delete(el) {
+            delete(el, data) {
                 $.ajax({
                     type: "DELETE",
                     url: '{{ route('translate.groups.destroy') }}',
-                    data: {id: el.data().id},
+                    data: {id: el.data().id, trans: true, _token: '{{ csrf_token() }}'},
                     success: function (res) {
                         if (res.status === 'success') {
                             el.remove().draw(false);
@@ -167,7 +164,18 @@
 
                 $('#groupTable tbody').on('click', 'div.action-delete', function () {
                     let el = groupApp.dataTable.row($(this).parents('tr'));
-                    groupApp.delete(el)
+                    if (el.data().trans > 0) {
+                        $('#groupDeleteModal').modal('show');
+                    }
+
+                    $('#groupDeleteModal button').on('click', function (e) {
+                        $('#groupDeleteModal').modal('hide');
+                        groupApp.delete(el)
+                    });
+
+                    if (el.data().trans === 0) {
+                        groupApp.delete(el)
+                    }
                 });
 
                 $('#groupSearchForm').on('submit', function (e) {

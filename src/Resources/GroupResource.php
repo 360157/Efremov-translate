@@ -18,7 +18,8 @@ class GroupResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'type' => $this->type,
-            'trans' => $this->trans.' / '.$this->not_trans,
+            'trans' => $this->trans,
+            'not_trans' => $this->not_trans,
             'created_at' => strval($this->created_at),
             'updated_at' => strval($this->updated_at),
         ];

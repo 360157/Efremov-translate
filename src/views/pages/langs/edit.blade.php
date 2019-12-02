@@ -24,7 +24,7 @@
                     </div>
                     <div class="active-status-wrapper">
                         <input id="isActiveCheck" type="checkbox" name="is_active" value="1">               
-                        <label>@lang('system::main.index')</label>                                               
+                        <label>@lang('system::main.is_active')</label>
                     </div>
                     <div class="value-group">
                         <button type="submit" class="btn button btn-center">@lang('system::main.save') <i class="icon-arrow-right14 position-right"></i></button>

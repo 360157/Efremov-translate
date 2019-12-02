@@ -6,9 +6,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
 
 @section('content')
 
-    <style>
-
-    </style>
     <div class="panel panel-flat">
         <div class="panel-heading">
             <h5 class="panel-title">Translations: {{ $type }}::{{ $group->name }}</h5>
@@ -40,13 +37,13 @@ use \Sashaef\TranslateProvider\Models\Trans;
     </div>
 
     <div class="btn-group aside">
-        <div class="aside-icon save"></div>
+        <!-- <div class="aside-icon save"></div>
 
         <div class="dropdown dropdown-btn">
             <div class="dropdown-toggle" data-toggle="dropdown">
                 <div class="aside-icon sort"></div>
             </div >
-        </div>
+        </div> -->
 
         <div class="dropdown dropdown-btn">
             <div class="dropdown-toggle" data-toggle="dropdown">
@@ -95,67 +92,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
             </div>
         </div>
     </div> 
-    <!-- <div class="btn-group aside">
-        <div class="aside-icon save"></div>
-        <div class="dropdown dropdown-btn">
-            <div class="dropdown-toggle" data-toggle="dropdown">
-                <div class="aside-icon sort"></div>
-            </div >
-            <div class="dropdown-menu dropdown-menu-sort">
-                <div class="field-wrapper">@lang('system::main.index')</div>
-                <div class="field-wrapper">@lang('system::main.name')</div>
-            </div>
-        </div>
-        <div class="dropdown dropdown-btn">
-            <div class="dropdown-toggle" data-toggle="dropdown">
-                <div class="aside-icon options"></div>
-            </div >
-            <div class="dropdown-menu dropdown-menu-options">
 
-
-                <div id="statusLink" class="field-wrapper">status</div>
-                <div id="statusOptions">
-                    <div class="form-check">
-                        <input class="form-check-input" id="all" type="radio" name="status" value="">
-                        <label class="form-check-label" for="translated">All</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" id="checked"  type="radio" name="status" value="2">
-                        <label class="form-check-label" for="translated">Checked</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" id="not-checked" type="radio" name="status" value="1">
-                        <label class="form-check-label" for="not-translated">Not checked</label>
-                    </div>
-                </div>
-                <div id="langFilter" class="field-wrapper">languages</div>
-                <div id="langOptions" >
-                    @foreach($langs as $lang)
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="lang[{{ $lang->id }}]" value="{{ $lang->id }}">
-                            <label class="form-check-label" for="not-translated">{{ $lang->name }}</label>
-                        </div>
-                    @endforeach
-                </div>
-
-
-            </div>
-        </div>
-        <div class="dropdown dropdown-btn">
-            <div class="dropdown-toggle" data-toggle="dropdown">
-                <div class="aside-icon find"></div>
-            </div >
-            <div class="dropdown-menu dropdown-menu-find">
-                <div class="field-wrapper">
-                    <form id="searchFilter">
-                        <input type="text" placeholder="Key" name="key" class="find-field">
-                        <input type="text" placeholder="Translation" name="translation" class="find-field">
-                        <button type="submit" class="button find-field">Search</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> -->
     @include('vocabulare::pages.trans.edit')
 @endsection
 @section('vocabulare-js')
@@ -195,7 +132,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
                         serverSide: true,
                         searching: false,
                         stateSave: true,
-                        scrollX: true,
+                        scrollX: 200,
                         order: [[0, "desc"]],
                         ajax: {
                             url: '{{ route('translate.translates.get') }}',
@@ -320,7 +257,6 @@ use \Sashaef\TranslateProvider\Models\Trans;
                             // $('#tranlateEditModal').modal()
                         }
                     });
-
                     $('#transTable tbody').on('click', '.translate', function () {
                         let tr = transApp.dataTable.row($(this).parents('tr'));
                         let el = tr.data();
