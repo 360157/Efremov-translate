@@ -40,6 +40,17 @@ class Langs extends Model
             ->paginate($perPage);
     }
 
+    public static function getLangsById($lang_id = null)
+    {
+        if (is_null($lang_id) || $lang_id == 'all') {
+            $result = self::get();
+        } else {
+            $result = self::where('id', $lang_id)->get();
+        }
+
+        return $result;
+    }
+
     public static function postLangs($name, $index)
     {
         return self::firstOrCreate([
