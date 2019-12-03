@@ -48,8 +48,7 @@ trait Langs
         }
 
         $order = [self::$langColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
-        $page = $request->start / $request->length + 1;
-        Paginator::currentPageResolver(function() use ($page) {return $page;});
+        self::setPageByStart($request->start, $request->length);
 
         return Model::filterLangs([
             'is_active' => $request->isActive,
@@ -97,5 +96,14 @@ trait Langs
         } else {
             return ['status' => 'error', 'message' => 'Server error!'];
         }
+    }
+
+    public static function setPageByStart($start, $perPage)
+    {
+        if ($start === null ) {return;}
+
+        $page = $start / ($perPage ?? (new Model)->getPerPage()) + 1;
+
+        Paginator::currentPageResolver(function() use ($page) {return $page;});
     }
 }

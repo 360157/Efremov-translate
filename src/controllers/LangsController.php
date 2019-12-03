@@ -70,7 +70,7 @@ class LangsController extends Controller
         if ($response->wasRecentlyCreated) {
             return response()->json(['status' => 'success', 'message' => 'The language has created!'], 200);
         } else {
-            return response()->json(['status' => 'success', 'message' => 'The language is already exists!'], 200);
+            return response()->json(['status' => 'danger', 'message' => 'The language is already exists!'], 200);
         }
     }
 

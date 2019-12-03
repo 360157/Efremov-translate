@@ -26,7 +26,7 @@ class Langs extends Model
             ->get();
     }
 
-    public static function filterLangs($filter, array $order = ['id', 'desc'], $perPage = 1)
+    public static function filterLangs($filter, array $order = ['id', 'desc'], $perPage = null)
     {
         $result = self::query();
 
@@ -73,5 +73,14 @@ class Langs extends Model
     public static function deleteLangs($id)
     {
         self::where('id', $id)->delete();
+    }
+
+    public function translateUpdatedAt()
+    {
+        $translation = $this->transData()
+            ->orderBy('updated_at')
+            ->first();
+
+        return $translation->updated_at ?? null;
     }
 }

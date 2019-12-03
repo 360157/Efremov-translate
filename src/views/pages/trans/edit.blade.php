@@ -38,8 +38,8 @@
                         <textarea name="translation" class="form-control description"></textarea>
                     </div>
                     <div class="btn-center">                        
-                        <button type="submit" class="button btn-light btn-icon" name="status" value="1"><div class="check-icon"></div>@lang('system::main.verify')</button>
-                        <button type="submit" class="button btn-icon" name="status" value="2"><div class="update-icon"></div>@lang('system::main.save')</button>
+                        <button type="submit" class="button btn-light btn-icon" name="status" value="2"><div class="check-icon"></div>@lang('system::main.verify')</button>
+                        <button type="submit" class="button btn-icon" name="status" value="1"><div class="update-icon"></div>@lang('system::main.save')</button>
                     </div>
                 </div>
             </div>

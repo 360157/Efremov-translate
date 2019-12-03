@@ -67,12 +67,17 @@ use \Sashaef\TranslateProvider\Models\Trans;
                 </div>
                 <div id="langFilter" class="field-wrapper">languages</div>
                 <div id="langOptions" hidden>
-                    @foreach($langs as $lang)
-                        <div class="form-check">
+                    <div class="field-wrapper">
+                        <input id="searchLangFilter" type="text" placeholder="language" name="name" class="find-field" autocomplete="off">
+                    </div>
+                    <div class="field-list dataTables_scrollBody">
+                        @foreach($langs as $lang)
+                        <div class="form-check" data-lang="{{ $lang->name }}">
                             <input class="form-check-input" type="checkbox" name="lang[{{ $lang->id }}]" value="{{ $lang->id }}">
                             <label class="form-check-label" for="not-translated">{{ $lang->name }}</label>
                         </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +116,22 @@ use \Sashaef\TranslateProvider\Models\Trans;
         };
         statusOptions.onclick = function(e) {
             e.stopPropagation();
-        }
+        };
+        searchLangFilter.onkeyup = function(e) {
+            let formChecks = $('#langOptions .form-check');
+            let value = this.value;
+            let valueUF = value.charAt(0).toUpperCase() + value.slice(1);
+            formChecks.hide();
+            if (value !== '') {
+                formChecks.each(function (index, element) {
+                    if ($(element).data('lang').match(value+".*") || $(element).data('lang').match(valueUF+".*")) {
+                        $(element).show();
+                    }
+                });
+            } else {
+                formChecks.show();
+            }
+        };
 
         let main = {
             'group': {{ $group->id }},
@@ -209,6 +229,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
                     columns.push({
                         data: 'key',
                         title: 'Key',
+                        width: "180px",
                         'render': function (data, type, full, meta) {
                             return '<div class="form-control field key-field" >' + data + '</div>' + ' <div class="dropdown-toggle key" id="dropdownMenuButton" data-toggle="tooltip" title="' + full.description + '"></div>';
                         }
@@ -217,13 +238,14 @@ use \Sashaef\TranslateProvider\Models\Trans;
                         columns.push({
                             data: 'items._' + id,
                             title: transApp.langs[id],
+                            width: "180px",
                             orderable: false,
                             'render': function (data, type, full, meta) {
                                 let translation = '';
                                 let transStatus = 'td-default';
                                 if (data) {
                                     translation = data.translation || '';
-                                    transStatus = (data.status === 1 ? 'td-aproved' : (data.status === 2 ? 'td-warning' : 'td-default'));
+                                    transStatus = (data.status === 2 ? 'td-aproved' : (data.status === 1 ? 'td-warning' : 'td-default'));
                                 }
                                 return '<div data-lang="' + id + '" class="translate form-control field ' + transStatus + '">' + translation + '</div>';
                             }
