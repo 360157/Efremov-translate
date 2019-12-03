@@ -25,7 +25,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
                     </div>
                 </form>
 
-                <table id="transTable" class="table table-sm table_wrapper" cellspacing="0" width="100%">
+                <table id="transTable" class="table table-sm table_wrapper hover" cellspacing="0" width="100%">
                     <thead>
                     </thead>
 

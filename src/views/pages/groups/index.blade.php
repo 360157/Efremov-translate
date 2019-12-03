@@ -10,7 +10,7 @@
             <div class="panel-body">
                 @include('vocabulare::pages.groups.create')
 
-                <table id="groupTable" class="table table_wrapper" style="width: 100%;">
+                <table id="groupTable" class="table table_wrapper hover" style="width: 100%;">
                     <thead>
                         <tr>
                             <th scope="col">@lang('system::main.id')</th>
@@ -27,10 +27,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
     <div class="btn-group btn-group-one-element aside">
         <div class="dropdown dropdown-btn">

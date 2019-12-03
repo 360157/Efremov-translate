@@ -9,7 +9,7 @@
             <div class="panel-body">
                 @include('vocabulare::pages.langs.create')
             </div>
-                <table id="langTable" class="table table_wrapper" style="width: 100%;">
+                <table id="langTable" class="table table_wrapper hover" style="width: 100%;">
                     <thead>
                     <tr>
                         <th scope="col">@lang('system::main.id')</th>
