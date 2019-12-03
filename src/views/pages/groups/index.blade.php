@@ -10,7 +10,7 @@
             <div class="panel-body">
                 @include('vocabulare::pages.groups.create')
 
-                <table id="groupTable" class="table table_wrapper" style="width: 100%;">
+                <table id="groupTable" class="table table_wrapper hover" style="width: 100%;">
                     <thead>
                         <tr>
                             <th scope="col">@lang('system::main.id')</th>
@@ -27,10 +27,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
     <div class="btn-group btn-group-one-element aside">
         <div class="dropdown dropdown-btn">
@@ -76,6 +72,7 @@
                     columns: [
                         {
                             data: 'id',
+                            width: "26px",
                             'render': function (data, type, full, meta) {
                                 return '<div class="action-link">' + data + '</div>';
                             }
@@ -93,8 +90,9 @@
                             }
                         },
                         {
-                            data: null, defaultContent:
-                            '<div class="edit-wrapper">' +
+                            data: null,
+                            width: "48px",
+                            defaultContent: '<div class="edit-wrapper">' +
                                 '<div class="dropdown dropdown-arrow">' +
                                     '<div class="dropdown-toggle" data-toggle="dropdown">' +
                                         '<a class="dropdown-toggle-arrow"></a>' +
@@ -164,16 +162,16 @@
 
                 $('#groupTable tbody').on('click', 'div.action-delete', function () {
                     let el = groupApp.dataTable.row($(this).parents('tr'));
-                    if (el.data().trans > 0) {
+                    let allTrans = el.data().trans + el.data().not_trans;
+
+                    if (allTrans > 0) {
                         $('#groupDeleteModal').modal('show');
-                    }
 
-                    $('#groupDeleteModal button').on('click', function (e) {
-                        $('#groupDeleteModal').modal('hide');
-                        groupApp.delete(el)
-                    });
-
-                    if (el.data().trans === 0) {
+                        $('#groupDeleteModal button[type="submit"]').on('click', function (e) {
+                            $('#groupDeleteModal').modal('hide');
+                            groupApp.delete(el)
+                        });
+                    } else {
                         groupApp.delete(el)
                     }
                 });

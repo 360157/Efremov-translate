@@ -20,7 +20,7 @@ class LangResource extends JsonResource
             'index' => $this->index,
             'is_active' => $this->is_active,
             'created_at' => strval($this->created_at),
-            'updated_at' => strval($this->updated_at),
+            'updated_at' => strval($this->translateUpdatedAt()),
         ];
     }
 }

@@ -10,7 +10,7 @@
 
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link href="/vendor/vocabulare/css/style.css" rel="stylesheet" type="text/css">
@@ -21,7 +21,7 @@
         }
 
         .navbar {
-            margin: 0 300px;
+            margin: 0 auto;
             border-radius: 4px;
             padding: 0 30px;
             margin-bottom: 10px;
@@ -37,14 +37,21 @@
             padding: 8px 60px;
         }
 
-        .nav-link span {
-            font: 300 14px/19px Roboto;
-            color: #212121;
+        .nav-link {
+            font: normal 14px/19px Roboto;
+            color: #212121!important;
         }
 
-        .nav-link:hover span {
+        .nav-link:hover {
+            color: #5670FF;
+            text-decoration: underline;
+        }
+
+        .nav-link.active {
             font-weight: 400;
             color: #5670FF;
+            background: transparent!important;
+            text-decoration: underline;
         }
 
         .nav-link:active span {
@@ -54,7 +61,7 @@
         }
 
         .page-content {
-            margin: 0 300px;
+            margin: 0 auto;
             border-radius: 4px;
             background-color: #FFFFFF;
         }
@@ -225,6 +232,25 @@
 
         #lang-options ul li {
             padding: 0 10px;
+        }
+
+        .aside .field-list {
+            max-height: 200px;
+            overflow-y: scroll;
+        }
+
+        .aside .field-list::-webkit-scrollbar {
+            background-color: #E8EBED;
+            width: 6px;
+            cursor:pointer;
+        }
+
+        .aside .field-list::-webkit-scrollbar-thumb {
+            height: 4px;
+            border-radius: 60px;
+            max-width: 100px;
+            width: 100px;
+            background: #5670FF;
         }
 
         #langFilter, #statusFilter, #statusLink {
@@ -427,8 +453,8 @@
 
 
         .table_wrapper {
-            width: 1200px !important;
-            max-width: 1200px !important;
+            width: 1050px !important;
+            min-width: 1050px !important;
             overflow-x: scroll !important;
         }
 
@@ -464,18 +490,11 @@
             text-align: center !important;
         }
 
-        .table.dataTable thead th {
-            border: none;
-        }
-
         .table.dataTable {
             table-layout: fixed;
             word-wrap: break-word;
         }
 
-        .table.dataTable thead th:first-child {
-            border-right: 1px solid #E5E5E5;
-        }
         .dataTables_length,
         .dataTables_info {
             font: 400 14px/25px Roboto;
@@ -727,27 +746,6 @@
             margin-top: 60px;
         }
 
-/* table.dataTable thead .sorting, 
-table.dataTable thead .sorting_asc, 
-table.dataTable thead .sorting_desc {
-    background : none;
-    position: relative;
-}
-table.dataTable thead .sorting_desc:after, 
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting:after {
-    content: '';
-    position: absolute;
-    top: 21px;
-    right: 12px;
-    width: 12px;
-    height: 7px;
-    background: url(/img/arrow.svg) no-repeat;
-    cursor: pointer;
-    transform: rotate(-90deg);
-    transition-duration: 500ms;
-} */
-
         .dataTables_wrapper .dataTables_paginate {
             display: flex;
             justify-content: center;
@@ -762,10 +760,10 @@ table.dataTable thead .sorting:after {
         #langTable_wrapper {
             min-height: 150px;
         }
-
+12
         #groupTable_wrapper thead th:first-child,
         #langTable_wrapper thead th:first-child{
-            width: 50px!important;
+            /*width: 24px!important;*/
         }
 
         #groupTable_previous, #groupTable_next,
@@ -836,15 +834,6 @@ table.dataTable thead .sorting:after {
             color: #010101 !important;
         }
 
-        .table.dataTable thead .sorting {
-            background: transparent;
-        }
-
-        .table.dataTable thead th {
-            border-bottom: none;
-        }
-
-
         /* scroll */
         .dataTables_wrapper.no-footer .dataTables_scrollBody {
             border: none;
@@ -865,11 +854,6 @@ table.dataTable thead .sorting:after {
         .dataTables_wrapper.no-footer .dataTables_scrollBody::-webkit-scrollbar:vertical {
             display: none;
         }
-
-        table.dataTable thead .sorting_asc {
-            background: transparent;
-        }
-
 
         /* dropdown edit element */
         .edit-wrapper {
@@ -920,28 +904,8 @@ table.dataTable thead .sorting:after {
 
         /*END dropdown edit element */
 
-        .block, .table.dataTable thead th {
-            max-width: 166px;
-            text-overflow: clip;
-        }
-
-        .table.dataTable thead th {
-            width: 166px !important;
-            max-width: 166px !important;
-        }
-
-        table.dataTable thead .sorting_desc {
-            width: 166px !important;;
-            max-width: 166px !important;
-        }
-
         .row {
             max-height: 28px !important;
-        }
-
-        .row .sorting_desc {
-            width: 166px !important;;
-            max-width: 166px !important;
         }
 
         table {
@@ -952,22 +916,39 @@ table.dataTable thead .sorting:after {
             overflow:hidden;
             text-overflow: ellipsis;
         } */
-        .table tbody tr td {
-            min-width: 217px !important;
-            width: 217px !important;
-            max-width: 217px !important;
+
+        .table thead tr th {
             max-height: 48px !important;
             font: 300 14px/19px Roboto;
             text-align: left;
-            padding: 0px 15px;
+            padding: 0 15px;
+            border-right: 1px solid #E5E5E5;
+            border-left: none;
+            border-bottom: 1px solid #E5E5E5;
+            border-top: none;
         }
 
-        #langTable tbody tr td {
+        .table thead tr th:last-child {
+            border-right: none;
+        }
+
+        .table tbody tr td {
+            max-height: 48px !important;
+            font: 300 14px/19px Roboto;
+            text-align: left;
+            padding: 0 15px;
             border-right: 1px solid #E5E5E5;
+            border-left: none;
+            border-bottom: 1px solid #E5E5E5;
+            border-top: none;
         }
 
         .table tbody tr td:last-child {
             border-right: none;
+        }
+
+        .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody {
+            cursor: pointer;
         }
 
         .field {
@@ -993,10 +974,6 @@ table.dataTable thead .sorting:after {
         table.dataTable tbody tr, table.dataTable thead {
             max-height: 40px;
             padding-bottom: 1px !important;
-        }
-
-        .table.dataTable thead th {
-            font: 500 14px/19px Roboto;
         }
 
         .field {
@@ -1052,10 +1029,6 @@ table.dataTable thead .sorting:after {
 
         .table th {
             border: none;
-        }
-
-        .table thead th:last-child{
-            text-align: right;
         }
 
         .modal-dialog {
@@ -1217,18 +1190,22 @@ table.dataTable thead .sorting:after {
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container">
         <nav id="navbar" class="navbar">
             <span class="navbar-brand">@lang('system::main.translate')</span>
+            @php
+            $route = request()->route()->getName();
+            $type = request()->route('type') ?? request()->get('type');
+            @endphp
             <ul class="nav nav-pills">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('translate.langs.index') }}"><span>@lang('system::main.langs')</span></a>
+                    <a class="nav-link{{ $route == 'translate.langs.index' ? ' active' : '' }}" href="{{ route('translate.langs.index') }}">@lang('system::main.langs')</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('translate.groups.type', ['type' => 'interface']) }}"><span>@lang('system::main.interface-trans')</span></a>
+                    <a class="nav-link{{ $type == 'interface' ? ' active' : '' }}" href="{{ route('translate.groups.type', ['type' => 'interface']) }}">@lang('system::main.interface-trans')</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('translate.groups.type', ['type' => 'system']) }}"><span>@lang('system::main.system-trans')</span></a>
+                    <a class="nav-link{{ $type == 'system' ? ' active' : '' }}" href="{{ route('translate.groups.type', ['type' => 'system']) }}">@lang('system::main.system-trans')</a>
                 </li>
             </ul>
         </nav>

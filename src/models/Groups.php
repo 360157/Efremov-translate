@@ -62,16 +62,15 @@ class Groups extends Model
 
     public static function getTransCount($id, $status = null)
     {
-        $orders = self::join('trans', 'trans_groups.id', '=', 'trans.group_id')
-            ->join('trans_data', 'trans.id', '=', 'trans_data.translation_id')
-            ->where('trans_groups.id', $id);
-        if (!is_null($status)) {
-            $orders = $orders->where('trans_data.status', 2);
-        } else {
-            $orders = $orders->where('trans_data.status', '!=',  2);
-        }
-        $orders = $orders->count();
+        $orders = self::join('trans', 'trans_groups.id', '=', 'trans.group_id');
 
-        return $orders;
+        if (!is_null($status)) {
+            $orders->join('trans_data', 'trans.id', '=', 'trans_data.translation_id');
+        } else {
+            $orders->leftJoin('trans_data', 'trans.id', '=', 'trans_data.translation_id')
+                ->whereNull('trans_data.translation');
+        }
+
+        return $orders->where('trans_groups.id', $id)->count();
     }
 }

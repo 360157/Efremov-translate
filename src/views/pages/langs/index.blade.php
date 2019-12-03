@@ -9,7 +9,7 @@
             <div class="panel-body">
                 @include('vocabulare::pages.langs.create')
             </div>
-                <table id="langTable" class="table table_wrapper" style="width: 100%;">
+                <table id="langTable" class="table table_wrapper hover" style="width: 100%;">
                     <thead>
                     <tr>
                         <th scope="col">@lang('system::main.id')</th>
@@ -105,20 +105,22 @@
                         }
                     },
                     columns: [
-                        { data: 'id' },
-                        { data: 'index' },
-                        { data: 'name' },
+                        { data: 'id', width: "24px" },
+                        { data: 'index', width: "26px" },
+                        { data: 'name', width: "100px" },
                         {
                             data: 'is_active',
+                            width: "42px",
                             'render': function (data, type, full, meta) {
                                 return '<div class="badge badge-' + (data ? 'active' : 'not-active') + '"></div>';
                             }
                         },
-                        { data: 'created_at' },
-                        { data: 'updated_at' },
+                        { data: 'created_at', width: "60px"},
+                        { data: 'updated_at', width: "60px"},
                         {
-                            data: null, defaultContent:
-                            '<div class="edit-wrapper">' +
+                            data: null,
+                            width: "48px",
+                            defaultContent: '<div class="edit-wrapper">' +
                                 '<div class="dropdown dropdown-arrow">' +
                                     '<div class="dropdown-toggle" data-toggle="dropdown">' +
                                         '<a class="dropdown-toggle-arrow"></a>' +
