@@ -3,7 +3,6 @@
 namespace Sashaef\TranslateProvider\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Sashaef\TranslateProvider\Models\Langs;
 
 class TransCollection extends ResourceCollection
 {

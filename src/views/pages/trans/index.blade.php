@@ -37,51 +37,64 @@ use \Sashaef\TranslateProvider\Models\Trans;
     </div>
 
     <div class="btn-group aside">
-        <!-- <div class="aside-icon save"></div>
-
-        <div class="dropdown dropdown-btn">
-            <div class="dropdown-toggle" data-toggle="dropdown">
-                <div class="aside-icon sort"></div>
-            </div >
-        </div> -->
 
         <div class="dropdown dropdown-btn">
             <div class="dropdown-toggle" data-toggle="dropdown">
                 <div class="aside-icon options"></div>
             </div >
             <div class="dropdown-menu dropdown-menu-options-trans" >
-                <div id="statusFilter" class="field-wrapper">status</div>
-                <div id="statusOptions" hidden>
-                    <div class="form-check">
-                        <input class="form-check-input" id="all" type="radio" name="status" value="">
-                        <label class="form-check-label" for="translated">All</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" id="checked"  type="radio" name="status" value="2">
-                        <label class="form-check-label" for="translated">Checked</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" id="not-checked" type="radio" name="status" value="1">
-                        <label class="form-check-label" for="not-translated">Not checked</label>
+                <div class="accordion">
+                    <div class="accordion-header field-wrapper">translate</div>
+                    <div class="accordion-body" id="translateOptions" hidden>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="translate" value="">
+                            <label class="form-check-label">All</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="translate" value="2">
+                            <label class="form-check-label">translated</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="translate" value="1">
+                            <label class="form-check-label">not translated</label>
+                        </div>
                     </div>
                 </div>
-                <div id="langFilter" class="field-wrapper">languages</div>
-                <div id="langOptions" hidden>
-                    <div class="field-wrapper">
-                        <input id="searchLangFilter" type="text" placeholder="language" name="name" class="find-field" autocomplete="off">
-                    </div>
-                    <div class="field-list dataTables_scrollBody">
-                        @foreach($langs as $lang)
-                        <div class="form-check" data-lang="{{ $lang->name }}">
-                            <input class="form-check-input" type="checkbox" name="lang[{{ $lang->id }}]" value="{{ $lang->id }}">
-                            <label class="form-check-label" for="not-translated">{{ $lang->name }}</label>
+                <div class="accordion">
+                    <div class="accordion-header field-wrapper">verify</div>
+                    <div class="accordion-body" id="verifyOptions" hidden>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" value="">
+                            <label class="form-check-label">All</label>
                         </div>
-                        @endforeach
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" value="2">
+                            <label class="form-check-label">verified</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" value="1">
+                            <label class="form-check-label">not verified</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header field-wrapper">languages</div>
+                    <div class="accordion-body" id="langOptions" hidden>
+                        <div class="field-wrapper">
+                            <input id="searchLangFilter" type="text" placeholder="language" name="name" class="find-field" autocomplete="off">
+                        </div>
+                        <div class="field-list dataTables_scrollBody">
+                            @foreach($langs as $lang)
+                            <div class="form-check" data-lang="{{ $lang->name }}">
+                                <input class="form-check-input" type="checkbox" name="lang[{{ $lang->id }}]" value="{{ $lang->id }}">
+                                <label class="form-check-label" for="not-translated">{{ $lang->name }}</label>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="dropdown dropdown-btn">
             <div class="dropdown-toggle" data-toggle="dropdown">
                 <div class="aside-icon find"></div>
@@ -102,21 +115,12 @@ use \Sashaef\TranslateProvider\Models\Trans;
 @endsection
 @section('vocabulare-js')
     <script>
-        statusFilter.onclick = function(e) {
+        $('.accordion-header').on('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            const options = document.getElementById("statusOptions");
-            options.classList.toggle("show-options");
-        };
-        langFilter.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const options = document.getElementById("langOptions");
-            options.classList.toggle("show-options");
-        };
-        statusOptions.onclick = function(e) {
-            e.stopPropagation();
-        };
+            $(this).parent().find('.accordion-body').toggleClass('show-options');
+        });
+
         searchLangFilter.onkeyup = function(e) {
             let formChecks = $('#langOptions .form-check');
             let value = this.value;
@@ -144,7 +148,8 @@ use \Sashaef\TranslateProvider\Models\Trans;
                 groupId: main.group,
                 keyText: null,
                 translationText: null,
-                status: null,
+                verified: null,
+                translated: null,
                 langs: main.langs,
                 get() {
                     this.dataTable = $('#transTable').DataTable({
@@ -160,7 +165,8 @@ use \Sashaef\TranslateProvider\Models\Trans;
                                 data.group_id = transApp.groupId;
                                 data.keyText = transApp.keyText;
                                 data.translationText = transApp.translationText;
-                                data.status = transApp.status;
+                                data.verified = transApp.verified;
+                                data.translated = transApp.translated;
                                 data.langs = Object.keys(transApp.langs);
                             }
                         },
@@ -302,8 +308,13 @@ use \Sashaef\TranslateProvider\Models\Trans;
                         transApp.update(data, $('#tranlateEditModal'));
                     });
 
-                    $('#statusOptions input').on('click', function () {
-                        transApp.status = $(this).val();
+                    $('#verifyOptions input').on('click', function () {
+                        transApp.verified = $(this).val();
+                        transApp.dataTable.draw();
+                    });
+
+                    $('#translateOptions input').on('click', function () {
+                        transApp.translated = $(this).val();
                         transApp.dataTable.draw();
                     });
 

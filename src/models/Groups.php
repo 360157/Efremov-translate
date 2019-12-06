@@ -71,6 +71,6 @@ class Groups extends Model
                 ->whereNull('trans_data.translation');
         }
 
-        return $orders->where('trans_groups.id', $id)->count();
+        return $orders->where('trans_groups.id', $id)->groupBy('trans.id')->count();
     }
 }

@@ -44,7 +44,7 @@ trait Translations
 
     public function filterTranslates($request)
     {
-        $order = [self::$translateColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
+        $order = ['trans.'.self::$translateColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
         $page = $request->start / $request->length + 1;
         Paginator::currentPageResolver(function() use ($page) {return $page;});
 
@@ -52,7 +52,8 @@ trait Translations
             'group' => $request->group_id,
             'key' => $request->keyText,
             'translation' => $request->translationText,
-            'status' => $request->status,
+            'status' => $request->verified,
+            'translated' => $request->translated,
         ], $order, $request->length);
     }
 
