@@ -20,7 +20,7 @@ class LangsController extends Controller
      */
     public function index(Request $request)
     {
-        return view('vocabulare::pages.langs.index');
+        return view('translate::pages.langs.index');
     }
 
     /**

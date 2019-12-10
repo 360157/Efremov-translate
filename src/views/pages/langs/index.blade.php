@@ -1,4 +1,4 @@
-@extends('vocabulare::layouts.main')
+@extends('translate::layouts.main')
 
 @section('content')
     <div class="panel panel-flat">
@@ -7,7 +7,7 @@
         </div>
         <div class="panel-content">
             <div class="panel-body">
-                @include('vocabulare::pages.langs.create')
+                @include('translate::pages.langs.create')
             </div>
                 <table id="langTable" class="table table_wrapper hover" style="width: 100%;">
                     <thead>
@@ -66,9 +66,9 @@
             </div>
         </div>
     </div>
-    @include('vocabulare::pages.langs.edit')
+    @include('translate::pages.langs.edit')
 @endsection
-@section('vocabulare-js')
+@section('translate-js')
     <script type='text/javascript'>
     statusLink.onclick = function(e) {
         e.preventDefault();

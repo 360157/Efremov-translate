@@ -50,23 +50,33 @@ Sashaef\TranslateProvider\TranslateProvider::class,
 }
 ```
 
--- Than
+-- Migrate db
 ```bash
 php artisan migrate
 ```
+-- Add assets
+```bash
+php artisan vendor:publish --tag=public --force
+
+```
+-- Add config
+```bash
+php artisan vendor:publish --tag=config
+```
 ## WEB
 ```bash
-/system-trans
-/interface-trans
-/langs
+/admin/trans
 ```
 ## API
 ```bash
 route - translate/show
-```
-@bodyparams - "key"   (interface:main:new_translation:2)
 
-@response    {
-                 "interface:main:new_translation:2": "r2fd"
-             }
-             
+@bodyparams - "key"   (interface:main:new_translation:2)
+@response {"interface:main:new_translation:2": "r2fd"}
+```
+    
+## Key structure
+```
+[null|interface, system]::[group name].[translate key]
+Example: system::main.translate
+```

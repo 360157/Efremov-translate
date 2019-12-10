@@ -2,7 +2,7 @@
 use \Sashaef\TranslateProvider\Models\Trans;
 ?>
 
-@extends('vocabulare::layouts.main')
+@extends('translate::layouts.main')
 
 @section('content')
 
@@ -12,7 +12,7 @@ use \Sashaef\TranslateProvider\Models\Trans;
         </div>
         <div class="panel-content">
             <div class="panel-body">
-                @include('vocabulare::pages.trans.create')
+                @include('translate::pages.trans.create')
                 <form action="{{ route('translate.translates.index', ['type' => $type, 'group_id' => $group->id]) }}" method="get" enctype="multipart/form-data">
                     <div class="form-group">
                         <div class="row">
@@ -111,9 +111,9 @@ use \Sashaef\TranslateProvider\Models\Trans;
         </div>
     </div> 
 
-    @include('vocabulare::pages.trans.edit')
+    @include('translate::pages.trans.edit')
 @endsection
-@section('vocabulare-js')
+@section('translate-js')
     <script>
         $('.accordion-header').on('click', function(e) {
             e.preventDefault();

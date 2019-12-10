@@ -35,10 +35,13 @@ class TranslateProvider extends ServiceProvider
     public function boot()
     {
         $this->loadRoutesFrom(__DIR__.'/routes.php');
-        $this->loadViewsFrom(__DIR__.'/views', 'vocabulare');
+        $this->loadViewsFrom(__DIR__.'/views', 'translate');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
         $this->publishes([
-            __DIR__.'/views/assets' => public_path('vendor/vocabulare'),
+            __DIR__.'/views/assets' => public_path('vendor/translate'),
         ], 'public');
+        $this->publishes([
+            __DIR__.'/config/translate.php' => config_path('translate.php')
+        ], 'config');
     }
 }
