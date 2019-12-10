@@ -6,8 +6,7 @@
             <h5 class="panel-title">
                 <a href="{{ url(config('translate.url', 'admin')) }}">@lang('system::main.main_page')</a> /
                 <a href="{{ route('translate.index') }}">@lang('system::main.translate')</a> /
-                <span>@lang('system::main.groups')</span> /
-                {{ $type }}
+                <span>{{ $type }}</span>
             </h5>
         </div>
         <div class="panel-content">
