@@ -1,10 +1,14 @@
 @extends('translate::layouts.main')
 
 @section('content')
-
     <div class="panel panel-flat">
         <div class="panel-heading">
-            <h5 class="panel-title">Groups: {{ $type }}</h5>
+            <h5 class="panel-title">
+                <a href="{{ url(config('translate.url', 'admin')) }}">@lang('system::main.main_page')</a> /
+                <a href="{{ route('translate.index') }}">@lang('system::main.translate')</a> /
+                <span>@lang('system::main.groups')</span> /
+                {{ $type }}
+            </h5>
         </div>
         <div class="panel-content">
             <div class="panel-body">
@@ -16,8 +20,6 @@
                             <th scope="col">@lang('system::main.id')</th>
                             <th scope="col">@lang('system::main.group')</th>
                             <th scope="col">@lang('system::main.trans')/@lang('system::main.not_trans')</th>
-                            <!-- <th scope="col">@lang('system::main.created_at')</th>
-                            <th scope="col">@lang('system::main.updated_at')</th> -->
                             <th scope="col">@lang('system::main.actions')</th>
                         </tr>
                     </thead>

@@ -1,14 +1,14 @@
-<?php
-use \Sashaef\TranslateProvider\Models\Trans;
-?>
-
 @extends('translate::layouts.main')
 
 @section('content')
-
     <div class="panel panel-flat">
         <div class="panel-heading">
-            <h5 class="panel-title">Translations: {{ $type }}::{{ $group->name }}</h5>
+            <h5 class="panel-title">
+                <a href="{{ url(config('translate.url', 'admin')) }}">@lang('system::main.main_page')</a> /
+                <a href="{{ route('translate.index') }}">@lang('system::main.translate')</a> /
+                <span>@lang('system::main.translations')</span> /
+                {{ $type }}::{{ $group->name }}
+            </h5>
         </div>
         <div class="panel-content">
             <div class="panel-body">
