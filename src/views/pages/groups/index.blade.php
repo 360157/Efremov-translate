@@ -1,4 +1,4 @@
-@extends('vocabulare::layouts.main')
+@extends('translate::layouts.main')
 
 @section('content')
 
@@ -8,7 +8,7 @@
         </div>
         <div class="panel-content">
             <div class="panel-body">
-                @include('vocabulare::pages.groups.create')
+                @include('translate::pages.groups.create')
 
                 <table id="groupTable" class="table table_wrapper hover" style="width: 100%;">
                     <thead>
@@ -43,9 +43,9 @@
             </div>
         </div>
     </div>
-    @include('vocabulare::pages.groups.delete')
+    @include('translate::pages.groups.delete')
 @endsection
-@section('vocabulare-js')
+@section('translate-js')
 
 <script type='text/javascript'>
     $(function () {

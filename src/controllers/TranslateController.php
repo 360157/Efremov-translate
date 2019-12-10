@@ -25,7 +25,7 @@ class TranslateController extends Controller
                 ->withError('The type or the group is missing!');
         }
 
-        return view('vocabulare::pages.trans.index', [
+        return view('translate::pages.trans.index', [
             'type' => $request->type,
             'group' => $this->getGroup($request->group),
             'langs' => $this->getLangs(true)

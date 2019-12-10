@@ -21,7 +21,7 @@ class GroupsController extends Controller
      */
     public function index($type = 'interface')
     {
-        return view('vocabulare::pages.groups.index', [
+        return view('translate::pages.groups.index', [
             'type' => $type,
         ]);
     }
