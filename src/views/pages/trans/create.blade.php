@@ -5,12 +5,12 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
-                <label>@lang('system::main.new_key')</label>
+                <label>@lang('system::main.key')</label>
                 <input type="text" placeholder="@lang('system::main.new_key')" name="key" value="" class="form-control full-width">
                 {!! $errors->first('key', '<span class="help-block text-danger">:message</span>') !!}
             </div>
             <div class="col-md-6">
-                <label>@lang('system::main.new_description')</label>
+                <label>@lang('system::main.description')</label>
                 <input type="text" placeholder="@lang('system::main.new_description')" name="description" value="" class="form-control">
                 {!! $errors->first('description', '<span class="help-block text-danger">:message</span>') !!}
                 <div class="text-right">
