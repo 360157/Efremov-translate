@@ -1,5 +1,5 @@
 <nav id="navbar" class="navbar">
-    <span class="navbar-brand">@lang('system::main.translate')</span>
+    <span class="navbar-brand">@lang('system::main.translation')</span>
     @php
         $route = request()->route()->getName();
         $type = request()->route('type') ?? request()->get('type');

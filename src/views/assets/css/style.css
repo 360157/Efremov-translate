@@ -394,13 +394,25 @@ label {
 	border: 1px solid #5670FF !important;
 	background: #FFFFFF !important;
 	color: #5670FF !important;
-
 }
 
 .btn-light:hover, .btn-light:active {
 	border: 1px solid #5670FF !important;
 	background: #FFFFFF !important;
 	color: #5670FF !important;
+}
+
+.btn-red {
+	margin: 0 4px;
+	color: #fff!important;
+	background-color: #dc3545!important;
+	border-color: #dc3545!important;
+}
+
+.btn-red:hover, .btn-light:active {
+	color: #fff!important;
+	background-color: #bd2130!important;
+	border-color: #b21f2d!important;
 }
 
 .update-icon {
