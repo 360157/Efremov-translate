@@ -37,8 +37,8 @@
             <div class="dropdown-menu dropdown-menu-find-groups">
                 <div class="field-wrapper">
                     <form id="groupSearchForm">
-                        <input type="text" placeholder="Search" class="find-field">
-                        <button type="submit" class="button find-field">Search</button>
+                        <input type="text" placeholder="@lang('system::main.search')" class="find-field">
+                        <button type="submit" class="button find-field">@lang('system::main.search')</button>
                     </form>
                 </div>
             </div>
