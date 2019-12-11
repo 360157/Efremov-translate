@@ -12,6 +12,7 @@
                 </div>
                 <div class="value-group">
                     <button type="submit" class="btn button btn-center">@lang('system::main.delete') <i class="icon-arrow-right14 position-right"></i></button>
+                    <button type="button" class="btn button btn-center btn-red" name="cancel">@lang('system::main.cancel') <i class="icon-arrow-right14 position-right"></i></button>
                 </div>
             </div>
         </div>
