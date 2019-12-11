@@ -57,11 +57,14 @@ php artisan migrate
 -- Add assets
 ```bash
 php artisan vendor:publish --tag=public --force
-
 ```
 -- Add config
 ```bash
 php artisan vendor:publish --tag=config
+```
+-- Add translations
+```bash
+php artisan db:seed --class=Sashaef\TranslateProvider\Database\Seeder\DatabaseSeeder
 ```
 ## WEB
 ```bash

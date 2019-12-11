@@ -104,7 +104,7 @@
                     <form id="searchFilter">
                         <input type="text" placeholder="Key" name="key" class="find-field">
                         <input type="text" placeholder="Translation" name="translation" class="find-field">
-                        <button type="submit" class="button find-field">Search</button>
+                        <button type="submit" class="button find-field">@lang('system::main.search')</button>
                     </form>
                 </div>
             </div>
