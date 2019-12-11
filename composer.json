@@ -1,14 +1,42 @@
 {
     "name": "sashaef/translateprovider",
-    "description": "Translate provider",
     "type": "package",
+	"version": "dev-master",
+    "minimum-stability": "dev",
+    "description": "Translate provider",
+    "keywords": [
+        "translateprovider",
+        "Laravel"
+    ],
     "authors": [
         {
             "name": "alex",
             "email": "sashaef02@gmail.com"
+        },
+        {
+            "name": "volodya"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
+        "illuminate/support": "~5.7",
+        "php": "~7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sashaef\\TranslateProvider\\": "src"
+        }
+    },
+    "scripts": {
+        "copy-assets": "php artisan vendor:publish --tag=public --force"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sashaef\\TranslateProvider\\TranslateProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
