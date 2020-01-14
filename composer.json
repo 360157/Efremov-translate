@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Sashaef\\TranslateProvider\\": "src"
+            "Sashaef\\TranslateProvider\\": "vendor/sashaef/translateprovider/src/"
         }
     },
     "scripts": {
