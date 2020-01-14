@@ -1,50 +1,62 @@
 <div id="keyEditModal" class="modal fade">
-    <form id="keyEditForm" action="{{ route('translate.translates.update', [ 'id' => 0 ]) }}" method="POST" enctype="multipart/form-data">
-        {{ csrf_field() }}
-        <input type="hidden" name="_method" value="PATCH" />
-        <input type="hidden" name="obj" value="key">
-        <input id="id" type="hidden" name="id">
-        <div class="modal-dialog">
-            <div class="modal-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="keyEditForm" action="{{ route('translate.translates.update', [ 'id' => 0 ]) }}" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <input type="hidden" name="_method" value="PATCH" />
+                <input type="hidden" name="obj" value="key">
+                <input id="id" type="hidden" name="id">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit key</h4>
+                    <button class="close" type="button" data-dismiss="modal"></button>
+                </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>@lang('system::main.key')</label>
+                        <label>@lang('main.key')</label>
                         <input type="text" name="key" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>@lang('system::main.description')</label>
+                        <label>@lang('main.description')</label>
                         <textarea name="description" class="form-control description"></textarea>
                     </div>
-                    <div class="row">
-                        <button type="submit" class="btn button btn-icon"><div class="update-icon"></div>@lang('system::main.update') </button>
-                        <button type="button" class="btn button btn-center btn-red" name="cancel">@lang('system::main.cancel') <i class="icon-arrow-right14 position-right"></i></button>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" name="status"><i class="icon-floppy-disk"></i> @lang('main.update')</button>
+                        <button type="button" class="btn btn-danger" name="cancel"><i class="icon-cancel-circle2"></i> @lang('main.cancel')</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 <div id="tranlateEditModal" class="modal fade">
-    <form id="tranlateEditForm" action="{{ route('translate.translates.update', [ 'id' => 0 ]) }}" method="POST" enctype="multipart/form-data">
-        {{ csrf_field() }}
-        <input type="hidden" name="_method" value="PATCH" />
-        <input type="hidden" name="obj" value="translate">
-        <input type="hidden" name="key">
-        <input type="hidden" name="lang">
-        <div class="modal-dialog">
-            <div class="modal-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="tranlateEditForm" action="{{ route('translate.translates.update', [ 'id' => 0 ]) }}" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <input type="hidden" name="_method" value="PATCH" />
+                <input type="hidden" name="obj" value="translate">
+                <input type="hidden" name="key">
+                <input type="hidden" name="lang">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit translation</h4>
+                    <button class="close" type="button" data-dismiss="modal"></button>
+                </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>@lang('system::main.translation')</label>
+                        <label>@lang('main.translation')</label>
                         <textarea name="translation" class="form-control description"></textarea>
                     </div>
-                    <div class="btn-center">                        
-                        <button type="submit" class="button btn-light btn-icon" name="status" value="2"><div class="check-icon"></div>@lang('system::main.verify')</button>
-                        <button type="submit" class="button btn-icon" name="status" value="1"><div class="update-icon"></div>@lang('system::main.save')</button>
-                        <button type="button" class="btn button btn-center btn-red" name="cancel">@lang('system::main.cancel') <i class="icon-arrow-right14 position-right"></i></button>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success" name="status" value="2"><i class="icon-check"></i> @lang('main.verify')</button>
+                        <button type="submit" class="btn btn-primary" name="status" value="1"><i class="icon-floppy-disk"></i> @lang('main.update')</button>
+                        <button type="button" class="btn btn-danger" name="cancel"><i class="icon-cancel-circle2"></i> @lang('main.cancel')</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>

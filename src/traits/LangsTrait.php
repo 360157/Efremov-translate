@@ -11,9 +11,8 @@ namespace Sashaef\TranslateProvider\Traits;
 use Sashaef\TranslateProvider\Models\Langs as Model;
 use Illuminate\Pagination\Paginator;
 
-trait Langs
+trait LangsTrait
 {
-    use Groups;
     public static $langColumns = [
         'id',
         'index',
@@ -61,26 +60,24 @@ trait Langs
         return Model::find($id);
     }
 
-    public function postLang($name, $index)
+    public function postLang($name, $index, $flag, $is_active = false)
     {
-        return Model::postLangs($name, $index);
+        return Model::postLangs($name, $index, $flag, $is_active);
     }
 
-    public function updateLang($id, $index, $name, $isActive)
+    public function updateLang($id, $index, $name, $flag, $isActive, $isDefault)
     {
         $lang = $this->getLang($id);
 
         if ($lang === null) {return ['status' => 'error', 'message' => 'The language is missing!'];}
 
-        if ($lang->update([
+        return $lang->update([
             'name' => $name,
             'index' => $index,
-            'is_active' => is_null($isActive) ? 0 : 1
-        ])) {
-            return ['status' => 'success', 'message' => 'The language has updated!'];
-        } else {
-            return ['status' => 'error', 'message' => 'Server error!'];
-        }
+            'flag' => $flag,
+            'is_active' => is_null($isActive) ? 0 : 1,
+            'is_default' => is_null($isDefault) ? 0 : 1
+        ]);
     }
 
     public function deleteLang($id)

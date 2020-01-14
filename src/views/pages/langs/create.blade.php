@@ -3,18 +3,20 @@
         {{ csrf_field() }}
         <div class="form-group">
             <div class="row">
-                <div class="col-md-5">
-                    <label>@lang('system::main.name')</label>
-                    <input type="text" name="name" placeholder="@lang('system::main.name')" class="form-control">
-                    {!! $errors->first('name', '<span class="help-block text-danger">:message</span>') !!}
-                </div>
-                <div class="col-md-5">
-                    <label>@lang('system::main.index')</label>
-                    <input type="text" name="index" placeholder="@lang('system::main.index')" class="form-control">
-                    {!! $errors->first('index', '<span class="help-block text-danger">:message</span>') !!}
+                <div class="col-md-3">
+                    <label>@lang('main.name')</label>
+                    <input type="text" name="name" placeholder="@lang('main.name')" class="form-control">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn button">@lang('system::main.create')<i class="icon-arrow-right14 position-right"></i></button>
+                    <label>@lang('main.index')</label>
+                    <input type="text" name="index" placeholder="@lang('main.index')" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label>@lang('main.flag')</label>
+                    <input type="text" name="flag" placeholder="@lang('main.flag')" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary align-bottom" name="status"><i class="icon-floppy-disk"></i> @lang('main.create')</button>
                 </div>
             </div>
         </div>

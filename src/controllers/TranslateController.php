@@ -5,13 +5,13 @@ namespace Sashaef\TranslateProvider\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Sashaef\TranslateProvider\Requests\TransStoreRequest;
-use Sashaef\TranslateProvider\Traits\Langs as LangTrait;
-use Sashaef\TranslateProvider\Traits\Translations;
+use Sashaef\TranslateProvider\Traits\{LangsTrait as LangTrait, TranslationsTrait, GroupsTrait};
 use Sashaef\TranslateProvider\Resources\TransCollection;
 
 class TranslateController extends Controller
 {
-    use Translations, LangTrait;
+    use TranslationsTrait, LangTrait, GroupsTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +28,8 @@ class TranslateController extends Controller
         return view('translate::pages.trans.index', [
             'type' => $request->type,
             'group' => $this->getGroup($request->group),
-            'langs' => $this->getLangs(true)
+            'langs' => $this->getLangs(true),
+            'title' => trans('main.translations')
         ]);
     }
 
@@ -128,6 +129,22 @@ class TranslateController extends Controller
                 ], 200);
             }
         }
+    }
+
+    /**
+     * Restart the specified resource from storage.
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function restart(Request $request)
+    {
+        $response = $this->restartTranslation($request->group);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The translation has restarted!'
+        ], 200);
     }
 
     /**

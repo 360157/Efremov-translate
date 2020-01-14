@@ -81,5 +81,5 @@ route - translate/show
 ## Key structure
 ```
 [null|interface, system]::[group name].[translate key]
-Example: system::main.translate
+Example: main.translate or system::main.translate or interface::main.translate
 ```

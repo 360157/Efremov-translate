@@ -1,34 +1,36 @@
-@extends('translate::layouts.main')
+@extends('translate::layouts.' . (config('translate.layout') ? 'empty' : 'main'))
 
-@section('content')
+@section('content_part')
     <div class="panel panel-flat">
         <div class="panel-heading">
             <h5 class="panel-title">
-                <a href="{{ url(config('translate.url', 'admin')) }}">@lang('system::main.main_page')</a> /
-                <a href="{{ route('translate.index') }}">@lang('system::main.translation')</a> /
-                <span>@lang('system::main.langs')</span>
+                <a href="{{ url(config('translate.url', 'admin')) }}">@lang('main.main_page')</a> /
+                <a href="{{ route('translate.index') }}">@lang('main.translation')</a> /
+                <span>@lang('main.languages')</span>
             </h5>
         </div>
         <div class="panel-content">
+            @include('translate::pages.langs.create')
+
             <div class="panel-body">
-                @include('translate::pages.langs.create')
-            </div>
                 <table id="langTable" class="table table_wrapper hover" style="width: 100%;">
                     <thead>
                     <tr>
-                        <th scope="col">@lang('system::main.id')</th>
-                        <th scope="col">@lang('system::main.index')</th>
-                        <th scope="col">@lang('system::main.name')</th>
-                        <th scope="col">@lang('system::main.is_active')</th>
-                        <th scope="col">@lang('system::main.created_at')</th>
-                        <th scope="col">@lang('system::main.updated_at')</th>
-                        <th scope="col">@lang('system::main.actions')</th>
+                        <th scope="col">@lang('main.id')</th>
+                        <th scope="col">@lang('main.flag')</th>
+                        <th scope="col">@lang('main.index')</th>
+                        <th scope="col">@lang('main.name')</th>
+                        <th scope="col">@lang('main.is_active')</th>
+                        <th scope="col">@lang('main.is_default')</th>
+                        <th scope="col">@lang('main.created_at')</th>
+                        <th scope="col">@lang('main.updated_at')</th>
+                        <th scope="col">@lang('main.actions')</th>
                     </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
-            </tr>
+            </div>
         </div>
     </div>
 
@@ -63,8 +65,8 @@
             <div class="dropdown-menu dropdown-menu-find">
                 <div class="field-wrapper">
                     <form id="langSearchForm">
-                        <input type="text" placeholder="@lang('system::main.search')" class="find-field">
-                        <button type="submit" class="button find-field">@lang('system::main.search')</button>
+                        <input type="text" placeholder="@lang('main.search')" class="find-field">
+                        <button type="submit" class="button find-field">@lang('main.search')</button>
                     </form>
                 </div>
             </div>
@@ -75,15 +77,16 @@
 @section('translate-js')
     <script type='text/javascript'>
     $(function () {
+        langApp.csrf = '{{ csrf_token() }}';
         langApp.url = {
             get:'{{ route('translate.langs.get') }}',
-                store:'{{ route('translate.langs.store') }}',
-                update:'{{ route('translate.langs.update') }}',
-                destroy:'{{ route('translate.langs.destroy') }}',
+            store:'{{ route('translate.langs.store') }}',
+            update:'{{ route('translate.langs.update') }}',
+            destroy:'{{ route('translate.langs.destroy') }}',
         };
         langApp.dict = {
-            edit:'@lang('system::main.edit')',
-                delete:'@lang('system::main.delete')',
+            edit:'@lang('main.edit')',
+            delete:'@lang('main.delete')',
         };
         langApp.init();
     });
