@@ -1,18 +1,19 @@
-@extends('translate::layouts.main')
+@extends('translate::layouts.' . (config('translate.layout') ? 'empty' : 'main'))
 
-@section('content')
+@section('content_part')
     <div class="panel panel-flat">
         <div class="panel-heading">
             <h5 class="panel-title">
-                <a href="{{ url(config('translate.url', 'admin')) }}">@lang('system::main.main_page')</a> /
-                <a href="{{ route('translate.index') }}">@lang('system::main.translation')</a> /
+                <a href="{{ url(config('translate.url', 'admin')) }}">@lang('main.main_page')</a> /
+                <a href="{{ route('translate.index') }}">@lang('main.translation')</a> /
                 <a href="{{ route('translate.groups.type', ['type' => $type]) }}">{{ $type }}</a> /
                 <span>{{ $group->name }}</span>
             </h5>
         </div>
         <div class="panel-content">
+            @include('translate::pages.trans.create')
+
             <div class="panel-body">
-                @include('translate::pages.trans.create')
                 <form action="{{ route('translate.translates.index', ['type' => $type, 'group_id' => $group->id]) }}" method="get" enctype="multipart/form-data">
                     <div class="form-group">
                         <div class="row">
@@ -104,7 +105,7 @@
                     <form id="searchFilter">
                         <input type="text" placeholder="Key" name="key" class="find-field">
                         <input type="text" placeholder="Translation" name="translation" class="find-field">
-                        <button type="submit" class="button find-field">@lang('system::main.search')</button>
+                        <button type="submit" class="button find-field">@lang('main.search')</button>
                     </form>
                 </div>
             </div>

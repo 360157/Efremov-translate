@@ -10,9 +10,9 @@
                 <div class="form-group">
                     <p>Ви дійсно бажаєте видалити групу перекладів?<br>* Дану дію не можна буде відмінити.</p>
                 </div>
-                <div class="value-group">
-                    <button type="submit" class="btn button btn-center">@lang('system::main.delete') <i class="icon-arrow-right14 position-right"></i></button>
-                    <button type="button" class="btn button btn-center btn-red" name="cancel">@lang('system::main.cancel') <i class="icon-arrow-right14 position-right"></i></button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary"><i class="icon-trash"></i>  @lang('main.delete')</button>
+                    <button type="button" class="btn btn-danger" name="cancel"><i class="icon-cancel-circle2"></i> @lang('main.cancel')</button>
                 </div>
             </div>
         </div>

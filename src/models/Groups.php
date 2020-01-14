@@ -39,10 +39,15 @@ class Groups extends Model
             ->where('type', $filter['type']);
 
         return $result->when($filter['search'], function ($q) use ($filter) {
-            return $q->where('name', 'LIKE', '%'.$filter['search'].'%');
-        })
+                return $q->where('name', 'LIKE', '%'.$filter['search'].'%');
+            })
             ->orderBy($order[0], $order[1])
             ->paginate($perPage);
+    }
+
+    public static function getByType($type)
+    {
+        return self::where('type', $type)->get();
     }
 
     public static function getAllGroups()

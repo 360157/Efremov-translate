@@ -2,7 +2,6 @@
 
 namespace Sashaef\TranslateProvider;
 
-use App\Models\Lang;
 use Countable;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
@@ -12,6 +11,7 @@ use Illuminate\Support\NamespacedItemResolver;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 use Illuminate\Translation\MessageSelector;
+use Sashaef\TranslateProvider\Models\Langs;
 
 class Translator extends NamespacedItemResolver implements TranslatorContract
 {
@@ -117,7 +117,7 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
             }
         }
 
-        return $line ?? $key;
+        return $line ?? (config('translate.show_full_key', true) ? $key : $item);
     }
 
     /**
@@ -266,7 +266,7 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
         $segments = parent::parseKey($key);
 
         if (is_null($segments[0])) {
-            $segments[0] = 'interface';
+            $segments[0] = 'system';
         }
 
         return $segments;
@@ -379,10 +379,10 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     public function getLangId($locale)
     {
         $langIds = Cache::rememberForever('lang.ids', function () {
-            return Lang::query()->where('is_active', true)->get()->pluck('id', 'index');
+            return Langs::query()->where('is_active', true)->get()->pluck('id', 'index');
         });
 
-        return $langIds[$locale] ?? $langIds[$this->fallback];
+        return $langIds[$locale] ?? $langIds[$this->fallback] ?? null;
     }
 
     /**
@@ -396,5 +396,9 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     public function getFromJson($key, array $replace = [], $locale = null)
     {
         return $this->get($key, $replace, $locale);
+    }
+
+    public function addNamespace()
+    {
     }
 }

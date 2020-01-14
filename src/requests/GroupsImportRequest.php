@@ -3,8 +3,9 @@
 namespace Sashaef\TranslateProvider\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Sashaef\TranslateProvider\Models\Groups;
 
-class LangCreateRequest extends FormRequest
+class GroupsImportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +25,8 @@ class LangCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:128',
-            'index' => 'required|string|max:2',
-            'flag' => 'required|string|max:2'
+            'group' => 'required|array',
+            'type' => 'required|string|max:191'
         ];
     }
 }

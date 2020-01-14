@@ -2,6 +2,7 @@ let langApp = {
     dataTable: {},
     url: {},
     dict: {},
+    csrf: null,
     isActive: null,
     searchText: null,
     get() {
@@ -10,6 +11,12 @@ let langApp = {
             serverSide: true,
             searching: false,
             stateSave: true,
+            language: {
+                paginate: {
+                    next: '<img src="/vendor/translate/img/arrow.svg">',
+                    previous: '<img src="/vendor/translate/img/arrow.svg">'
+                }
+            },
             order: [[0, "desc"]],
             scrollX: true,
             // scrollY: false,
@@ -18,17 +25,31 @@ let langApp = {
             scroller:       true,
             ajax: {
                 url: langApp.url.get,
-                'data': function(data){
+                'data': function(data) {
                     data.isActive = langApp.isActive;
                     data.search = langApp.searchText;
                 }
             },
             columns: [
                 { data: 'id', width: "24px" },
+                {
+                    data: 'flag_path',
+                    width: "26px",
+                    'render': function (data, type, full, meta) {
+                        return '<img src="'+data+'">';
+                    }
+                },
                 { data: 'index', width: "26px" },
                 { data: 'name', width: "100px" },
                 {
                     data: 'is_active',
+                    width: "42px",
+                    'render': function (data, type, full, meta) {
+                        return '<div class="badge badge-' + (data ? 'active' : 'not-active') + '"></div>';
+                    }
+                },
+                {
+                    data: 'is_default',
                     width: "42px",
                     'render': function (data, type, full, meta) {
                         return '<div class="badge badge-' + (data ? 'active' : 'not-active') + '"></div>';
@@ -39,21 +60,18 @@ let langApp = {
                 {
                     data: null,
                     width: "48px",
-                    defaultContent: '<div class="edit-wrapper">' +
-                        '<div class="dropdown dropdown-arrow">' +
-                        '<div class="dropdown-toggle" data-toggle="dropdown">' +
-                        '<a class="dropdown-toggle-arrow"></a>' +
-                        '</div>' +
+                    defaultContent: '<div class="dropdown dropdown-arrow">' +
+                        '<div class="dropdown-toggle" data-toggle="dropdown"><a class="dropdown-toggle-arrow"></a></div>' +
                         '<div class="dropdown-menu dropdown-menu-right dropdown-menu-edit">' +
-                        '<div class="action-edit"><div class="edit-icon"></div>'+langApp.dict.edit+'</div>'  +
-                        '<div class="action-delete"><div class="delete-icon"></div>'+langApp.dict.delete+'</div>' +
-                        '</div>' +
+                        '<div class="action action-edit"><div class="icon icon-edit"></div>'+langApp.dict.edit+'</div>'  +
+                        '<div class="action action-delete"><div class="icon icon-delete"></div>'+langApp.dict.delete+'</div>' +
                         '</div>' +
                         '</div>'
                 }
             ],
             columnDefs: [
-                {targets: 6, orderable: false}
+                {targets: 6, orderable: false},
+                {targets: 7, orderable: false},
             ]
         });
     },
@@ -95,7 +113,7 @@ let langApp = {
         $.ajax({
             type: "DELETE",
             url: langApp.url.destroy,
-            data: {id: el.data().id},
+            data: {id: el.data().id, _token: langApp.csrf},
             success: function (res) {
                 if (res.status === 'success') {
                     el.remove().draw(false);
@@ -120,7 +138,9 @@ let langApp = {
             $('#langEditModal [name="id"]').val(el.id);
             $('#langEditModal [name="index"]').val(el.index);
             $('#langEditModal [name="name"]').val(el.name);
+            $('#langEditModal [name="flag"]').val(el.flag);
             $('#langEditModal [name="is_active"]').prop('checked', el.is_active);
+            $('#langEditModal [name="is_default"]').prop('checked', el.is_default);
             $('#langEditModal').modal()
         });
 
@@ -170,12 +190,18 @@ let groupApp = {
             serverSide: true,
             searching: false,
             stateSave: true,
+            language: {
+                paginate: {
+                    next: '<img src="/vendor/translate/img/arrow.svg">',
+                    previous: '<img src="/vendor/translate/img/arrow.svg">'
+                }
+            },
             order: [[0, "desc"]],
             scrollX: true,
             scrollY: false,
             ajax: {
                 url: groupApp.url.get,
-                'data': function(data){
+                'data': function(data) {
                     data.type = groupApp.type;
                     data.search = groupApp.searchText;
                 }
@@ -203,14 +229,11 @@ let groupApp = {
                 {
                     data: null,
                     width: "48px",
-                    defaultContent: '<div class="edit-wrapper">' +
-                        '<div class="dropdown dropdown-arrow">' +
-                        '<div class="dropdown-toggle" data-toggle="dropdown">' +
-                        '<a class="dropdown-toggle-arrow"></a>' +
-                        '</div>' +
+                    defaultContent: '<div class="dropdown dropdown-arrow">' +
+                        '<div class="dropdown-toggle" data-toggle="dropdown"><a class="dropdown-toggle-arrow"></a></div>' +
                         '<div class="dropdown-menu dropdown-menu-right dropdown-menu-edit">' +
-                        '<div class="action-delete"><div class="delete-icon"></div>'+groupApp.dict.delete+'</div>' +
-                        '</div>' +
+                        '<div class="action action-restart"><div class="icon icon-restart"></div>'+groupApp.dict.restart+'</div>'  +
+                        '<div class="action action-delete"><div class="icon icon-delete"></div>'+groupApp.dict.delete+'</div>' +
                         '</div>' +
                         '</div>'
                 }
@@ -243,6 +266,67 @@ let groupApp = {
             },
         });
     },
+    restart(el) {
+        $.ajax({
+            type: "POST",
+            url: groupApp.url.restart,
+            data: {group: el.data().id, _token: groupApp.csrf},
+            success: function (res) {
+                if (res.status === 'success') {
+                    groupApp.dataTable.ajax.reload();
+                    $.notify({message: res.message},{type: 'success'});
+                } else {
+                    $.notify({message: res.message},{type: 'danger'});
+                }
+            }
+        });
+    },
+    import() {
+        $.ajax({
+            type: "GET",
+            url: groupApp.url.import,
+            data: {type: groupApp.type},
+            success: function (res) {
+                if (res.status === 'success') {
+                    let trs = '';
+                    for (let group in res.items) {
+                        trs += '<tr class="'+(res.items[group].exists ? 'success' : '')+'">' +
+                            '<td>'+group+'</td>' +
+                            '<td>'+res.items[group].lang.join(', ')+'</td>' +
+                            '<td><input type="checkbox" class="form-control input-xs" name="group['+group+']" value="1"></td>' +
+                            '</tr>';
+                    }
+                    $('#groupImportForm tbody').html(trs);
+                    $('#groupImportModal').modal('show');
+                }
+            },
+            error: function (res) {
+                $.notify({message: 'Server error!'},{type: 'danger'});
+            },
+        });
+    },
+    parse(data) {
+        $.ajax({
+            type: "POST",
+            url: groupApp.url.parse,
+            data: data,
+            success: function (res) {
+                if (res.status === 'success') {
+                    groupApp.dataTable.ajax.reload();
+                    $('#groupImportModal').modal('hide');
+                    $.notify({message: res.message},{type: 'success'});
+                } else {
+                    $.notify({message: res.message},{type: 'danger'});
+                }
+            },
+            error: function (res) {
+                $.notify({message: 'Server error!'},{type: 'danger'});
+            },
+            complete: function(data) {
+                $('#groupImportForm .modal-footer button').prop('disabled', false);
+            }
+        });
+    },
     delete(el, data) {
         $.ajax({
             type: "DELETE",
@@ -269,6 +353,21 @@ let groupApp = {
         $('#groupTable tbody').on('click', 'div.action-link', function () {
             let el = groupApp.dataTable.row($(this).parents('tr'));
             groupApp.show(el)
+        });
+
+        $('#groupTable tbody').on('click', 'div.action-restart', function () {
+            let el = groupApp.dataTable.row($(this).parents('tr'));
+            groupApp.restart(el)
+        });
+
+        $('#importGroup').on('click', function () {
+            groupApp.import();
+        });
+
+        $('#groupImportForm').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('.modal-footer button').prop('disabled', true);
+            groupApp.parse($(this).serializeArray())
         });
 
         $('#groupTable tbody').on('click', 'div.action-delete', function () {
@@ -311,6 +410,12 @@ let transApp = {
             serverSide: true,
             searching: false,
             stateSave: true,
+            language: {
+                paginate: {
+                    next: '<img src="/vendor/translate/img/arrow.svg">',
+                    previous: '<img src="/vendor/translate/img/arrow.svg">'
+                }
+            },
             scrollX: 200,
             order: [[0, "desc"]],
             ajax: {

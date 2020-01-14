@@ -4,14 +4,15 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Sashaef\TranslateProvider\Traits\Langs;
+use Sashaef\TranslateProvider\Traits\LangsTrait;
 use Sashaef\TranslateProvider\Requests\LangCreateRequest;
 use Sashaef\TranslateProvider\Requests\LangUpdateRequest;
 use Sashaef\TranslateProvider\Resources\LangCollection;
 
 class LangsController extends Controller
 {
-    use Langs;
+    use LangsTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +21,9 @@ class LangsController extends Controller
      */
     public function index(Request $request)
     {
-        return view('translate::pages.langs.index');
+        return view('translate::pages.langs.index', [
+            'title' => trans('main.languages')
+        ]);
     }
 
     /**
@@ -65,7 +68,7 @@ class LangsController extends Controller
      */
     public function store(LangCreateRequest $request)
     {
-        $response = $this->postLang($request->name, $request->index);
+        $response = $this->postLang($request->name, $request->index, $request->flag);
 
         if ($response->wasRecentlyCreated) {
             return response()->json(['status' => 'success', 'message' => 'The language has created!'], 200);
@@ -98,10 +101,16 @@ class LangsController extends Controller
             $request->id,
             $request->index,
             $request->name,
-            $request->is_active
+            $request->flag,
+            $request->is_active,
+            $request->is_default
         );
 
-        return response()->json($response, 200);
+        if ($response) {
+            return response()->json(['status' => 'success', 'message' => 'The language has updated!'], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Server error!'], 200);
+        }
     }
 
     /**

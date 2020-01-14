@@ -4,14 +4,16 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Sashaef\TranslateProvider\Traits\Groups;
 use App\Http\Controllers\Controller;
-use Sashaef\TranslateProvider\Requests\GroupsStoreRequest;
+use Sashaef\TranslateProvider\Requests\{GroupsStoreRequest, GroupsImportRequest};
+use Sashaef\TranslateProvider\Models\Groups;
+use Sashaef\TranslateProvider\Models\Trans;
 use Sashaef\TranslateProvider\Resources\GroupCollection;
+use Sashaef\TranslateProvider\Traits\{GroupsTrait, TranslationsTrait};
 
 class GroupsController extends Controller
 {
-    use Groups;
+    use GroupsTrait, TranslationsTrait;
 
     /**
      * Display a listing of the resource.
@@ -23,6 +25,7 @@ class GroupsController extends Controller
     {
         return view('translate::pages.groups.index', [
             'type' => $type,
+            'title' => trans('main.groups')
         ]);
     }
 
@@ -93,12 +96,77 @@ class GroupsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return array
+     */
+    public function import(Request $request)
+    {
+        return response()->json(['status' => 'success', 'items' => $this->getTranslateFilesByType($request->type)], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return array
+     */
+    public function parse(GroupsImportRequest $request)
+    {
+        $response = $this->parseTranslateFilesByType($request->group, $request->type);
+
+        if (!empty($response['done'])) {
+            return [
+                'status' => 'success',
+                'message' => 'The groups ['.implode(', ', $response['done']).'] has imported! '
+                    .(!empty($response['not_done']) ? 'The groups ['.implode(', ', $response['not_done']).'] has not imported: ' : '')
+            ];
+        } else {
+            return ['status' => 'error', 'message' => 'The groups has not imported!'];
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return array
+     */
+    public function export()
+    {
+        $arr = [];
+        $groups = Groups::where('type', 'interface')->get();
+        foreach ($groups as $group) {
+            $keys = Trans::where('group_id', $group->id)->get();
+            foreach ($keys as $key) {
+                $keyArr = explode('.', $key->key);
+
+                if (count($keyArr) === 1) {
+                    $arr[$group->name][$keyArr[0]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+                if (count($keyArr) === 2) {
+                    $arr[$group->name][$keyArr[0]][$keyArr[1]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+                if (count($keyArr) === 3) {
+                    $arr[$group->name][$keyArr[0]][$keyArr[1]][$keyArr[2]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+                if (count($keyArr) === 4) {
+                    $arr[$group->name][$keyArr[0]][$keyArr[1]][$keyArr[2]][$keyArr[3]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+            }
+        }
+
+        return response()->json($arr, 200);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Sashaef\TranslateProvider;
 
 use Illuminate\Support\ServiceProvider;
+use Cache;
 use Sashaef\TranslateProvider\Translator;
 use Illuminate\Support\Facades\Redis;
 
@@ -15,16 +16,12 @@ class TranslateProvider extends ServiceProvider
      */
     public function register()
     {
-        parent::register();
-
         $this->app->singleton('translator', function ($app) {
             $trans = new Translator(Redis::class, $app['config']['app.locale']);
             $trans->setFallback($app['config']['app.fallback_locale']);
 
             return $trans;
         });
-
-        $this->app->make('Sashaef\TranslateProvider\Controllers\TranslateController');
     }
 
     /**
