@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(config('translate.layout', 'layouts.admin'))
 
 @section('content')
 

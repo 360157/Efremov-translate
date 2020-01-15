@@ -52,7 +52,7 @@ Sashaef\TranslateProvider\TranslateProvider::class,
 
 -- Migrate db
 ```bash
-php artisan migrate
+php artisan migrate --path=vendor/sashaef/translateprovider/src/database/migrations
 ```
 -- Add assets
 ```bash
