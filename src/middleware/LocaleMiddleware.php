@@ -54,6 +54,7 @@ class LocaleMiddleware
             $langs = [];
             foreach (Langs::query()->where('is_active', true)->get() as $lang) {
                 $langs[$lang->index] = [
+                    'id' => $lang->id,
                     'index' => $lang->index,
                     'name' => $lang->name,
                     'flag' => $lang->flag,

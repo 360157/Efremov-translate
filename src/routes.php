@@ -1,4 +1,6 @@
 <?php
+Route::get('/translate', 'Sashaef\TranslateProvider\Controllers\DefaultController@index')->name('translate.default.index');
+
 Route::group(['prefix' => Sashaef\TranslateProvider\middleware\LocaleMiddleware::getLocale()], function () {
     Route::group(['middleware' => config('translate.middleware', ['web']), 'prefix' => config('translate.url', '/admin/trans'), 'namespace' => 'Sashaef\TranslateProvider\Controllers', 'as' => 'translate.'], function () {
         Route::get('/', 'GroupsController@index')->name('index');

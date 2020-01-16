@@ -14,11 +14,12 @@ use Sashaef\TranslateProvider\Models\Langs;
 use Sashaef\TranslateProvider\Models\Groups;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Pagination\Paginator;
-use Sashaef\TranslateProvider\Traits\RedisTrait;
+use Sashaef\TranslateProvider\Traits\{RedisTrait, LangsTrait};
 
 trait TranslationsTrait
 {
     use RedisTrait;
+    use LangsTrait;
 
     public static $translateColumns = [
         'id',
@@ -129,5 +130,33 @@ trait TranslationsTrait
         });
 
         return true;
+    }
+
+    public static function getTranslations($type = 'interface', $lang = 'en', $keys = [])
+    {
+        if (is_null($lang)) {return [];}
+
+        $langId = self::getLangId($lang);
+        $translations = [];
+
+        if (empty($keys)) {
+            foreach(Redis::keys("$type:*:*:$langId") as $key) {
+                $keyArr = explode(':', $key, 4);
+
+                if (!isset($keyArr[1]) || !isset($keyArr[2])) {continue;}
+
+                $translations[$keyArr[1]][$keyArr[2]] = Redis::get($key);
+            }
+        } else {
+            foreach($keys as $key) {
+                $keyArr = explode('.', $key, 2);
+
+                if (!isset($keyArr[0]) || !isset($keyArr[1])) {continue;}
+
+                $translations[$keyArr[0]][$keyArr[1]] = Redis::get("$type:$keyArr[0]:$keyArr[1]:$langId");
+            }
+        }
+
+        return $translations;
     }
 }

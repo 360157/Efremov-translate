@@ -378,11 +378,9 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
      */
     public function getLangId($locale)
     {
-        $langIds = Cache::rememberForever('lang.ids', function () {
-            return Langs::query()->where('is_active', true)->get()->pluck('id', 'index');
-        });
+        $langs = config('app.langs');
 
-        return $langIds[$locale] ?? $langIds[$this->fallback] ?? null;
+        return $langs[$locale]['id'] ?? $langs[$locale][$this->fallback] ?? null;
     }
 
     /**

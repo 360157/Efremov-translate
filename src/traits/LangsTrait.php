@@ -103,4 +103,9 @@ trait LangsTrait
 
         Paginator::currentPageResolver(function() use ($page) {return $page;});
     }
+
+    public static function getLangId($lang)
+    {
+        return config('app.langs')[$lang]['id'] ?? null;
+    }
 }
