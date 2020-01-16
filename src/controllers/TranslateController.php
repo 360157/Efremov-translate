@@ -5,12 +5,12 @@ namespace Sashaef\TranslateProvider\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Sashaef\TranslateProvider\Requests\TransStoreRequest;
-use Sashaef\TranslateProvider\Traits\{LangsTrait as LangTrait, TranslationsTrait, GroupsTrait};
+use Sashaef\TranslateProvider\Traits\{TranslationsTrait, GroupsTrait};
 use Sashaef\TranslateProvider\Resources\TransCollection;
 
 class TranslateController extends Controller
 {
-    use TranslationsTrait, LangTrait, GroupsTrait;
+    use TranslationsTrait, GroupsTrait;
 
     /**
      * Display a listing of the resource.

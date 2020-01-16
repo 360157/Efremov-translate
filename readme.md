@@ -28,15 +28,7 @@
             "sashaef/translateprovider": "dev-master"
         },     
   ```       
--- Than run composer install and composer update        
-
-
-
--- Add to config/app.php
-
-```bash
-Sashaef\TranslateProvider\TranslateProvider::class,
-```
+-- Than run composer install and composer update
 
 -- Add to composer.json
 
@@ -53,18 +45,31 @@ Sashaef\TranslateProvider\TranslateProvider::class,
 ```bash
 php artisan migrate --path=vendor/sashaef/translateprovider/src/database/migrations
 ```
+
 -- Add assets
 ```bash
 php artisan vendor:publish --tag=public --force
 ```
+
 -- Add config
 ```bash
 php artisan vendor:publish --tag=config
 ```
+
 -- Add translations
 ```bash
+Linux:
+php artisan db:seed --class=Sashaef\\TranslateProvider\\Database\\Seeder\\DatabaseSeeder
+
+Windiws:
 php artisan db:seed --class=Sashaef\TranslateProvider\Database\Seeder\DatabaseSeeder
 ```
+
+-- Add to config/app.php
+```bash
+Sashaef\TranslateProvider\TranslateProvider::class,
+```
+
 -- Remove from config/app.php exists translate module
 ```bash
 //Barryvdh\TranslationManager\TranslationServiceProvider::class,
