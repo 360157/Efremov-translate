@@ -110,16 +110,21 @@ php artisan db:seed --class=Sashaef\TranslateProvider\Database\Seeder\DatabaseSe
 'layout' => 'layouts.admin',
 'show_full_key' => true,
 ```
-## API
-```bash
-route - translate/show
-
-@bodyparams - "key"   (interface:main:new_translation:2)
-@response {"interface:main:new_translation:2": "r2fd"}
+## Key structure in Redis
 ```
-    
-## Key structure
+[type = interface, system]:[group = main]:[key = new_translation]:[langId = 2]
+```
+## Key structure for Laravel function trans() or @lang()
 ```
 [null|interface, system]::[group name].[translate key]
 Example: main.translate or system::main.translate or interface::main.translate
+```
+## API path
+```bash
+route - /translate
+
+@params - "type" (interface: default, system)
+@params - "lang" (en: default)
+@params - "keys" (array)
+Example: /translate?lang=en
 ```
