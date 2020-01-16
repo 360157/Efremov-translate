@@ -38,7 +38,6 @@
 Sashaef\TranslateProvider\TranslateProvider::class,
 ```
 
-
 -- Add to composer.json
 
 ```bash
@@ -66,9 +65,50 @@ php artisan vendor:publish --tag=config
 ```bash
 php artisan db:seed --class=Sashaef\TranslateProvider\Database\Seeder\DatabaseSeeder
 ```
-## WEB
+-- Remove from config/app.php exists translate module
+```bash
+//Barryvdh\TranslationManager\TranslationServiceProvider::class,
+```
+## Admin
+-- Path
 ```bash
 /admin/trans
+```
+-- Add menu
+```bash
+<li {{ $segment2 == 'translates'?'class=active':''}}>
+    <a {{ $segment2 == 'translates'?'class=active':''}}>
+        <i class="fa fa-language"></i>
+        <span>@lang('main.translations')</span>
+    </a>
+    <ul>
+        <li {{ $segment3 == 'black'?'class=active':''}}>
+            <a {{ $segment3 == 'black'?'class=active':''}} href="{{ route('translate.langs.index') }}">
+                <i class="fa fa-circle-o"></i>
+                <span>@lang('main.languages')</span>
+            </a>
+        </li>
+        <li {{ $segment3 == 'black'?'class=active':''}}>
+            <a {{ $segment3 == 'black'?'class=active':''}} href="{{ route('translate.groups.type', ['type' => 'interface']) }}">
+                <i class="fa fa-circle-o"></i>
+                <span>@lang('main.interface-trans')</span>
+            </a>
+        </li>
+        <li {{ $segment3 == 'white'?'class=active':''}}>
+            <a {{ $segment3 == 'white'?'class=active':''}} href="{{ route('translate.groups.type', ['type' => 'system']) }}">
+                <i class="fa fa-circle-o"></i>
+                <span>@lang('main.system-trans')</span>
+            </a>
+        </li>
+    </ul>
+</li>
+```
+-- config
+```bash
+'url' => '/admin/translates',
+'middleware' => ['web', ...],
+'layout' => 'layouts.admin',
+'show_full_key' => true,
 ```
 ## API
 ```bash
