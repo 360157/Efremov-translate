@@ -74,6 +74,12 @@ Sashaef\TranslateProvider\TranslateProvider::class,
 ```bash
 //Barryvdh\TranslationManager\TranslationServiceProvider::class,
 ```
+
+-- Commit line in AppServiceProvider.php
+```bash
+//Resource::withoutWrapping();
+```
+
 ## Admin
 -- Path
 ```bash
