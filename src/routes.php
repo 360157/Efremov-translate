@@ -33,7 +33,5 @@ Route::group(['prefix' => Sashaef\TranslateProvider\middleware\LocaleMiddleware:
             Route::post('/restart', 'TranslateController@restart')->name('restart');
             Route::delete('/', 'TranslateController@destroy')->name('destroy');
         });
-
-        Route::get('/test', 'TestController@index')->name('test');
     });
 });
