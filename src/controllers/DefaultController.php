@@ -4,15 +4,12 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Translation\FileLoader;
-use Sashaef\TranslateProvider\Requests\TransStoreRequest;
-use Sashaef\TranslateProvider\Traits\LangsTrait as LangTrait;
 use Sashaef\TranslateProvider\Traits\TranslationsTrait;
-use Sashaef\TranslateProvider\Resources\TransCollection;
-use Illuminate\Filesystem\Filesystem;
 
-class TestController extends Controller
+class DefaultController extends Controller
 {
+    use TranslationsTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -20,6 +17,10 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-
+        return response()->json([
+            'status' => 'success',
+            'lang' => $request->lang,
+            'data' => self::getTranslations($request->type ?? 'interface', $request->lang ?? 'en', $request->keys)
+        ], 200);
     }
 }
