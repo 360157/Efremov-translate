@@ -1,5 +1,7 @@
+
 ## Setup
 
+-- Add to composer.json
 -- Add to composer.json
 
 1) 
