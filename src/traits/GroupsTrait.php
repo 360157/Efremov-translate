@@ -94,7 +94,8 @@ trait GroupsTrait
     public static function getTranslateFilesByType($type = 'system')
     {
         $systemData = self::getTranslateFiles('system', app('path.lang'), []);
-        $interfaceData = self::getTranslateFiles('interface', config('translate.lang_path.interface'), ['index.js', 'icon.png']);
+
+        $interfaceData = config('translate.lang_path.interface') ? self::getTranslateFiles('interface', config('translate.lang_path.interface'), ['index.js', 'icon.png']) : [];
 
         return $type === 'interface' ? array_merge($interfaceData, $systemData) : array_merge($systemData, $interfaceData);
     }
