@@ -22,7 +22,7 @@ trait LangsTrait
         'updated_at'
     ];
 
-    public function getLangs($select = null)
+    public static function getLangs($select = null)
     {
         switch ($select) {
             case 'yes':
@@ -39,7 +39,7 @@ trait LangsTrait
         return Model::getLangs($isActive);
     }
 
-    public function filterLangs($request)
+    public static function filterLangs($request)
     {
         switch ($request->isActive) {
             case 'yes': $request->isActive = true; break;
@@ -55,19 +55,19 @@ trait LangsTrait
         ], $order, $request->length);
     }
 
-    public function getLang($id)
+    public static function getLang($id)
     {
         return Model::find($id);
     }
 
-    public function postLang($name, $index, $flag, $is_active = false)
+    public static function postLang($name, $index, $flag, $is_active = false)
     {
         return Model::postLangs($name, $index, $flag, $is_active);
     }
 
-    public function updateLang($id, $index, $name, $flag, $isActive, $isDefault)
+    public static function updateLang($id, $index, $name, $flag, $isActive, $isDefault)
     {
-        $lang = $this->getLang($id);
+        $lang = self::getLang($id);
 
         if ($lang === null) {return ['status' => 'error', 'message' => 'The language is missing!'];}
 
@@ -80,9 +80,9 @@ trait LangsTrait
         ]);
     }
 
-    public function deleteLang($id)
+    public static function deleteLang($id)
     {
-        $lang = $this->getLang($id);
+        $lang = self::getLang($id);
 
         if ($lang === null) {return ['status' => 'error', 'message' => 'The language is missing!'];}
 

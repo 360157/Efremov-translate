@@ -27,8 +27,8 @@ class TranslateController extends Controller
 
         return view('translate::pages.trans.index', [
             'type' => $request->type,
-            'group' => $this->getGroup($request->group),
-            'langs' => $this->getLangs(true),
+            'group' => self::getGroup($request->group),
+            'langs' => self::getLangs(true),
             'title' => trans('main.translations')
         ]);
     }
@@ -41,7 +41,7 @@ class TranslateController extends Controller
      */
     public function get(Request $request)
     {
-        $translations = $this->filterTranslates($request);
+        $translations = self::filterTranslates($request);
 
         return new TransCollection($translations);
     }
@@ -75,7 +75,7 @@ class TranslateController extends Controller
      */
     public function store(TransStoreRequest $request)
     {
-        if ($this->storeTranslation($request->type, $request->group_id, $request->key, $request->description, $request->translates, $request->statuses)) {
+        if (self::storeTranslation($request->type, $request->group_id, $request->key, $request->description, $request->translates, $request->statuses)) {
             return response()->json(['status' => 'success', 'message' => 'The key "'.$request->key.'" has created!'], 200);
         } else {
             return response()->json(['status' => 'error', 'message' => 'The key "'.$request->key.'" is already exists!'], 200);
@@ -139,7 +139,7 @@ class TranslateController extends Controller
      */
     public function restart(Request $request)
     {
-        $response = $this->restartTranslation($request->group);
+        self::restartTranslation($request->group);
 
         return response()->json([
             'status' => 'success',

@@ -26,7 +26,7 @@ trait TranslationsTrait
         'key',
     ];
 
-    public function filterTranslates($request)
+    public static function filterTranslates($request)
     {
         $order = ['trans.'.self::$translateColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
         $page = $request->start / $request->length + 1;
@@ -41,7 +41,7 @@ trait TranslationsTrait
         ], $order, $request->length);
     }
 
-    public function storeTranslation($type, $group_id, $key, $description, $translates, $statuses)
+    public static function storeTranslation($type, $group_id, $key, $description, $translates, $statuses)
     {
         $groupKey = Groups::getGroupName($group_id);
 
@@ -62,7 +62,7 @@ trait TranslationsTrait
         return false;
     }
 
-    public function storeTranslations($group, $translates, $statuses)
+    public static function storeTranslations($group, $translates, $statuses)
     {
         try {
             foreach ($translates as $key => $translations) {
@@ -81,14 +81,14 @@ trait TranslationsTrait
         }
     }
 
-    function updateKey($id, $value, $description)
+    public static function updateKey($id, $value, $description)
     {
         $trans = Trans::find($id);
 
         return $trans->update(['key' => $value, 'description' => $description]);
     }
 
-    function updateTranslation($key, $lang, $translation, $status)
+    public static function updateTranslation($key, $lang, $translation, $status)
     {
         $trans = Trans::find($key);
         $group = $trans->group;
@@ -105,7 +105,7 @@ trait TranslationsTrait
         ]);
     }
 
-    public function restartTranslation($id)
+    public static function restartTranslation($id)
     {
         $group = Groups::find($id);
         $langIds = Langs::getLangs(1)->pluck('id');

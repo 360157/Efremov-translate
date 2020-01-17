@@ -34,7 +34,7 @@ class LangsController extends Controller
      */
     public function get(Request $request)
     {
-        $langs = $this->filterLangs($request);
+        $langs = self::filterLangs($request);
 
         return new LangCollection($langs);
     }
@@ -68,7 +68,7 @@ class LangsController extends Controller
      */
     public function store(LangCreateRequest $request)
     {
-        $response = $this->postLang($request->name, $request->index, $request->flag);
+        $response = self::postLang($request->name, $request->index, $request->flag);
 
         if ($response->wasRecentlyCreated) {
             return response()->json(['status' => 'success', 'message' => 'The language has created!'], 200);
@@ -97,7 +97,7 @@ class LangsController extends Controller
      */
     public function update(LangUpdateRequest $request)
     {
-        $response = $this->updateLang(
+        $response = self::updateLang(
             $request->id,
             $request->index,
             $request->name,
@@ -121,7 +121,7 @@ class LangsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $response = $this->deleteLang($request->id);
+        $response = self::deleteLang($request->id);
 
         return response()->json($response, 200);
     }

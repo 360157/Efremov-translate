@@ -4,6 +4,7 @@ namespace Sashaef\TranslateProvider;
 
 use Illuminate\Support\ServiceProvider;
 use Cache;
+use Sashaef\TranslateProvider\Models\Langs;
 use Sashaef\TranslateProvider\Translator;
 use Illuminate\Support\Facades\Redis;
 
@@ -33,6 +34,8 @@ class TranslateProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->loadViewsFrom(__DIR__.'/views', 'translate');
+        config(['app.langs' => self::getLangs()]);
+
         //$this->loadMigrationsFrom(__DIR__.'/database/migrations');
         $this->publishes([
             __DIR__.'/views/assets' => public_path('vendor/translate'),
@@ -40,5 +43,23 @@ class TranslateProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/translate.php' => config_path('translate.php')
         ], 'config');
+    }
+
+    public static function getLangs()
+    {
+        return Cache::rememberForever('app.langs', function () {
+            $langs = [];
+            foreach (Langs::query()->where('is_active', true)->get() as $lang) {
+                $langs[$lang->index] = [
+                    'id' => $lang->id,
+                    'index' => $lang->index,
+                    'name' => $lang->name,
+                    'flag' => $lang->flag,
+                    'is_default' => $lang->is_default
+                ];
+            }
+
+            return $langs;
+        });
     }
 }

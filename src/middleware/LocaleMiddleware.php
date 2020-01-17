@@ -24,7 +24,7 @@ class LocaleMiddleware
 
     public static function getLocale()
     {
-        config(['app.langs' => self::$languages = self::getLangs()]);
+        self::$languages = config('app.langs');
         $uri = Request::path();
         $segmentsURI = explode('/', $uri);
 
@@ -46,23 +46,5 @@ class LocaleMiddleware
         view()->share('nowLangId', self::$languages[$locale]['id']);
 
         return $next($request);
-    }
-
-    public static function getLangs()
-    {
-        return Cache::rememberForever('app.langs', function () {
-            $langs = [];
-            foreach (Langs::query()->where('is_active', true)->get() as $lang) {
-                $langs[$lang->index] = [
-                    'id' => $lang->id,
-                    'index' => $lang->index,
-                    'name' => $lang->name,
-                    'flag' => $lang->flag,
-                    'is_default' => $lang->is_default
-                ];
-            }
-
-            return $langs;
-        });
     }
 }

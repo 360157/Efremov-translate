@@ -80,6 +80,11 @@ Sashaef\TranslateProvider\TranslateProvider::class,
 //Resource::withoutWrapping();
 ```
 
+-- Add LocaleMiddleware for switch lang
+```bash
+Sashaef\TranslateProvider\Models\Langs\LocaleMiddleware;
+```
+
 ## Admin
 -- Path
 ```bash
@@ -117,7 +122,7 @@ Sashaef\TranslateProvider\TranslateProvider::class,
 -- config
 ```bash
 'url' => '/admin/translates',
-'middleware' => ['web', ...],
+'middleware' => ['web', ...] get from admin route,
 'layout' => 'layouts.admin',
 'show_full_key' => true,
 ```
