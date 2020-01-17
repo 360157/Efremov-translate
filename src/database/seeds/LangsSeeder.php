@@ -41,7 +41,7 @@ class LangsSeeder extends Seeder
 
         foreach ($langs as $lang) {
 
-            $this->postLang($lang['name'], $lang['index'], $lang['flag'], $lang['is_active']);
+            self::postLang($lang['name'], $lang['index'], $lang['flag'], $lang['is_active']);
         }
     }
 }

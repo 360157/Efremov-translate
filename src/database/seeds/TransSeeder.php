@@ -9,7 +9,7 @@ class TransSeeder extends Seeder
 {
     use GroupsTrait, TranslationsTrait;
 
-    private $langsIds;
+    private static $langsIds;
 
     /**
      * Seed the application's database.
@@ -291,23 +291,23 @@ class TransSeeder extends Seeder
             ],
         ];
 
-        $this->langsIds = $this->getLangIds();
-        $statuses = $this->decodeTranslates([
+        self::$langsIds = self::getLangIds();
+        $statuses = self::decodeTranslates([
             'en' => 2,
             'uk' => 2,
             'ru' => 2,
         ]);
 
         foreach ($translates as $translate) {
-            $key = $this->decodeKey($translate['key']);
+            $key = self::decodeKey($translate['key']);
             $group = self::storeGroup('main', $key['type']);
-            $translations = $this->decodeTranslates($translate['translates']);
+            $translations = self::decodeTranslates($translate['translates']);
 
-            $this->storeTranslation($group->type, $group->id, $key['name'], $translate['description'], $translations, $statuses);
+            self::storeTranslation($group->type, $group->id, $key['name'], $translate['description'], $translations, $statuses);
         }
     }
 
-    function decodeKey($key)
+    public static function decodeKey($key)
     {
         $key = explode('::', $key);
         if (isset($key[1])) {
@@ -323,19 +323,19 @@ class TransSeeder extends Seeder
         return $arr;
     }
 
-    function decodeTranslates($translates)
+    public static function decodeTranslates($translates)
     {
         $arr = [];
         foreach ($translates as $lang => $translate) {
-            if (isset($this->langsIds[$lang])) {
-                $arr[$this->langsIds[$lang]] = $translate;
+            if (isset(self::$langsIds[$lang])) {
+                $arr[self::$langsIds[$lang]] = $translate;
             }
         }
 
         return $arr;
     }
 
-    function getLangIds()
+    public static function getLangIds()
     {
         return Langs::all()->keyBy('index')->pluck('id', 'index');
     }

@@ -17,7 +17,7 @@ class LangResource extends JsonResource
         return [
             'id' => $this->id,
             'flag' => $this->flag,
-            'flag_path' => $this->flag ? '/images/flags/'.$this->flag.'.png' : '',
+            'flag_path' => $this->flag ? '/vendor/translate/img/flags/'.$this->flag.'.png' : '',
             'name' => $this->name,
             'index' => $this->index,
             'is_active' => $this->is_active,

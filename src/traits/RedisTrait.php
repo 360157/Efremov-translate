@@ -19,6 +19,13 @@ trait RedisTrait
         }
     }
 
+    public static function redisDeleteByGroup($type, $group)
+    {
+        foreach (Redis::keys($type.':'.$group.':*:*') as $key) {
+            Redis::del($key);
+        }
+    }
+
     public static function redisSet($type, $group, $key, $lang, $translation)
     {
         Redis::set($type.':'.$group.':'.$key.':'.$lang, $translation);

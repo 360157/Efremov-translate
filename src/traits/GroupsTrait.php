@@ -24,7 +24,7 @@ trait GroupsTrait
         'updated_at'
     ];
 
-    public function filterGroups($request)
+    public static function filterGroups($request)
     {
         $order = [self::$groupColumns[$request->order[0]['column'] ?? 0], $request->order[0]['dir'] ?? 'desc'];
 
@@ -44,19 +44,19 @@ trait GroupsTrait
         return $groups;
     }
 
-    public function getGroup($id)
+    public static function getGroup($id)
     {
         return Model::find($id);
     }
 
-    public function storeGroup($name, $type)
+    public static function storeGroup($name, $type)
     {
         return Model::storeGroup($name, $type);
     }
 
-    public function updateGroup($id, $name)
+    public static function updateGroup($id, $name)
     {
-        $group = $this->getGroup($id);
+        $group = self::getGroup($id);
 
         if ($group === null) {return ['status' => 'error', 'message' => 'The group is missing!'];}
 
@@ -69,40 +69,37 @@ trait GroupsTrait
         }
     }
 
-    public function deleteGroup($id, $trans = false)
+    public static function deleteGroup($id, $trans = false)
     {
-        $group = $this->getGroup($id);
+        $group = self::getGroup($id);
 
         if ($group === null) {return ['status' => 'error', 'message' => 'The group is missing!'];}
 
         if ($trans === false && $group->trans->isNotEmpty()) {return ['status' => 'error', 'message' => 'The group has translations!'];}
 
         if ($group->delete()) {
+            self::redisDeleteByGroup($group->type, $group->name);
+
             return ['status' => 'success', 'message' => 'The group has deleted!'];
         } else {
             return ['status' => 'error', 'message' => 'Server error!'];
         }
     }
 
-    public function getAllGroups()
+    public static function getAllGroups()
     {
         return Model::getAllGroups();
     }
 
-    public function getTranslateFilesByType($type = 'system')
+    public static function getTranslateFilesByType($type = 'system')
     {
-        $dir = app('path.lang');
-        $hidden = [];
+        $systemData = self::getTranslateFiles('system', app('path.lang'), []);
+        $interfaceData = self::getTranslateFiles('interface', config('translate.lang_path.interface'), ['index.js', 'icon.png']);
 
-        if ($type === 'interface') {
-            $dir = config('translate.lang_path.interface');
-            $hidden = ['index.js', 'icon.png'];
-        }
-
-        return $this->getTranslateFiles($type, $dir, $hidden);
+        return $type === 'interface' ? array_merge($interfaceData, $systemData) : array_merge($systemData, $interfaceData);
     }
 
-    public function getTranslateFiles($type, $dir, $hidden = [])
+    public static function getTranslateFiles($type, $dir, $hidden = [])
     {
         $existsGroup = Model::getByType($type)->pluck('name', 'id')->toArray();
         $files = app('files')->allFiles($dir, false);
@@ -126,19 +123,10 @@ trait GroupsTrait
         return $groups;
     }
 
-    public function parseTranslateFilesByType($groups, $type)
+    public static function parseTranslateFiles($groups, $type)
     {
-        $dir = app('path.lang');
-
-        if ($type === 'interface') {
-            $dir = config('translate.lang_path.interface');
-        }
-
-        return $this->parseTranslateFiles($groups, $type, $dir);
-    }
-
-    public function parseTranslateFiles($groups, $type, $dir)
-    {
+        $dir['php'] = app('path.lang');
+        $dir['js'] = config('translate.lang_path.interface');
         $files = app('files');
         $langs = Langs::getLangs(true);
         $done = [];
@@ -146,10 +134,11 @@ trait GroupsTrait
 
         foreach ($groups as $filename => $check) {
             $group = substr($filename, 0, strrpos($filename, "."));
+            $ext = substr($filename, strrpos($filename, ".") + 1);
             $group = Model::storeGroup($group, $type);
-            $translates = self::loadTranslateFiles($files, $dir, $langs, $filename, $type);
+            $translates = self::loadTranslateFiles($files, $dir[$ext], $langs, $filename, $ext);
 
-            if ($this->storeTranslations($group, $translates, 2)) {
+            if (self::storeTranslations($group, $translates, 2)) {
                 $done[] = $group->name;
             } else {
                 $notDone[] = $group->name;
@@ -162,16 +151,16 @@ trait GroupsTrait
         ];
     }
 
-    public static function loadTranslateFiles($files, $dir, $langs, $filename, $type)
+    public static function loadTranslateFiles($files, $dir, $langs, $filename, $ext)
     {
         $translates = [];
         foreach ($langs as $lang) {
             if ($files->exists($path = "{$dir}/{$lang->index}/{$filename}")) {
-                if ($type === 'system') {
+                if ($ext === 'php') {
                     $lines = $files->getRequire($path);
                 }
 
-                if ($type === 'interface') {
+                if ($ext === 'js') {
                     $lines = self::loadLangJsFile($path);
                 }
 
@@ -215,8 +204,4 @@ trait GroupsTrait
 
         return $translates;
     }
-
-
-
-
 }
