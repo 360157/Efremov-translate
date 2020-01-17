@@ -1,7 +1,7 @@
 {
     "name": "sashaef/translateprovider",
     "type": "package",
-	"version": "dev-master",
+	"version": "master",
     "minimum-stability": "dev",
     "description": "Translate provider",
     "keywords": [
