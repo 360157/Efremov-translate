@@ -8,7 +8,7 @@
 
 namespace Sashaef\TranslateProvider\Traits;
 
-use Redis;
+use Illuminate\Support\Facades\Redis;
 
 trait RedisTrait
 {
