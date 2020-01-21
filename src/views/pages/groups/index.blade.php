@@ -4,7 +4,7 @@
     <div class="panel panel-flat">
         <div class="panel-heading">
             <h5 class="panel-title">
-                <a href="{{ url(config('translate.url', 'admin')) }}">@lang('main.main_page')</a> /
+                <a href="{{ url(config('translate.url.admin', 'admin')) }}">@lang('main.main_page')</a> /
                 <a href="{{ route('translate.index') }}">@lang('main.translation')</a> /
                 <span>@lang('main.'.$type.'-trans')</span>
             </h5>
