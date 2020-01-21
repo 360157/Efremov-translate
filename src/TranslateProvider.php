@@ -41,26 +41,5 @@ class TranslateProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/translate.php' => config_path('translate.php')
         ], 'config');
-
-        config(['app.langs' => self::getLangs()]);
-    }
-
-    public static function getLangs()
-    {
-        $langs = [];
-
-        try {
-            foreach (Langs::query()->where('is_active', true)->get() as $lang) {
-                $langs[$lang->index] = [
-                    'id' => $lang->id,
-                    'index' => $lang->index,
-                    'name' => $lang->name,
-                    'flag' => $lang->flag,
-                    'is_default' => $lang->is_default
-                ];
-            }
-        } catch (\Exception $e) {}
-
-        return $langs;
     }
 }

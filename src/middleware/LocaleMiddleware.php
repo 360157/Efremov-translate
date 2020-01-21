@@ -4,47 +4,82 @@ namespace Sashaef\TranslateProvider\middleware;
 
 use Closure;
 use App;
-use Request;
-use Cache;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Request;
 use Sashaef\TranslateProvider\Models\Langs;
 
 class LocaleMiddleware
 {
-    public static $mainLanguage = null;
+    private static $langs = [];
 
-    public static $languages = [];
-
-    public function __construct()
+    public function handle($request, Closure $next)
     {
-        self::$mainLanguage = config('app.locale');
-        $languages = config('app.locales');
-        unset($languages[array_search(self::$mainLanguage, $languages)]);
-        self::$languages = $languages;
+        $langs = self::getLangs();
+        $defaultLang = config('app.locale');
+        $currentLang = Cookie::get('locale');
+
+        if (empty($currentLang)) {
+            $currentLang = self::getLangByIp() ?? $defaultLang;
+        }
+
+        if (Cookie::has('locale') && self::getLangFromUrl() !== $currentLang) {
+            $currentLang = self::getLangFromUrl() ?? $defaultLang;
+        }
+
+        Cookie::queue('locale', $currentLang);
+
+        if (self::getLangFromUrl() === null && $currentLang !== $defaultLang) {
+            return redirect('/'.$currentLang.'/'.Request::path());
+        }
+
+        App::setLocale($currentLang);
+        view()->share('nowLang', $currentLang);
+        view()->share('nowLangId', $langs[$currentLang]['id']);
+
+        return $next($request);
     }
 
     public static function getLocale()
     {
-        self::$languages = config('app.langs');
-        $uri = Request::path();
-        $segmentsURI = explode('/', $uri);
+        self::$langs = self::getLangs();
 
-        if (!empty($segmentsURI[0]) && isset(self::$languages[$segmentsURI[0]])) {
-            if ($segmentsURI[0] != self::$mainLanguage) {
-                return $segmentsURI[0];
-            }
-        }
-
-        return null;
+        return self::getLangFromUrl();
     }
 
-    public function handle($request, Closure $next)
+    public static function getLangs()
     {
-        $locale = self::getLocale() ?: self::$mainLanguage;
+        if (!is_null(config('app.langs'))) return config('app.langs');
 
-        App::setLocale($locale);
-        view()->share('nowLang', $locale);
-        view()->share('nowLangId', self::$languages[$locale]['id']);
+        $langs = [];
+        try {
+            foreach (Langs::query()->where('is_active', true)->get() as $lang) {
+                $langs[$lang->index] = [
+                    'id' => $lang->id,
+                    'index' => $lang->index,
+                    'name' => $lang->name,
+                    'flag' => $lang->flag,
+                    'is_default' => $lang->is_default
+                ];
+            }
+            config(['app.langs' => $langs]);
+        } catch (\Exception $e) {}
 
-        return $next($request);
+        return $langs;
+    }
+
+    public static function getLangFromUrl()
+    {
+        $segmentsUri = explode('/', Request::path());
+
+        return isset(self::$langs[$segmentsUri[0]]) ? $segmentsUri[0] : null;
+    }
+
+    public static function getLangByIp()
+    {
+        $geoip = geoip(Request::ip());
+
+        $langs = config('translate.country');
+
+        return $langs[$geoip['iso_code']] ?? $langs['*'] ?? null;
     }
 }

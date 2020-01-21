@@ -18,8 +18,9 @@
         }
     ],
     "require": {
-        "illuminate/support": "~5.7",
-        "php": "~7.1"
+        "php": "~7.1",
+        "illuminate/support": "~5.8",
+        "torann/geoip" : ""
     },
     "autoload": {
         "psr-4": {
