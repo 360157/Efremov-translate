@@ -5,7 +5,12 @@
             <div class="row">
                 <div class="col-md-3">
                     <label>@lang('main.name')</label>
-                    <input type="text" name="name" placeholder="@lang('main.name')" class="form-control">
+                    <select name="name" class="form-control">
+                        <option>...</option>
+                        @foreach($langs as $code => $name)
+                        <option value="{{ $name }}" data-code="{{ $code }}">{{ $name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-2">
                     <label>@lang('main.index')</label>
@@ -13,7 +18,16 @@
                 </div>
                 <div class="col-md-2">
                     <label>@lang('main.flag')</label>
-                    <input type="text" name="flag" placeholder="@lang('main.flag')" class="form-control">
+                    <select name="flag" class="form-control">
+                        <option>...</option>
+                        @foreach($countries as $code => $name)
+                            <option value="{{ $code }}">{{ $name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>@lang('main.countries')</label>
+                    <input type="text" name="countries" placeholder="@lang('main.countries')" class="form-control">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary align-bottom" name="status"><i class="icon-floppy-disk"></i> @lang('main.create')</button>

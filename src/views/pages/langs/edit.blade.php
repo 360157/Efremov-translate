@@ -22,7 +22,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label>@lang('main.flag')</label>
-                                <input id="index" type="text" name="flag" value="" class="form-control">
+                                <input id="flag" type="text" name="flag" value="" class="form-control">
                             </div>
                         </div>
                     </div>

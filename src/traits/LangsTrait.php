@@ -108,4 +108,9 @@ trait LangsTrait
     {
         return config('app.langs')[$lang]['id'] ?? null;
     }
+
+    public static function getLangList()
+    {
+        return include_once (__DIR__ . '/../database/data/langs.php');
+    }
 }

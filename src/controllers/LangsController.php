@@ -4,14 +4,15 @@ namespace Sashaef\TranslateProvider\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Sashaef\TranslateProvider\Traits\LangsTrait;
 use Sashaef\TranslateProvider\Requests\LangCreateRequest;
 use Sashaef\TranslateProvider\Requests\LangUpdateRequest;
 use Sashaef\TranslateProvider\Resources\LangCollection;
+use Sashaef\TranslateProvider\Traits\{LangsTrait, CountriesTrait};
 
 class LangsController extends Controller
 {
     use LangsTrait;
+    use CountriesTrait;
 
     /**
      * Display a listing of the resource.
@@ -22,7 +23,9 @@ class LangsController extends Controller
     public function index(Request $request)
     {
         return view('translate::pages.langs.index', [
-            'title' => trans('main.languages')
+            'title' => trans('main.languages'),
+            'langs' => self::getLangList(),
+            'countries' => self::getCountryList()
         ]);
     }
 
