@@ -41,6 +41,8 @@ let langApp = {
                 },
                 { data: 'index', width: "26px" },
                 { data: 'name', width: "100px" },
+                { data: 'dir', width: "26px" },
+                { data: 'countries', width: "100px" },
                 {
                     data: 'is_active',
                     width: "42px",
@@ -70,8 +72,8 @@ let langApp = {
                 }
             ],
             columnDefs: [
-                {targets: 6, orderable: false},
                 {targets: 7, orderable: false},
+                {targets: 8, orderable: false},
             ]
         });
     },
@@ -132,6 +134,15 @@ let langApp = {
             langApp.create($(this).serializeArray())
         });
 
+        let formEditCountries = $('#langEditForm select#country').select2({
+            placeholder: "Other",
+            templateSelection: function (state) {
+                if (state.id === 'Other') {return state.text;}
+
+                return $('<span><img class="img-flag" src="/vendor/translate/img/flags/'+state.element.value.toLowerCase()+'.png"/> <span>'+state.text+'</span></span>');
+            }
+        });
+
         $('#langTable tbody').on('click', 'div.action-edit', function () {
             let tr = langApp.dataTable.row($(this).parents('tr'));
             let el = tr.data();
@@ -139,6 +150,8 @@ let langApp = {
             $('#langEditModal [name="index"]').val(el.index);
             $('#langEditModal [name="name"]').val(el.name);
             $('#langEditModal [name="flag"]').val(el.flag);
+            $('#langEditModal [name="dir"]').val(el.dir);
+            formEditCountries.val(el.countries.split(',')).trigger('change');
             $('#langEditModal [name="is_active"]').prop('checked', el.is_active);
             $('#langEditModal [name="is_default"]').prop('checked', el.is_default);
             $('#langEditModal').modal()
@@ -146,6 +159,8 @@ let langApp = {
 
         $('#langEditForm').on('submit', function (e) {
             e.preventDefault();
+            transApp.translationText = $(this).find('[name="translation"]').val();
+            $(this).find('input[name="countries"]').val(formEditCountries.val());
             langApp.update($(this).serializeArray(), $('#langEditModal'))
         });
 
@@ -173,6 +188,41 @@ let langApp = {
 
         $('#statusOptions').on('click', function(e) {
             e.stopPropagation();
+        });
+
+        $('#langCreateForm select[name="name"]').select2({
+            placeholder: "...",
+        }).on('select2:select', function (e) {
+            $('#langCreateForm input[name="index"]').val(e.params.data.element.dataset.code || null);
+            $('#langCreateForm select[name="flag"]').val(e.params.data.element.dataset.flag || null).trigger('change');
+            $('#langCreateForm select[name="dir"]').val(e.params.data.element.dataset.dir || null);
+        });
+
+        $('#langCreateForm select[name="flag"]').select2({
+            placeholder: "...",
+            templateSelection: function (state) {
+                if (!state.id || state.id === '...') {return state.text;}
+
+                return $('<span><img class="img-flag" src="/vendor/translate/img/flags/'+state.element.value.toLowerCase()+'.png"/> <span>'+state.text+'</span></span>');
+            }
+        });
+
+        let formCountry = $('#langCreateForm input[name="countries"]').on('click', function () {
+            $('#langCountryModal').modal();
+        });
+
+        let modalCountry = $('#langCountryModal select[name="country"]').select2({
+            placeholder: "Other",
+            templateSelection: function (state) {
+                if (!state.id || state.id === 'Other') {return state.text;}
+
+                return $('<span><img class="img-flag" src="/vendor/translate/img/flags/'+state.element.value.toLowerCase()+'.png"/> <span>'+state.text+'</span></span>');
+            }
+        });
+
+        $('#langCountryModal button[name="add"]').on('click', function (e) {
+            formCountry.val(modalCountry.val());
+            $('#langCountryModal').modal('hide');
         });
     },
 };
@@ -327,7 +377,7 @@ let groupApp = {
             }
         });
     },
-    delete(el, data) {
+    delete(el) {
         $.ajax({
             type: "DELETE",
             url: groupApp.url.destroy,
@@ -372,9 +422,7 @@ let groupApp = {
 
         $('#groupTable tbody').on('click', 'div.action-delete', function () {
             let el = groupApp.dataTable.row($(this).parents('tr'));
-            let allTrans = el.data().trans + el.data().not_trans;
-
-            if (allTrans > 0) {
+            if (el.data().trans + el.data().not_trans > 0) {
                 $('#groupDeleteModal').modal('show');
 
                 $('#groupDeleteModal button[type="submit"]').on('click', function (e) {

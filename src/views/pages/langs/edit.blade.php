@@ -10,19 +10,38 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="_method" value="PATCH" />
                     <div class="form-group">
-                        <input id="id" type="hidden" name="id" value="" class="form-control">
+                        <input type="hidden" name="id" value="" class="form-control">
+                        <input type="hidden" name="countries" value="" class="form-control">
                         <div class="row">
                             <div class="col-md-6">
                                 <label>@lang('main.name')</label>
                                 <input id="name" type="text" name="name" value="" class="form-control">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label>@lang('main.index')</label>
                                 <input id="index" type="text" name="index" value="" class="form-control">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label>@lang('main.flag')</label>
-                                <input id="index" type="text" name="flag" value="" class="form-control">
+                                <input id="flag" type="text" name="flag" value="" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <label>@lang('main.dir') <span class="badge badge-primary" title="@lang('main.changeTextDir')">?</span></label>
+                                <select id="dir" name="dir" class="form-control">
+                                    <option value="ltr">@lang('main.ltr')</option>
+                                    <option value="rtl">@lang('main.rtl')</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>@lang('main.countries')</label>
+                                <select id="country" class="form-control" multiple="multiple">
+                                    <option value="*">Other</option>
+                                    @foreach($countries as $code => $name)
+                                        <option value="{{ $code }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>

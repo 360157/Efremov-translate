@@ -20,6 +20,8 @@ class LangResource extends JsonResource
             'flag_path' => $this->flag ? '/vendor/translate/img/flags/'.$this->flag.'.png' : '',
             'name' => $this->name,
             'index' => $this->index,
+            'dir' => $this->dir ? 'rtl' : 'ltr',
+            'countries' => $this->countries,
             'is_active' => $this->is_active,
             'is_default' => $this->is_default,
             'created_at' => strval($this->created_at),

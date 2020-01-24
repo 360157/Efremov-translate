@@ -105,7 +105,7 @@ trait TranslationsTrait
         ]);
     }
 
-    public static function restartTranslation($id)
+    public static function restartTranslationByGroup($id)
     {
         $group = Groups::find($id);
         $langIds = Langs::getLangs(1)->pluck('id');
@@ -126,6 +126,38 @@ trait TranslationsTrait
         Redis::pipeline(function ($pipe) use ($translates, $group)  {
             foreach ($translates as $translate) {
                 $pipe->set($group->type.':'.$group->name.':'.$translate->key.':'.$translate->lang_id, $translate->translation);
+            }
+        });
+
+        return true;
+    }
+
+    public static function restartTranslationByType(array $types = ['interface', 'system'])
+    {
+        $langIds = Langs::getLangs(1)->pluck('id');
+
+        foreach ($types as $type) {
+            self::redisDelete($type.':*');
+        }
+
+        $translates = Trans::query()
+            ->select([
+                'trans_groups.type AS type',
+                'trans_groups.name AS group',
+                'key',
+                'translation',
+                'lang_id',
+            ])
+            ->join('trans_groups', 'trans.group_id', '=', 'trans_groups.id')
+            ->join('trans_data', 'trans.id', '=', 'trans_data.translation_id')
+            ->whereIn('lang_id', $langIds)
+            ->whereIn('trans_groups.type', $types)
+            ->whereNotNull('translation')
+            ->get();
+
+        Redis::pipeline(function ($pipe) use ($translates)  {
+            foreach ($translates as $translate) {
+                $pipe->set($translate->type.':'.$translate->group.':'.$translate->key.':'.$translate->lang_id, $translate->translation);
             }
         });
 

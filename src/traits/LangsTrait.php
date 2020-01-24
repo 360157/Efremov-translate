@@ -8,6 +8,7 @@
 
 namespace Sashaef\TranslateProvider\Traits;
 
+use Sashaef\TranslateProvider\Models\Langs;
 use Sashaef\TranslateProvider\Models\Langs as Model;
 use Illuminate\Pagination\Paginator;
 
@@ -60,12 +61,12 @@ trait LangsTrait
         return Model::find($id);
     }
 
-    public static function postLang($name, $index, $flag, $is_active = false)
+    public static function postLang($name, $index, $flag, $dir = 'ltr', $countries = null, $is_active = false)
     {
-        return Model::postLangs($name, $index, $flag, $is_active);
+        return Model::postLangs($name, $index, $flag, $dir, $countries, $is_active);
     }
 
-    public static function updateLang($id, $index, $name, $flag, $isActive, $isDefault)
+    public static function updateLang($id, $index, $name, $flag, $dir, $countries, $isActive, $isDefault)
     {
         $lang = self::getLang($id);
 
@@ -75,6 +76,8 @@ trait LangsTrait
             'name' => $name,
             'index' => $index,
             'flag' => $flag,
+            'dir' => $dir === 'ltr' ? false : true,
+            'countries' => $countries,
             'is_active' => is_null($isActive) ? 0 : 1,
             'is_default' => is_null($isDefault) ? 0 : 1
         ]);
@@ -107,5 +110,34 @@ trait LangsTrait
     public static function getLangId($lang)
     {
         return config('app.langs')[$lang]['id'] ?? null;
+    }
+
+    public static function getLangList()
+    {
+        return include_once (__DIR__ . '/../database/data/langs.php');
+    }
+
+    public static function getLangFlags()
+    {
+        $flags = Langs::query()->select('flag')->get()->pluck('flag');
+        $countryList = self::getCountryList();
+
+        /*foreach ($flags as $flag) {
+            unset($countryList[strtoupper($flag)]);
+        }*/
+
+        return $countryList;
+    }
+
+    public static function getLangCountries()
+    {
+        $countries = Langs::query()->select('countries')->get()->pluck('countries')->implode(',');
+        $countryList = self::getCountryList();
+
+        /*foreach (explode(',', $countries) as $country) {
+            unset($countryList[$country]);
+        }*/
+
+        return $countryList;
     }
 }

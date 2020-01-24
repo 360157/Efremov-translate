@@ -20,6 +20,8 @@
                         <th scope="col">@lang('main.flag')</th>
                         <th scope="col">@lang('main.index')</th>
                         <th scope="col">@lang('main.name')</th>
+                        <th scope="col">@lang('main.dir')</th>
+                        <th scope="col">@lang('main.countries')</th>
                         <th scope="col">@lang('main.is_active')</th>
                         <th scope="col">@lang('main.is_default')</th>
                         <th scope="col">@lang('main.created_at')</th>
@@ -73,6 +75,7 @@
         </div>
     </div>
     @include('translate::pages.langs.edit')
+    @include('translate::pages.langs.country')
 @endsection
 @section('translate-js')
     <script type='text/javascript'>

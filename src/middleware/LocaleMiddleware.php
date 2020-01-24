@@ -10,31 +10,33 @@ use Sashaef\TranslateProvider\Models\Langs;
 
 class LocaleMiddleware
 {
-    private static $langs = [];
+    public static $langs = [];
+    public static $currentLang = null;
+    public static $defaultLang = null;
 
     public function handle($request, Closure $next)
     {
         $langs = self::getLangs();
-        $defaultLang = config('app.locale');
-        $currentLang = Cookie::get('locale');
+        self::$defaultLang = config('app.locale');
+        self::$currentLang = Cookie::get('locale');
 
-        if (empty($currentLang)) {
-            $currentLang = self::getLangByIp() ?? $defaultLang;
+        if (empty(self::$currentLang)) {
+            self::$currentLang = self::getLangByIp() ?? self::$defaultLang;
         }
 
-        if (Cookie::has('locale') && self::getLangFromUrl() !== $currentLang) {
-            $currentLang = self::getLangFromUrl() ?? $defaultLang;
+        if (Cookie::has('locale') && self::getLangFromUrl() !== self::$currentLang) {
+            self::$currentLang = self::getLangFromUrl() ?? self::$defaultLang;
         }
 
-        Cookie::queue('locale', $currentLang);
+        Cookie::queue('locale', self::$currentLang);
 
-        if (self::getLangFromUrl() === null && $currentLang !== $defaultLang) {
-            return redirect('/'.$currentLang.'/'.Request::path());
+        if (self::getLangFromUrl() === null && self::$currentLang !== self::$defaultLang) {
+            return redirect('/'.self::$currentLang.'/'.Request::path());
         }
 
-        App::setLocale($currentLang);
-        view()->share('nowLang', $currentLang);
-        view()->share('nowLangId', $langs[$currentLang]['id']);
+        App::setLocale(self::$currentLang);
+        view()->share('nowLang', self::$currentLang);
+        view()->share('nowLangId', $langs[self::$currentLang]['id']);
 
         return $next($request);
     }
@@ -58,6 +60,8 @@ class LocaleMiddleware
                     'index' => $lang->index,
                     'name' => $lang->name,
                     'flag' => $lang->flag,
+                    'dir' => $lang->dir,
+                    'countries' => $lang->countries ? explode(',', $lang->countries) : [],
                     'is_default' => $lang->is_default
                 ];
             }
@@ -77,9 +81,11 @@ class LocaleMiddleware
     public static function getLangByIp()
     {
         $geoip = geoip(Request::ip());
+        $country = $geoip['iso_code'];
+        $langCountries = array_column(config('app.langs'), 'countries', 'index');
 
-        $langs = config('translate.country');
-
-        return $langs[$geoip['iso_code']] ?? $langs['*'] ?? null;
+        return key(array_filter($langCountries, function ($codes) use ($country) {
+                return in_array($country, $codes) || in_array('*', $codes);
+            })) ?? null;
     }
 }
