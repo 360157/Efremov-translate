@@ -7,8 +7,8 @@
                     <label>@lang('main.name')</label>
                     <select name="name" class="form-control">
                         <option>...</option>
-                        @foreach($langs as $code => $name)
-                        <option value="{{ $name }}" data-code="{{ $code }}">{{ $name }}</option>
+                        @foreach($langs as $code => $lang)
+                        <option value="{{ $lang[1] }}" data-code="{{ $code }}" data-flag="{{ strtoupper($lang[3]) }}" data-dir="{{ $lang[4] }}">{{ $lang[1] }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -20,9 +20,16 @@
                     <label>@lang('main.flag')</label>
                     <select name="flag" class="form-control">
                         <option>...</option>
-                        @foreach($countries as $code => $name)
+                        @foreach($flags as $code => $name)
                             <option value="{{ $code }}">{{ $name }}</option>
                         @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>@lang('main.dir')</label>
+                    <select name="dir" class="form-control">
+                        <option value="ltr">ltr</option>
+                        <option value="rtl">rtl</option>
                     </select>
                 </div>
                 <div class="col-md-2">

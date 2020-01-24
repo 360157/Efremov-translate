@@ -25,7 +25,8 @@ class LangsController extends Controller
         return view('translate::pages.langs.index', [
             'title' => trans('main.languages'),
             'langs' => self::getLangList(),
-            'countries' => self::getCountryList()
+            'flags' => self::getLangFlags(),
+            'countries' => self::getLangCountries()
         ]);
     }
 
@@ -71,7 +72,13 @@ class LangsController extends Controller
      */
     public function store(LangCreateRequest $request)
     {
-        $response = self::postLang($request->name, $request->index, $request->flag);
+        $response = self::postLang(
+            $request->name,
+            $request->index,
+            $request->flag,
+            $request->dir,
+            $request->countries
+        );
 
         if ($response->wasRecentlyCreated) {
             return response()->json(['status' => 'success', 'message' => 'The language has created!'], 200);
@@ -105,6 +112,8 @@ class LangsController extends Controller
             $request->index,
             $request->name,
             $request->flag,
+            $request->dir,
+            $request->countries,
             $request->is_active,
             $request->is_default
         );

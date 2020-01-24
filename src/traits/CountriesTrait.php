@@ -8,11 +8,12 @@
 
 namespace Sashaef\TranslateProvider\Traits;
 
-use Illuminate\Pagination\Paginator;
 use Sashaef\TranslateProvider\Models\Countries;
 
 trait CountriesTrait
 {
+    private static $countryList = [];
+
     public function getCountries($isActive = null)
     {
         return Countries::query()
@@ -24,6 +25,6 @@ trait CountriesTrait
 
     public static function getCountryList()
     {
-        return include_once (__DIR__ . '/../database/data/countries.php');
+        return self::$countryList ?: self::$countryList = include_once (__DIR__ . '/../database/data/countries.php');
     }
 }

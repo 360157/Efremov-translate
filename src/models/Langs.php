@@ -8,7 +8,7 @@ class Langs extends Model
 {
     protected $table = 'langs';
 
-    protected $fillable = ['name', 'index', 'flag', 'is_active', 'is_default'];
+    protected $fillable = ['name', 'index', 'flag', 'dir', 'countries', 'is_active', 'is_default'];
 
     protected $perPage = 10;
 
@@ -51,14 +51,16 @@ class Langs extends Model
         return $result;
     }
 
-    public static function postLangs($name, $index, $flag, $is_active)
+    public static function postLangs($name, $index, $flag, $dir = 'ltr', $countries = null, $is_active = false)
     {
         return self::firstOrCreate([
             'index' => $index
         ], [
             'name' => $name,
-            'index' => $index,
-            'flag' => $flag,
+            'index' => strtolower($index),
+            'flag' => strtolower($flag),
+            'dir' => $dir === 'ltr' ? false : true,
+            'countries' => $countries,
             'is_active' => $is_active
         ]);
     }

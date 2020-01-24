@@ -139,7 +139,7 @@ class TranslateController extends Controller
      */
     public function restart(Request $request)
     {
-        self::restartTranslation($request->group);
+        self::restartTranslationByGroup($request->group);
 
         return response()->json([
             'status' => 'success',

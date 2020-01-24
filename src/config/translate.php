@@ -9,10 +9,4 @@ return [
     'lang_path' => [
         'interface' => resource_path() . '/themes/default/views/tickets-vue/src/i18n'
     ],
-    'country' => [
-        '*' => 'en',
-        'UA' => 'uk',
-        'RU' => 'ru',
-        'US' => 'en',
-    ]
 ];

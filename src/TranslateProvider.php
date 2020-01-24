@@ -3,9 +3,6 @@
 namespace Sashaef\TranslateProvider;
 
 use Illuminate\Support\ServiceProvider;
-use Cache;
-use Sashaef\TranslateProvider\Models\Langs;
-use Sashaef\TranslateProvider\Translator;
 use Illuminate\Support\Facades\Redis;
 
 class TranslateProvider extends ServiceProvider
@@ -41,5 +38,11 @@ class TranslateProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/translate.php' => config_path('translate.php')
         ], 'config');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Sashaef\TranslateProvider\Commands\CacheCommand::class,
+            ]);
+        }
     }
 }

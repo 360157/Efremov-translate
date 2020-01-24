@@ -12,18 +12,18 @@ use Illuminate\Support\Facades\Redis;
 
 trait RedisTrait
 {
-    public static function redisDelete($key)
+    public static function redisDelete($patern)
     {
-        foreach (Redis::keys($key) as $key) {
-            Redis::del($key);
-        }
+        Redis::pipeline(function ($pipe) use ($patern)  {
+            foreach (Redis::keys($patern) as $key) {
+                $pipe->del($key);
+            }
+        });
     }
 
     public static function redisDeleteByGroup($type, $group)
     {
-        foreach (Redis::keys($type.':'.$group.':*:*') as $key) {
-            Redis::del($key);
-        }
+        self::redisDelete($type.':'.$group.':*:*');
     }
 
     public static function redisSet($type, $group, $key, $lang, $translation)
