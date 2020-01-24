@@ -144,3 +144,8 @@ route - /translate
 @params - "keys" (array)
 Example: /translate?lang=en
 ```
+
+## Cach translations after clear cache Redis
+```bash
+php artisan translate:cache
+```
