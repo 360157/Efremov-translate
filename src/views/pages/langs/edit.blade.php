@@ -26,10 +26,10 @@
                                 <input id="flag" type="text" name="flag" value="" class="form-control">
                             </div>
                             <div class="col-md-2">
-                                <label>@lang('main.dir')</label>
-                                <select id="dir"  name="dir" class="form-control">
-                                    <option value="ltr">ltr</option>
-                                    <option value="rtl">rtl</option>
+                                <label>@lang('main.dir') <span class="badge badge-primary" title="@lang('main.changeTextDir')">?</span></label>
+                                <select id="dir" name="dir" class="form-control">
+                                    <option value="ltr">@lang('main.ltr')</option>
+                                    <option value="rtl">@lang('main.rtl')</option>
                                 </select>
                             </div>
                         </div>

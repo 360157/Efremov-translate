@@ -289,6 +289,51 @@ class TransSeeder extends Seeder
                     'ru' => 'разобрать',
                 ]
             ],
+            [
+                'key' => 'main.dir',
+                'description' => null,
+                'translates' => [
+                    'en' => 'direction',
+                    'uk' => 'напрямок',
+                    'ru' => 'направление',
+                ]
+            ],
+            [
+                'key' => 'main.countries',
+                'description' => null,
+                'translates' => [
+                    'en' => 'countries',
+                    'uk' => 'країни',
+                    'ru' => 'страны',
+                ]
+            ],
+            [
+                'key' => 'main.ltr',
+                'description' => null,
+                'translates' => [
+                    'en' => 'ltr',
+                    'uk' => 'зліва направо',
+                    'ru' => 'слева направо',
+                ]
+            ],
+            [
+                'key' => 'main.rtl',
+                'description' => null,
+                'translates' => [
+                    'en' => 'rtl',
+                    'uk' => 'справа наліво',
+                    'ru' => 'справа налево',
+                ]
+            ],
+            [
+                'key' => 'main.changeTextDir',
+                'description' => null,
+                'translates' => [
+                    'en' => 'change text direction',
+                    'uk' => 'изменить направление текста',
+                    'ru' => 'змінити напрямок тексту',
+                ]
+            ],
         ];
 
         self::$langsIds = self::getLangIds();

@@ -26,10 +26,10 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label>@lang('main.dir')</label>
+                    <label>@lang('main.dir') <span class="badge badge-primary" title="@lang('main.changeTextDir')">?</span></label>
                     <select name="dir" class="form-control">
-                        <option value="ltr">ltr</option>
-                        <option value="rtl">rtl</option>
+                        <option value="ltr">@lang('main.ltr')</option>
+                        <option value="rtl">@lang('main.rtl')</option>
                     </select>
                 </div>
                 <div class="col-md-2">
