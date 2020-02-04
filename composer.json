@@ -28,6 +28,7 @@
         }
     },
     "scripts": {
+        "copy-config": "php artisan vendor:publish --tag=config",
         "copy-assets": "php artisan vendor:publish --tag=public --force"
     },
     "extra": {

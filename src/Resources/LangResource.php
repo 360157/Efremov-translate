@@ -24,8 +24,8 @@ class LangResource extends JsonResource
             'countries' => $this->countries,
             'is_active' => $this->is_active,
             'is_default' => $this->is_default,
-            'created_at' => strval($this->created_at),
-            'updated_at' => strval($this->translateUpdatedAt()),
+            'created_at' => $this->created_at->format('Y-m-d'),
+            'updated_at' => $this->translateUpdatedAt()
         ];
     }
 }

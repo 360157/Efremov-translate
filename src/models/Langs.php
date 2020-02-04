@@ -8,7 +8,7 @@ class Langs extends Model
 {
     protected $table = 'langs';
 
-    protected $fillable = ['name', 'index', 'flag', 'dir', 'countries', 'is_active', 'is_default'];
+    protected $fillable = ['name', 'index', 'flag', 'dir', 'countries', 'is_active', 'is_default', 'created_at', 'updated_at'];
 
     protected $perPage = 10;
 
@@ -86,6 +86,6 @@ class Langs extends Model
             ->orderBy('updated_at')
             ->first();
 
-        return $translation->updated_at ?? null;
+        return $translation !== null ? $translation->updated_at->format('Y-m-d') : null;
     }
 }

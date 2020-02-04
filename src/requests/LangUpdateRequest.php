@@ -25,8 +25,9 @@ class LangUpdateRequest extends FormRequest
     {
         return [
             'id' => 'required|integer',
-            'name' => 'required|string|max:191',
-            'index' => 'required|string|max:191'
+            'name' => 'required|string|max:128',
+            'index' => 'required|string|min:2|max:5',
+            'flag' => 'required|string|max:2'
         ];
     }
 }
