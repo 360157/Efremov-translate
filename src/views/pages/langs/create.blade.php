@@ -13,11 +13,11 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label>@lang('main.index')</label>
+                    <label>@lang('main.index') <span class="badge badge-primary" title="@lang('translate.langIndexRange')">?</span></label>
                     <input type="text" name="index" placeholder="@lang('main.index')" class="form-control">
                 </div>
                 <div class="col-md-2">
-                    <label>@lang('main.flag')</label>
+                    <label>@lang('main.flag') <span class="badge badge-primary" title="@lang('translate.flagIndex')">?</span></label>
                     <select name="flag" class="form-control">
                         <option>...</option>
                         @foreach($flags as $code => $name)
@@ -26,14 +26,14 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label>@lang('main.dir') <span class="badge badge-primary" title="@lang('main.changeTextDir')">?</span></label>
+                    <label>@lang('main.dir') <span class="badge badge-primary" title="@lang('translate.changeTextDir')">?</span></label>
                     <select name="dir" class="form-control">
                         <option value="ltr">@lang('main.ltr')</option>
                         <option value="rtl">@lang('main.rtl')</option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label>@lang('main.countries')</label>
+                    <label>@lang('main.countries') <span class="badge badge-primary" title="@lang('translate.selectCountries')">?</span></label>
                     <input type="text" name="countries" placeholder="@lang('main.countries')" class="form-control">
                 </div>
                 <div class="col-md-2">

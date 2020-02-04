@@ -144,32 +144,7 @@ class GroupsController extends Controller
      */
     public function export()
     {
-        $groups = Groups::where('type', 'interface')->get();
-
-        $arr = [];
-        foreach ($groups as $group) {
-            $keys = Trans::where('group_id', $group->id)->get();
-
-            foreach ($keys as $key) {
-                $keyArr = explode('.', $key->key);
-
-                if (count($keyArr) === 1) {
-                    $arr[$group->name][$keyArr[0]] = $key->data()->where('lang_id', 1)->first()->translation;
-                }
-
-                if (count($keyArr) === 2) {
-                    $arr[$group->name][$keyArr[0]][$keyArr[1]] = $key->data()->where('lang_id', 1)->first()->translation;
-                }
-
-                if (count($keyArr) === 3) {
-                    $arr[$group->name][$keyArr[0]][$keyArr[1]][$keyArr[2]] = $key->data()->where('lang_id', 1)->first()->translation;
-                }
-
-                if (count($keyArr) === 4) {
-                    $arr[$group->name][$keyArr[0]][$keyArr[1]][$keyArr[2]][$keyArr[3]] = $key->data()->where('lang_id', 1)->first()->translation;
-                }
-            }
-        }
+        $arr = self::exportGroup();
 
         return response()->json($arr, 200);
     }

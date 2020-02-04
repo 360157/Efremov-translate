@@ -137,12 +137,12 @@ table.dataTable thead {
 }
 .table .dropdown-toggle-arrow {
 	position: absolute;
-	top: 0;
+	top: -12px;
 	right: 0;
-	width: 12px;
-	height: 7px;
-	background: url("/vendor/translate/img/arrow.svg") no-repeat;
+	background: url(/vendor/translate/img/arrow.svg) no-repeat center;
 	cursor: pointer;
+	padding: 12px;
+	text-align: center;
 }
 .table.dataTable thead .sorting:before,
 .table.dataTable thead .sorting::after,

@@ -8,11 +8,11 @@
 
 namespace Sashaef\TranslateProvider\Traits;
 
-use Sashaef\TranslateProvider\Models\Groups;
 use Sashaef\TranslateProvider\Models\Groups as Model;
 use Illuminate\Pagination\Paginator;
 use Sashaef\TranslateProvider\Models\Langs;
 use Log;
+use Sashaef\TranslateProvider\Models\Trans;
 
 trait GroupsTrait
 {
@@ -66,6 +66,36 @@ trait GroupsTrait
             return ['status' => 'success', 'message' => 'The group has updated!'];
         } else {
             return ['status' => 'error', 'message' => 'Server error!'];
+        }
+    }
+
+    public static function exportGroup()
+    {
+        $groups = Model::where('type', 'interface')->get();
+
+        $arr = [];
+        foreach ($groups as $group) {
+            $keys = Trans::where('group_id', $group->id)->get();
+
+            foreach ($keys as $key) {
+                $keyArr = explode('.', $key->key);
+
+                if (count($keyArr) === 1) {
+                    $arr[$group->name][$keyArr[0]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+
+                if (count($keyArr) === 2) {
+                    $arr[$group->name][$keyArr[0]][$keyArr[1]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+
+                if (count($keyArr) === 3) {
+                    $arr[$group->name][$keyArr[0]][$keyArr[1]][$keyArr[2]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+
+                if (count($keyArr) === 4) {
+                    $arr[$group->name][$keyArr[0]][$keyArr[1]][$keyArr[2]][$keyArr[3]] = $key->data()->where('lang_id', 1)->first()->translation;
+                }
+            }
         }
     }
 

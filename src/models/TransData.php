@@ -25,10 +25,10 @@ class TransData extends Model
         return self::updateOrCreate([
             'translation_id' => $trans_id,
             'lang_id' => $lang_id,
+            'translation' => null
         ], [
-
             'translation' => $translation,
-            'status' => $status
+            'status' => $status,
         ]);
     }
 

@@ -151,7 +151,8 @@ let langApp = {
             $('#langEditModal [name="name"]').val(el.name);
             $('#langEditModal [name="flag"]').val(el.flag);
             $('#langEditModal [name="dir"]').val(el.dir);
-            formEditCountries.val(el.countries.split(',')).trigger('change');
+            let countries = el.countries ? el.countries.split(',') : null;
+            formEditCountries.val(countries).trigger('change');
             $('#langEditModal [name="is_active"]').prop('checked', el.is_active);
             $('#langEditModal [name="is_default"]').prop('checked', el.is_default);
             $('#langEditModal').modal()

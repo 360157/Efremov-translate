@@ -25,7 +25,7 @@ class LangCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:128',
-            'index' => 'required|string|max:2',
+            'index' => 'required|string|min:2|max:5',
             'flag' => 'required|string|max:2'
         ];
     }

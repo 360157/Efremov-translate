@@ -1,7 +1,5 @@
-
 ## Setup
 
--- Add to composer.json
 -- Add to composer.json
 
 1) 
@@ -145,4 +143,9 @@ route - /translate
 @params - "lang" (en: default)
 @params - "keys" (array)
 Example: /translate?lang=en
+```
+
+## Cach translations after clear cache Redis
+```bash
+php artisan translate:cache
 ```
