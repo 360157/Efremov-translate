@@ -42,6 +42,7 @@ class TranslateProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 \Sashaef\TranslateProvider\Commands\CacheCommand::class,
+                \Sashaef\TranslateProvider\Commands\RouteCacheCommand::class,
             ]);
         }
     }
