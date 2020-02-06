@@ -45,7 +45,7 @@ class LocaleMiddleware
     {
         self::$langs = self::getLangs();
 
-        return self::getLangFromUrl();
+        return self::getLangFromUrl() ?? env('ROUTING_LOCALE');
     }
 
     public static function getLangs()
@@ -54,7 +54,7 @@ class LocaleMiddleware
 
         $langs = [];
         try {
-            foreach (Langs::query()->where('is_active', true)->get() as $lang) {
+            foreach (Langs::getLangs(1) as $lang) {
                 $langs[$lang->index] = [
                     'id' => $lang->id,
                     'index' => $lang->index,
