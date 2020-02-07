@@ -283,7 +283,6 @@ let groupApp = {
                     defaultContent: '<div class="dropdown dropdown-arrow">' +
                         '<div class="dropdown-toggle" data-toggle="dropdown"><a class="dropdown-toggle-arrow"></a></div>' +
                         '<div class="dropdown-menu dropdown-menu-right dropdown-menu-edit">' +
-                        '<div class="action action-restart"><div class="icon icon-restart"></div>'+groupApp.dict.restart+'</div>'  +
                         '<div class="action action-delete"><div class="icon icon-delete"></div>'+groupApp.dict.delete+'</div>' +
                         '</div>' +
                         '</div>'
@@ -317,11 +316,11 @@ let groupApp = {
             },
         });
     },
-    restart(el) {
+    restart(type) {
         $.ajax({
             type: "POST",
             url: groupApp.url.restart,
-            data: {group: el.data().id, _token: groupApp.csrf},
+            data: {type: type, _token: groupApp.csrf},
             success: function (res) {
                 if (res.status === 'success') {
                     groupApp.dataTable.ajax.reload();
@@ -406,11 +405,6 @@ let groupApp = {
             groupApp.show(el)
         });
 
-        $('#groupTable tbody').on('click', 'div.action-restart', function () {
-            let el = groupApp.dataTable.row($(this).parents('tr'));
-            groupApp.restart(el)
-        });
-
         $('#importGroup').on('click', function () {
             groupApp.import();
         });
@@ -439,6 +433,10 @@ let groupApp = {
             e.preventDefault();
             groupApp.searchText = $(this).find('input').val();
             groupApp.dataTable.draw();
+        });
+
+        $('#restartType').on('click', function () {
+            groupApp.restart($(this).data('type'));
         });
     },
 };
@@ -515,7 +513,10 @@ let transApp = {
                 } else {
                     $.notify({message: res.message},{type: 'danger'});
                 }
-            }
+            },
+            error: function (res) {
+                $.notify({message: res.message},{type: 'danger'});
+            },
         });
     },
     delete(data, modal) {
@@ -531,15 +532,14 @@ let transApp = {
                 } else {
                     $.notify({message: res.message},{type: 'danger'});
                 }
-            }
+            },
+            error: function (res) {
+                $.notify({message: res.message},{type: 'danger'});
+            },
         });
     },
     columns() {
         let columns = [];
-        // columns.push({
-        //     data: 'id',
-        //     title: 'ID'
-        // });
         columns.push({
             data: 'key',
             title: 'Key',
@@ -576,22 +576,13 @@ let transApp = {
             transApp.create($(this).serializeArray())
         });
 
-        $('#transTable tbody').on('click', '.dropdown-toggle', function () {
+        $('#transTable tbody').on('click', '.dropdown-toggle.key', function () {
             let tr = transApp.dataTable.row($(this).parents('tr'));
             let el = tr.data();
-            if ($(this).hasClass('key')) {
-                $('#keyEditForm [name="id"]').val(el.id);
-                $('#keyEditForm [name="key"]').val(el.key);
-                $('#keyEditForm [name="description"]').val(el.description);
-                $('#keyEditModal').modal()
-            } else {
-                // let lang_id = $(this).data('lang');
-                // let translation = el.items['_' + lang_id] ? el.items['_' + lang_id].translation : '';
-                // $('#tranlateEditForm [name="key"]').val(el.id);
-                // $('#tranlateEditForm [name="lang"]').val(lang_id);
-                // $('#tranlateEditForm [name="translation"]').val(translation);
-                // $('#tranlateEditModal').modal()
-            }
+            $('#keyEditForm [name="id"]').val(el.id);
+            $('#keyEditForm [name="key"]').val(el.key);
+            $('#keyEditForm [name="description"]').val(el.description);
+            $('#keyEditModal').modal()
         });
         $('#transTable tbody').on('click', '.translate', function () {
             let tr = transApp.dataTable.row($(this).parents('tr'));
@@ -606,7 +597,11 @@ let transApp = {
 
         $('#keyEditForm button[type="submit"]').on('click', function (e) {
             e.preventDefault();
-            transApp.update($(this).closest('form').serializeArray(), $('#keyEditModal'))
+            if ($(this).val() === 'delete') {
+                transApp.delete($(this).closest('form').serializeArray(), $('#keyEditModal'))
+            } else {
+                transApp.update($(this).closest('form').serializeArray(), $('#keyEditModal'))
+            }
         });
 
         $('#tranlateEditForm button[type="submit"]').on('click', function (e) {

@@ -88,6 +88,15 @@ trait TranslationsTrait
         return $trans->update(['key' => $value, 'description' => $description]);
     }
 
+    public static function deleteKey($id)
+    {
+        $trans = Trans::find($id);
+        $group = $trans->group;
+        self::redisDelete($group->type.':'.$group->name.':'.$trans->key.':*');
+
+        return $trans->delete();
+    }
+
     public static function updateTranslation($key, $lang, $translation, $status)
     {
         $trans = Trans::find($key);
