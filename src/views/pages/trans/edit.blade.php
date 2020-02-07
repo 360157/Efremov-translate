@@ -22,7 +22,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary" name="status"><i class="icon-floppy-disk"></i> @lang('main.update')</button>
+                        <button type="submit" class="btn btn-primary" name="update" value="update"><i class="icon-floppy-disk"></i> @lang('main.update')</button>
+                        <button type="submit" class="btn btn-warning" name="delete" value="delete"><i class="icon-trash-alt"></i> @lang('main.delete')</button>
                         <button type="button" class="btn btn-danger" name="cancel"><i class="icon-cancel-circle2"></i> @lang('main.cancel')</button>
                     </div>
                 </div>

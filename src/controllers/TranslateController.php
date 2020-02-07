@@ -139,7 +139,7 @@ class TranslateController extends Controller
      */
     public function restart(Request $request)
     {
-        self::restartTranslationByGroup($request->group);
+        self::restartTranslationByType([$request->type]);
 
         return response()->json([
             'status' => 'success',
@@ -153,11 +153,18 @@ class TranslateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy(Request $request)
     {
-        return response()->json([
-            'status' => 'success',
-            'message' => 'The translation has not deleted!'
-        ], 200);
+        if (self::deleteKey($request->id)) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'The key has deleted!'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The key has not deleted!'
+            ], 200);
+        }
     }
 }

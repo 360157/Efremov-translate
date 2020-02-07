@@ -13,6 +13,7 @@
                     <div class="align-bottom">
                         <button type="submit" class="btn btn-primary"><i class="icon-floppy-disk"></i> @lang('main.create')</button>
                         <button type="button" class="btn btn-warning" id="importGroup"><i class="icon-import"></i> @lang('main.import')</button>
+                        <button type="button" class="btn btn-danger" id="restartType" data-type="{{ $type }}"><i class="icon-rotate-cw"></i> @lang('main.restart')</button>
                     </div>
                 </div>
             </div>
